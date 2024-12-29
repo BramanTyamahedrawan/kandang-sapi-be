@@ -2,21 +2,27 @@ package com.ternak.sapi.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.repository.JenisHewanRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.KandangRequest;
 import com.ternak.sapi.payload.PagedResponse;
+import com.ternak.sapi.payload.PeternakRequest;
 import com.ternak.sapi.repository.KandangRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.util.AppConstants;
@@ -29,32 +35,31 @@ public class KandangService {
 
     private static final Logger logger = LoggerFactory.getLogger(KandangService.class);
 
-
     public PagedResponse<Kandang> getAllKandang(int page, int size, String peternakID) throws IOException {
         validatePageNumberAndSize(page, size);
 
         // Retrieve Polls
         List<Kandang> kandangResponse = new ArrayList<>();
 
-        if(peternakID.equalsIgnoreCase("*")){
+        if (peternakID.equalsIgnoreCase("*")) {
             kandangResponse = kandangRepository.findAll(size);
-        }else{
+        } else {
             kandangResponse = kandangRepository.findKandangByPeternak(peternakID, size);
         }
 
         return new PagedResponse<>(kandangResponse, kandangResponse.size(), "Successfully get data", 200);
     }
 
-     public Kandang createKandang(KandangRequest kandangRequest, String savePath) throws IOException {
-         // Validasi ID Kandang
-         if (kandangRepository.existsByIdKandang(kandangRequest.getIdKandang())) {
-             throw new IllegalArgumentException("ID Kandang sudah terdaftar!");
-         }
+    public Kandang createKandang(KandangRequest kandangRequest, String savePath) throws IOException {
+        // Validasi ID Kandang
+        if (kandangRepository.existsByIdKandang(kandangRequest.getIdKandang())) {
+            throw new IllegalArgumentException("ID Kandang sudah terdaftar!");
+        }
 
-         // Validasi Alamat
-//         if (kandangRepository.existsByAlamat(kandangRequest.getAlamat())) {
-//             throw new IllegalArgumentException("Alamat Kandang sudah terdaftar!");
-//         }
+        // Validasi Alamat
+        // if (kandangRepository.existsByAlamat(kandangRequest.getAlamat())) {
+        // throw new IllegalArgumentException("Alamat Kandang sudah terdaftar!");
+        // }
 
         Kandang kandang = new Kandang();
         Peternak peternakResponse = peternakRepository.findById(kandangRequest.getPeternak_id().toString());
@@ -89,11 +94,11 @@ public class KandangService {
         }
     }
 
-
     public DefaultResponse<Kandang> getKandangById(String kandangId) throws IOException {
         // Retrieve Kandang
         Kandang kandangResponse = kandangRepository.findById(kandangId);
-        return new DefaultResponse<>(kandangResponse.isValid() ? kandangResponse : null, kandangResponse.isValid() ? 1 : 0, "Successfully get data");
+        return new DefaultResponse<>(kandangResponse.isValid() ? kandangResponse : null,
+                kandangResponse.isValid() ? 1 : 0, "Successfully get data");
     }
 
     public Kandang updateKandang(String kandangId, KandangRequest kandangRequest, String savePath) throws IOException {
@@ -101,7 +106,7 @@ public class KandangService {
         Peternak peternakResponse = peternakRepository.findById(kandangRequest.getPeternak_id().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getJenisHewanId().toString());
 
-        if (peternakResponse.getNamaPeternak()!= null) {
+        if (peternakResponse.getNamaPeternak() != null) {
             kandang.setLuas(kandangRequest.getLuas());
             kandang.setKapasitas(kandangRequest.getKapasitas());
             kandang.setJenisKandang(kandangRequest.getJenisKandang());
@@ -121,21 +126,71 @@ public class KandangService {
 
     public void deleteKandangById(String kandangId) throws IOException {
         Kandang kandangResponse = kandangRepository.findById(kandangId);
-//        if(kandangResponse.isValid()){
-            kandangRepository.deleteById(kandangId);
-//        }else{
-//            throw new ResourceNotFoundException("Kandang", "id", kandangId);
-//        }
+        // if(kandangResponse.isValid()){
+        kandangRepository.deleteById(kandangId);
+        // }else{
+        // throw new ResourceNotFoundException("Kandang", "id", kandangId);
+        // }
     }
 
     private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
+        if (page < 0) {
             throw new BadRequestException("Page number cannot be less than zero.");
         }
 
-        if(size > AppConstants.MAX_PAGE_SIZE) {
+        if (size > AppConstants.MAX_PAGE_SIZE) {
             throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
         }
+    }
+
+    @Transactional
+    public void createBulkKandang(List<KandangRequest> kandangRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data kandang secara bulk...");
+
+        List<Kandang> kandangList = new ArrayList<>();
+        int skippedIncomplete = 0;
+
+        for (KandangRequest request : kandangRequests) {
+            try {
+                // Validasi jika peternak tidak ditemukan, tetapi tetap lanjut
+                Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
+                if (peternakResponse == null) {
+                    System.err.println("Peternak tidak ditemukan, tetapi data kandang tetap diproses: " + request);
+                }
+
+                // Buat objek Kandang
+                Kandang kandang = new Kandang();
+                kandang.setPeternak(peternakResponse);
+                kandang.setIdKandang(request.getIdKandang());
+                kandang.setAlamat(request.getAlamat());
+                kandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
+                        : "Kandang " + request.getIdKandang());
+                kandang.setLuas(request.getLuas());
+                kandang.setJenisKandang(request.getJenisKandang() != null ? request.getJenisKandang() : "Permanen");
+                kandang.setNilaiBangunan(request.getNilaiBangunan());
+                kandang.setLatitude(request.getLatitude());
+                kandang.setLongitude(request.getLongitude());
+                kandang.setNikPeternak(request.getNikPeternak());
+
+                // Tambahkan ke list
+                kandangList.add(kandang);
+                System.out.println("Menambahkan data kandang ke dalam daftar: " + kandang);
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data: " + request);
+                e.printStackTrace();
+                skippedIncomplete++;
+            }
+        }
+
+        if (!kandangList.isEmpty()) {
+            System.out.println("Menyimpan data kandang yang valid...");
+            kandangRepository.saveAll(kandangList);
+            System.out.println("Data kandang berhasil disimpan. Total: " + kandangList.size());
+        } else {
+            System.out.println("Tidak ada data kandang baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete);
     }
 
 }

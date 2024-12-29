@@ -1,4 +1,7 @@
 package com.ternak.sapi.payload;
+
+import com.ternak.sapi.model.Peternak;
+
 public class KandangRequest {
     private String idKandang;
     private String peternak_id;
@@ -11,22 +14,46 @@ public class KandangRequest {
     private String namaKandang;
     private String latitude;
     private String longitude;
+    private String nikPeternak;
+
+    private Peternak peternak;
 
     public KandangRequest() {
     }
 
-    public KandangRequest(String idKandang, String peternak_id, String luas, String jenisHewanId, String kapasitas, String jenisKandang, String nilaiBangunan, String alamat, String namaKandang, String jenisKandang1, String latitude, String longitude) {
+    public KandangRequest(String idKandang, String peternak_id, String luas, String jenisHewanId,
+            String kapasitas,
+            String jenisKandang, String nilaiBangunan, String alamat, String namaKandang, String jenisKandang1,
+            String latitude, String longitude, String nikPeternak) {
         this.idKandang = idKandang;
         this.peternak_id = peternak_id;
         this.luas = luas;
         this.jenisHewanId = jenisHewanId;
         this.kapasitas = kapasitas;
+        this.nikPeternak = nikPeternak;
         this.jenisKandang = jenisKandang;
         this.nilaiBangunan = nilaiBangunan;
         this.alamat = alamat;
         this.namaKandang = namaKandang;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    // relasi peternak
+    public Peternak getPeternak() {
+        return peternak;
+    }
+
+    public void setPeternak(Peternak peternak) {
+        this.peternak = peternak;
+    }
+
+    public String getNikPeternak() {
+        return nikPeternak;
+    }
+
+    public void setNikPeternak(String nikPeternak) {
+        this.nikPeternak = nikPeternak;
     }
 
     public String getIdKandang() {
@@ -76,7 +103,7 @@ public class KandangRequest {
     public void setJenisKandang(String jenisKandang) {
         this.jenisKandang = jenisKandang;
     }
-    
+
     public String getNilaiBangunan() {
         return nilaiBangunan;
     }

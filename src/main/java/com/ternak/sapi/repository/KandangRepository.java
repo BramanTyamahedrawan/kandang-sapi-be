@@ -5,6 +5,9 @@ import com.ternak.sapi.controller.HewanController;
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -15,7 +18,7 @@ import java.util.*;
 public class KandangRepository {
     Configuration conf = HBaseConfiguration.create();
     String tableName = "kandangdev";
-   // HewanController departmentController = new HewanController();
+    // HewanController departmentController = new HewanController();
 
     public List<Kandang> findAll(int size) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
@@ -57,11 +60,73 @@ public class KandangRepository {
         client.insertRecord(tableKandang, rowKey, "peternak", "idPeternak", kandang.getPeternak().getIdPeternak());
         client.insertRecord(tableKandang, rowKey, "peternak", "nikPeternak", kandang.getPeternak().getNikPeternak());
         client.insertRecord(tableKandang, rowKey, "peternak", "namaPeternak", kandang.getPeternak().getNamaPeternak());
-        client.insertRecord(tableKandang, rowKey, "jenisHewan", "idJenisHewan", kandang.getJenisHewan().getIdJenisHewan());
+        client.insertRecord(tableKandang, rowKey, "jenisHewan", "idJenisHewan",
+                kandang.getJenisHewan().getIdJenisHewan());
         client.insertRecord(tableKandang, rowKey, "jenisHewan", "jenis", kandang.getJenisHewan().getJenis());
         client.insertRecord(tableKandang, rowKey, "jenisHewan", "deskripsi", kandang.getJenisHewan().getDeskripsi());
         client.insertRecord(tableKandang, rowKey, "detail", "created_by", "Polinema");
         return kandang;
+    }
+
+    public List<Kandang> saveAll(List<Kandang> kandangList) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableKandang = TableName.valueOf(tableName);
+
+        System.out.println("Memulai penyimpanan data ke HBase...");
+        List<String> failedRows = new ArrayList<>();
+
+        for (Kandang kandang : kandangList) {
+            try {
+                // Validasi jenis kandang jika null
+                if (kandang.getJenisKandang() == null || kandang.getJenisKandang().isEmpty()) {
+                    kandang.setJenisKandang("Permanen");
+                }
+
+                // validasi nama kandang jika null
+                if (kandang.getNamaKandang() == null || kandang.getNamaKandang().isEmpty()) {
+                    kandang.setNamaKandang("Kandang " + kandang.getPeternak().getNamaPeternak());
+                }
+
+                String rowKey = safeString(kandang.getIdKandang());
+
+                // Insert data kandang ke HBase
+                client.insertRecord(tableKandang, rowKey, "main", "idKandang", safeString(kandang.getIdKandang()));
+                client.insertRecord(tableKandang, rowKey, "main", "namaKandang", safeString(kandang.getNamaKandang()));
+                client.insertRecord(tableKandang, rowKey, "main", "alamat", safeString(kandang.getAlamat()));
+                client.insertRecord(tableKandang, rowKey, "main", "luas", safeString(kandang.getLuas()));
+                client.insertRecord(tableKandang, rowKey, "main", "nilaiBangunan",
+                        safeString(kandang.getNilaiBangunan()));
+                client.insertRecord(tableKandang, rowKey, "main", "jenisKandang",
+                        safeString(kandang.getJenisKandang()));
+                client.insertRecord(tableKandang, rowKey, "main", "latitude", safeString(kandang.getLatitude()));
+                client.insertRecord(tableKandang, rowKey, "main", "longitude", safeString(kandang.getLongitude()));
+
+                // Jika peternak ada, masukkan informasi peternak
+                if (kandang.getPeternak() != null) {
+                    Peternak peternak = kandang.getPeternak();
+                    client.insertRecord(tableKandang, rowKey, "peternak", "nikPeternak",
+                            safeString(peternak.getNikPeternak()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "namaPeternak",
+                            safeString(peternak.getNamaPeternak()));
+                }
+
+                System.out.println("Berhasil menyimpan data Kandang ID: " + kandang.getIdKandang());
+            } catch (Exception e) {
+                failedRows.add(kandang.getIdKandang());
+                System.err
+                        .println("Gagal menyimpan Kandang ID: " + kandang.getIdKandang() + " Error: " + e.getMessage());
+            }
+        }
+
+        if (!failedRows.isEmpty()) {
+            throw new IOException("Failed to save records for Kandang IDs: " + String.join(", ", failedRows));
+        }
+
+        return kandangList;
+    }
+
+    private String safeString(String value) {
+        return value != null ? value : "";
     }
 
     public Kandang findById(String kandangId) throws IOException {
@@ -105,7 +170,8 @@ public class KandangRepository {
         columnMapping.put("longitude", "longitude");
         columnMapping.put("file_path", "file_path");
         columnMapping.put("namaKandang", "namaKandang");
-        List<Kandang> kandang = client.getDataListByColumn(tableUsers.toString(), columnMapping, "peternak", "nikPeternak", peternakID, Kandang.class, size);
+        List<Kandang> kandang = client.getDataListByColumn(tableUsers.toString(), columnMapping, "peternak",
+                "nikPeternak", peternakID, Kandang.class, size);
 
         return kandang;
     }
@@ -155,8 +221,10 @@ public class KandangRepository {
         client.insertRecord(tableKandang, kandangId, "main", "namaKandang", kandang.getNamaKandang());
         client.insertRecord(tableKandang, kandangId, "peternak", "idPeternak", kandang.getPeternak().getIdPeternak());
         client.insertRecord(tableKandang, kandangId, "peternak", "nikPeternak", kandang.getPeternak().getNikPeternak());
-        client.insertRecord(tableKandang, kandangId, "peternak", "namaPeternak", kandang.getPeternak().getNamaPeternak());
-        client.insertRecord(tableKandang, kandangId, "jenisHewan", "idJenisHewan", kandang.getJenisHewan().getIdJenisHewan());
+        client.insertRecord(tableKandang, kandangId, "peternak", "namaPeternak",
+                kandang.getPeternak().getNamaPeternak());
+        client.insertRecord(tableKandang, kandangId, "jenisHewan", "idJenisHewan",
+                kandang.getJenisHewan().getIdJenisHewan());
         client.insertRecord(tableKandang, kandangId, "jenisHewan", "jenis", kandang.getJenisHewan().getJenis());
         client.insertRecord(tableKandang, kandangId, "jenisHewan", "deskripsi", kandang.getJenisHewan().getDeskripsi());
         client.insertRecord(tableKandang, kandangId, "detail", "created_by", "Polinema");
@@ -175,7 +243,8 @@ public class KandangRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("idKandang", "idKandang");
 
-        Kandang kandang = client.getDataByColumn(tableKandang.toString(), columnMapping, "main", "idKandang", idKandang, Kandang.class);
+        Kandang kandang = client.getDataByColumn(tableKandang.toString(), columnMapping, "main", "idKandang", idKandang,
+                Kandang.class);
         return kandang.getIdKandang() != null; // True jika ID Kandang sudah ada
     }
 
@@ -185,7 +254,8 @@ public class KandangRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("alamat", "alamat");
 
-        Kandang kandang = client.getDataByColumn(tableKandang.toString(), columnMapping, "main", "alamat", alamat, Kandang.class);
+        Kandang kandang = client.getDataByColumn(tableKandang.toString(), columnMapping, "main", "alamat", alamat,
+                Kandang.class);
         return kandang.getAlamat() != null; // True jika alamat sudah ada
     }
 }

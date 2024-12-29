@@ -280,6 +280,20 @@ public class PeternakRepository {
         return client.getExistingByColumn(tablePetugas.toString(), columnMapping, "main", "nikPetugas", nikPetugasList);
     }
 
+    public Peternak findByNikPeternak(String nikPeternak) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePeternak = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("nikPeternak", "nikPeternak");
+
+        Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "nikPeternak",
+                nikPeternak, Peternak.class);
+
+        System.out.println("Data Peternak ditemukan: " + peternak);
+
+        return peternak.getNikPeternak() != null ? peternak : null;
+    }
+
     public List<String> findExistingNamaPetugas(List<String> namaPetugasList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf("petugasdev"); // Nama tabel petugas di HBase

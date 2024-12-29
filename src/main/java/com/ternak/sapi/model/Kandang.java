@@ -1,24 +1,27 @@
 package com.ternak.sapi.model;
 
-
 public class Kandang {
     private String idKandang;
     private Peternak peternak;
     private String luas;
+    private String jenisKandang;
     private JenisHewan jenisHewan;
     private String kapasitas;
     private String nilaiBangunan;
-    private String jenisKandang;
     private String alamat;
     private String latitude;
     private String longitude;
     private String file_path;
     private String namaKandang;
+    private String nikPeternak;
 
     public Kandang() {
     }
 
-    public Kandang(String idKandang, Peternak peternak, String luas, JenisHewan jenisHewan, String kapasitas, String nilaiBangunan, String jenisKandang, String alamat, String latitude, String longitude, String file_path, String namaKandang) {
+    public Kandang(String idKandang, Peternak peternak, String luas, JenisHewan jenisHewan,
+            String kapasitas,
+            String nilaiBangunan, String jenisKandang, String alamat, String latitude, String longitude,
+            String file_path, String namaKandang, String nikPeternak) {
         this.idKandang = idKandang;
         this.peternak = peternak;
         this.luas = luas;
@@ -31,6 +34,7 @@ public class Kandang {
         this.longitude = longitude;
         this.file_path = file_path;
         this.namaKandang = namaKandang;
+        this.nikPeternak = nikPeternak;
     }
 
     public String getIdKandang() {
@@ -47,6 +51,14 @@ public class Kandang {
 
     public void setPeternak(Peternak peternak) {
         this.peternak = peternak;
+    }
+
+    public String getNikPeternak() {
+        return nikPeternak;
+    }
+
+    public void setNikPeternak(String nikPeternak) {
+        this.nikPeternak = nikPeternak;
     }
 
     public String getLuas() {
@@ -72,7 +84,7 @@ public class Kandang {
     public void setKapasitas(String kapasitas) {
         this.kapasitas = kapasitas;
     }
-    
+
     public String getJenisKandang() {
         return jenisKandang;
     }
@@ -80,7 +92,7 @@ public class Kandang {
     public void setJenisKandang(String jenisKandang) {
         this.jenisKandang = jenisKandang;
     }
-    
+
     public String getNilaiBangunan() {
         return nilaiBangunan;
     }
@@ -96,7 +108,7 @@ public class Kandang {
     public void setAlamat(String alamat) {
         this.alamat = alamat;
     }
-    
+
     public String getLatitude() {
         return latitude;
     }
@@ -130,18 +142,18 @@ public class Kandang {
     }
 
     public boolean isValid() {
-        return this.idKandang != null && 
-               this.peternak != null && 
-               this.luas != null && 
-               this.jenisHewan != null && 
-               this.kapasitas != null &&
-               this.jenisKandang != null &&
-               this.nilaiBangunan != null && 
-               this.alamat != null &&
-               this.latitude != null &&
-               this.longitude != null &&
-               this.file_path != null &&
-               this.namaKandang != null;
+        return this.idKandang != null &&
+                this.peternak != null &&
+                this.luas != null &&
+                this.jenisHewan != null &&
+                this.kapasitas != null &&
+                this.jenisKandang != null &&
+                this.nilaiBangunan != null &&
+                this.alamat != null &&
+                this.latitude != null &&
+                this.longitude != null &&
+                this.file_path != null &&
+                this.namaKandang != null;
     }
 
     public void set(String fieldName, String value) {
@@ -155,7 +167,7 @@ public class Kandang {
             case "kapasitas":
                 this.kapasitas = value;
                 break;
-             case "jenisKandang":
+            case "jenisKandang":
                 this.jenisKandang = value;
                 break;
             case "nilaiBangunan":

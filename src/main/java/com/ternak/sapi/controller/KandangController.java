@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 import org.apache.hadoop.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -40,16 +41,17 @@ public class KandangController {
     private FileSystem fileSystem;
 
     @GetMapping
-    public PagedResponse<Kandang> getKandangs(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID) throws IOException {
+    public PagedResponse<Kandang> getKandangs(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID) throws IOException {
         return kandangService.getAllKandang(page, size, peternakID);
     }
-    
+
     @GetMapping("/file/{fileName}")
     public ResponseEntity<byte[]> getFileFromHDFS(@PathVariable String fileName) {
         String uri = "hdfs://hadoop-primary:9000/kandang/" + fileName;
-       // String uri = "hdfs://h-primary:6912/kandang/" + fileName;
+        // String uri = "hdfs://h-primary:6912/kandang/" + fileName;
         Configuration configuration = new Configuration();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -170,6 +172,7 @@ public class KandangController {
             }
         }
     }
+
     @GetMapping("/{kandangId}")
     public DefaultResponse<Kandang> getKandangById(@PathVariable String kandangId) throws IOException {
         return kandangService.getKandangById(kandangId);
@@ -177,7 +180,8 @@ public class KandangController {
 
     @PutMapping("/{kandangId}")
     public ResponseEntity<?> updateKandang(@PathVariable String kandangId,
-                                          @RequestParam("file") MultipartFile file, @ModelAttribute KandangRequest kandangRequest) throws IOException {
+            @RequestParam("file") MultipartFile file, @ModelAttribute KandangRequest kandangRequest)
+            throws IOException {
         // upload file
         try {
             // Mendapatkan nama file asli
@@ -204,12 +208,13 @@ public class KandangController {
             String localPath = newFile.getAbsolutePath();
             String uri = "hdfs://hadoop-primary:9000";
             String hdfsDir = "hdfs://hadoop-primary:9000/kandang/" + newFileName + fileExtension;
-   //          String uri = "hdfs://h-primary:6912";
-    //        String hdfsDir = "hdfs://h-primary:6912/kandang/" + newFileName + fileExtension;
+            // String uri = "hdfs://h-primary:6912";
+            // String hdfsDir = "hdfs://h-primary:6912/kandang/" + newFileName +
+            // fileExtension;
             Configuration configuration = new Configuration();
             FileSystem fs = FileSystem.get(URI.create(uri), configuration);
             fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/"+ newFileName + fileExtension ;
+            String savePath = "file/" + newFileName + fileExtension;
 
             newFile.delete();
             Kandang kandang = kandangService.updateKandang(kandangId, kandangRequest, savePath);
@@ -227,12 +232,23 @@ public class KandangController {
                     .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
         }
 
-
     }
 
     @DeleteMapping("/{kandangId}")
-    public HttpStatus deleteKandang(@PathVariable (value = "kandangId") String kandangId) throws IOException {
+    public HttpStatus deleteKandang(@PathVariable(value = "kandangId") String kandangId) throws IOException {
         kandangService.deleteKandangById(kandangId);
         return HttpStatus.FORBIDDEN;
     }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> createBulkKandang(@RequestBody List<KandangRequest> kandangRequests) {
+        try {
+            kandangService.createBulkKandang(kandangRequests); // Passing List<KandangRequest>
+            return ResponseEntity.ok(new ApiResponse(true, "All Kandang Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
 }
