@@ -4,6 +4,8 @@ package com.ternak.sapi.repository;
 import com.ternak.sapi.controller.JenisHewanController;
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.JenisHewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -15,7 +17,7 @@ import java.util.*;
 public class JenisHewanRepository {
     Configuration conf = HBaseConfiguration.create();
     String tableName = "jenishewandev";
-    //JenisHewanController departmentController = new JenisHewanController();
+    // JenisHewanController departmentController = new JenisHewanController();
 
     public List<JenisHewan> findAll(int size) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
@@ -46,6 +48,50 @@ public class JenisHewanRepository {
         return jenishewan;
     }
 
+    public List<JenisHewan> saveAll(List<JenisHewan> jenishewanList) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableJenisHewan = TableName.valueOf(tableName);
+
+        System.out.println("Memulai penyimpanan data ke HBase...");
+        List<String> failedRows = new ArrayList<>();
+
+        for (JenisHewan jenisHewan : jenishewanList) {
+            try {
+                String rowKey = safeString(jenisHewan.getIdJenisHewan());
+
+                client.insertRecord(tableJenisHewan, rowKey, "main", "idJenisHewan",
+                        safeString(jenisHewan.getIdJenisHewan()));
+                if (jenisHewan.getJenis() != null) {
+                    client.insertRecord(tableJenisHewan, rowKey, "main", "jenis", safeString(jenisHewan.getJenis()));
+                }
+                client.insertRecord(tableJenisHewan, rowKey, "main", "deskripsi",
+                        (jenisHewan.getDeskripsi() != null && !jenisHewan.getDeskripsi().isEmpty())
+                                ? jenisHewan.getDeskripsi()
+                                : "Deskripsi "
+                                        + (jenisHewan.getJenis() != null ? jenisHewan.getJenis() : "Tidak Diketahui"));
+                client.insertRecord(tableJenisHewan, rowKey, "detail", "created_by", "Polinema");
+
+                System.out.println("Berhasil menyimpan Jenis Hewan: " + jenisHewan.getIdJenisHewan());
+            } catch (Exception e) {
+                failedRows.add(jenisHewan.getIdJenisHewan());
+                System.err.println(
+                        "Failed to insert record for ID: " + jenisHewan.getIdJenisHewan() + ", Error: "
+                                + e.getMessage());
+            }
+        }
+
+        if (!failedRows.isEmpty()) {
+            throw new IOException("Failed to save records for Jenis Hewan: " + String.join(", ", failedRows));
+        }
+
+        return jenishewanList;
+    }
+
+    // Utility untuk memastikan nilai string tidak null
+    private String safeString(String value) {
+        return value != null ? value : "";
+    }
+
     public JenisHewan findById(String idHewan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -65,10 +111,10 @@ public class JenisHewanRepository {
 
         TableName tableJenisHewan = TableName.valueOf(tableName);
         if (jenishewan.getJenis() != null) {
-        client.insertRecord(tableJenisHewan, jenishewanId, "main", "jenis", jenishewan.getJenis());
+            client.insertRecord(tableJenisHewan, jenishewanId, "main", "jenis", jenishewan.getJenis());
         }
         if (jenishewan.getDeskripsi() != null) {
-        client.insertRecord(tableJenisHewan, jenishewanId, "main", "deskripsi", jenishewan.getDeskripsi());
+            client.insertRecord(tableJenisHewan, jenishewanId, "main", "deskripsi", jenishewan.getDeskripsi());
         }
 
         client.insertRecord(tableJenisHewan, jenishewanId, "detail", "created_by", "Polinema");
@@ -87,7 +133,8 @@ public class JenisHewanRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("jenis", "jenis");
 
-        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping, "main", "jenis", jenis, JenisHewan.class);
+        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping, "main", "jenis",
+                jenis, JenisHewan.class);
         return jenisHewan.getJenis() != null; // True jika sudah ada jenis yang sama
     }
 }

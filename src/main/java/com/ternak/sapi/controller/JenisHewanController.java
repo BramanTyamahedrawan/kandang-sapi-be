@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 import org.apache.hadoop.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -32,18 +33,19 @@ public class JenisHewanController {
     private JenisHewanService jenishewanService = new JenisHewanService();
 
     @GetMapping
-    public PagedResponse<JenisHewan> getJenisHewans(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
-                                            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID,
-                                            @RequestParam(value = "kandangID", defaultValue = "*") String kandangID) throws IOException {
+    public PagedResponse<JenisHewan> getJenisHewans(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
+            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID,
+            @RequestParam(value = "kandangID", defaultValue = "*") String kandangID) throws IOException {
         return jenishewanService.getAllJenisHewan(page, size, peternakID, hewanID, kandangID);
     }
-    
-        @GetMapping("/file/{fileName}")
+
+    @GetMapping("/file/{fileName}")
     public ResponseEntity<byte[]> getFileFromHDFS(@PathVariable String fileName) {
         String uri = "hdfs://hadoop-primary:9000/jenishewan/" + fileName;
-       // String uri = "hdfs://h-primary:6912/hewan/" + fileName;
+        // String uri = "hdfs://h-primary:6912/hewan/" + fileName;
         Configuration configuration = new Configuration();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -73,7 +75,8 @@ public class JenisHewanController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createJenisHewan(@Valid @RequestBody JenisHewanRequest jenishewanRequest) throws IOException {
+    public ResponseEntity<?> createJenisHewan(@Valid @RequestBody JenisHewanRequest jenishewanRequest)
+            throws IOException {
         try {
             JenisHewan jenishewan = jenishewanService.createJenisHewan(jenishewanRequest);
 
@@ -100,7 +103,8 @@ public class JenisHewanController {
 
     @PutMapping("/{jenishewanId}")
     public ResponseEntity<?> updateJenisHewan(@PathVariable String jenishewanId,
-                                          @RequestParam("file") MultipartFile file, @ModelAttribute JenisHewanRequest jenishewanRequest) throws IOException {
+            @RequestParam("file") MultipartFile file, @ModelAttribute JenisHewanRequest jenishewanRequest)
+            throws IOException {
         // upload file
         try {
             // Mendapatkan nama file asli
@@ -126,13 +130,14 @@ public class JenisHewanController {
             // Mendapatkan local path dari file yang disimpan
             String localPath = newFile.getAbsolutePath();
             String uri = "hdfs://hadoop-primary:9000";
-           String hdfsDir = "hdfs://hadoop-primary:9000/jenishewan/" + newFileName + fileExtension;
-  //             String uri = "hdfs://h-primary:6912";
-  //          String hdfsDir = "hdfs://h-primary:6912/jenishewan/" + newFileName + fileExtension;
+            String hdfsDir = "hdfs://hadoop-primary:9000/jenishewan/" + newFileName + fileExtension;
+            // String uri = "hdfs://h-primary:6912";
+            // String hdfsDir = "hdfs://h-primary:6912/jenishewan/" + newFileName +
+            // fileExtension;
             Configuration configuration = new Configuration();
             FileSystem fs = FileSystem.get(URI.create(uri), configuration);
             fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/"+ newFileName + fileExtension ;
+            String savePath = "file/" + newFileName + fileExtension;
 
             newFile.delete();
             JenisHewan jenishewan = jenishewanService.updateJenisHewan(jenishewanId, jenishewanRequest, savePath);
@@ -150,12 +155,22 @@ public class JenisHewanController {
                     .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
         }
 
-
     }
 
     @DeleteMapping("/{jenishewanId}")
-    public HttpStatus deleteJenisHewan(@PathVariable (value = "jenishewanId") String jenishewanId) throws IOException {
+    public HttpStatus deleteJenisHewan(@PathVariable(value = "jenishewanId") String jenishewanId) throws IOException {
         jenishewanService.deleteJenisHewanById(jenishewanId);
         return HttpStatus.FORBIDDEN;
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> createBulkJenisHewan(@RequestBody List<JenisHewanRequest> jenishewanRequests) {
+        try {
+            jenishewanService.createBulkJenisHewan(jenishewanRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "All JenisHewan Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
     }
 }
