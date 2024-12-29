@@ -15,7 +15,7 @@ import java.util.*;
 public class RumpunHewanRepository {
     Configuration conf = HBaseConfiguration.create();
     String tableName = "rumpunhewandev";
-    //RumpunHewanController departmentController = new RumpunHewanController();
+    // RumpunHewanController departmentController = new RumpunHewanController();
 
     public List<RumpunHewan> findAll(int size) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
@@ -44,6 +44,46 @@ public class RumpunHewanRepository {
         }
         client.insertRecord(tableRumpunHewan, rowKey, "detail", "created_by", "Polinema");
         return rumpunhewan;
+    }
+
+    public List<RumpunHewan> saveAll(List<RumpunHewan> rumpunhewanList) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableRumpunHewan = TableName.valueOf(tableName);
+
+        System.out.println("Memulai penyimpanan data ke HBase...");
+        List<String> failedRows = new ArrayList<>();
+
+        for (RumpunHewan rumpunhewan : rumpunhewanList) {
+            try {
+                String rowKey = safeString(rumpunhewan.getIdRumpunHewan());
+
+                client.insertRecord(tableRumpunHewan, rowKey, "main", "idRumpunHewan",
+                        safeString(rumpunhewan.getIdRumpunHewan()));
+                client.insertRecord(tableRumpunHewan, rowKey, "main", "rumpun",
+                        safeString(rumpunhewan.getRumpun()));
+                client.insertRecord(tableRumpunHewan, rowKey, "main", "deskripsi",
+                        safeString(rumpunhewan.getDeskripsi()));
+                client.insertRecord(tableRumpunHewan, rowKey, "detail", "created_by", "Polinema");
+
+                System.out.println(
+                        "Berhasil menyimpan Rumpun Hewan: " + rumpunhewan.getIdRumpunHewan());
+            } catch (Exception e) {
+                failedRows.add(rumpunhewan.getIdRumpunHewan());
+                System.err.println(
+                        "Failed to insert record for ID: " + rumpunhewan.getIdRumpunHewan() + ", Error: "
+                                + e.getMessage());
+            }
+        }
+
+        if (!failedRows.isEmpty()) {
+            throw new IOException("Failed to save records for Rumpun Hewan: " + String.join(", ", failedRows));
+        }
+
+        return rumpunhewanList;
+    }
+
+    private String safeString(String value) {
+        return value != null ? value : "";
     }
 
     public RumpunHewan findById(String idHewan) throws IOException {
@@ -87,7 +127,8 @@ public class RumpunHewanRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("rumpun", "rumpun");
 
-        RumpunHewan rumpunHewan = client.getDataByColumn(tableRumpunHewan.toString(), columnMapping, "main", "rumpun", rumpun, RumpunHewan.class);
+        RumpunHewan rumpunHewan = client.getDataByColumn(tableRumpunHewan.toString(), columnMapping, "main", "rumpun",
+                rumpun, RumpunHewan.class);
         return rumpunHewan.getRumpun() != null; // True jika rumpun sudah ada
     }
 }

@@ -42,6 +42,12 @@ public class HBaseClientStructure {
         client.deleteTable(tableJenisHewan);
         client.createTable(tableJenisHewan, jenishewandev);
 
+        // Create Tabel Tujuan Pemeliharaan
+        TableName tableTujuanPemeliharaan = TableName.valueOf("tujuanpemeliharaandev");
+        String[] tujuanpemeliharaandev = { "main", "detail" };
+        client.deleteTable(tableTujuanPemeliharaan);
+        client.createTable(tableTujuanPemeliharaan, tujuanpemeliharaandev);
+
         TableName tableRumpunHewan = TableName.valueOf("rumpunhewandev");
         String[] rumpunhewandev = { "main", "detail" };
         client.deleteTable(tableRumpunHewan);

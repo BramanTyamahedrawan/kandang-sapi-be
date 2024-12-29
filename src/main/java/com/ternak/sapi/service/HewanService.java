@@ -9,8 +9,9 @@ import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.*;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,18 +26,19 @@ public class HewanService {
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
     private RumpunHewanRepository rumpunHewanRepository = new RumpunHewanRepository();
 
-    private static final Logger logger = LoggerFactory.getLogger(HewanService.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(HewanService.class);
 
-
-    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakId, String petugasId, String kandangId) throws IOException {
+    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakId, String petugasId, String kandangId)
+            throws IOException {
         validatePageNumberAndSize(page, size);
 
         // Retrieve Polls
         List<Hewan> hewanResponse = new ArrayList<>();
 
-        if(peternakId.equalsIgnoreCase("*")){
+        if (peternakId.equalsIgnoreCase("*")) {
             hewanResponse = hewanRepository.findAll(size);
-        }else{
+        } else {
             hewanResponse = hewanRepository.findHewanByPeternak(peternakId, size);
         }
 
@@ -54,7 +56,6 @@ public class HewanService {
             throw new IllegalArgumentException("Kode Eartag Nasional sudah terdaftar!");
         }
 
-
         Hewan hewan = new Hewan();
         Peternak peternakResponse = peternakRepository.findById(hewanRequest.getPeternak_id().toString());
         Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugas_id().toString());
@@ -62,7 +63,9 @@ public class HewanService {
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
 
-        if (peternakResponse.getNamaPeternak()!= null && petugasResponse.getNamaPetugas()!= null && kandangResponse.getAlamat()!= null && jenisHewanResponse.getJenis() != null && rumpunHewanResponse.getRumpun() != null){
+        if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
+                && kandangResponse.getAlamat() != null && jenisHewanResponse.getJenis() != null
+                && rumpunHewanResponse.getRumpun() != null) {
             hewan.setIdHewan(hewanRequest.getIdHewan());
             hewan.setKodeEartagNasional(hewanRequest.getKodeEartagNasional());
             hewan.setSex(hewanRequest.getSex());
@@ -87,11 +90,11 @@ public class HewanService {
         }
     }
 
-
     public DefaultResponse<Hewan> getHewanById(String idHewan) throws IOException {
         // Retrieve Hewan
         Hewan hewanResponse = hewanRepository.findById(idHewan);
-        return new DefaultResponse<>(hewanResponse.isValid() ? hewanResponse : null, hewanResponse.isValid() ? 1 : 0, "Successfully get data");
+        return new DefaultResponse<>(hewanResponse.isValid() ? hewanResponse : null, hewanResponse.isValid() ? 1 : 0,
+                "Successfully get data");
     }
 
     public Hewan updateHewan(String idHewan, HewanRequest hewanRequest, String savePath) throws IOException {
@@ -102,7 +105,9 @@ public class HewanService {
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
 
-        if (peternakResponse.getNamaPeternak()!= null && petugasResponse.getNamaPetugas()!= null && kandangResponse.getAlamat()!= null && jenisHewanResponse.getJenis() != null && rumpunHewanResponse.getRumpun() != null){
+        if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
+                && kandangResponse.getAlamat() != null && jenisHewanResponse.getJenis() != null
+                && rumpunHewanResponse.getRumpun() != null) {
             hewan.setIdHewan(hewanRequest.getIdHewan());
             hewan.setKodeEartagNasional(hewanRequest.getKodeEartagNasional());
             hewan.setSex(hewanRequest.getSex());
@@ -129,20 +134,69 @@ public class HewanService {
 
     public void deleteHewanById(String idHewan) throws IOException {
         Hewan hewanResponse = hewanRepository.findById(idHewan);
-        if(hewanResponse.isValid()){
+        if (hewanResponse.isValid()) {
             hewanRepository.deleteById(idHewan);
-        }else{
+        } else {
             throw new ResourceNotFoundException("Hewan", "id", idHewan);
         }
     }
 
     private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
+        if (page < 0) {
             throw new BadRequestException("Page number cannot be less than zero.");
         }
 
-        if(size > AppConstants.MAX_PAGE_SIZE) {
+        if (size > AppConstants.MAX_PAGE_SIZE) {
             throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
+        }
+    }
+
+    @Transactional
+    public void createBulkTernakHewan(List<HewanRequest> hewanRequest) throws IOException {
+        System.out.println("Memulai proses penyimpanan data peternak secara bulk...");
+
+        List<Hewan> hewanList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int skippedExisting = 0;
+
+        for (HewanRequest request : hewanRequest) {
+            try {
+                Hewan hewan = new Hewan();
+                hewan.setIdHewan(request.getIdHewan());
+                hewan.setKodeEartagNasional(request.getKodeEartagNasional());
+
+                Peternak peternakResponse = peternakRepository.findById(request.getPeternak_id().toString());
+                Petugas petugasResponse = petugasRepository.findById(request.getPetugas_id().toString());
+                Kandang kandangResponse = kandangRepository.findById(request.getKandang_id().toString());
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getJenisHewanId().toString());
+                RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(request.getRumpunHewanId().toString());
+
+                if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
+                        && kandangResponse.getAlamat() != null && jenisHewanResponse.getJenis() != null
+                        && rumpunHewanResponse.getRumpun() != null) {
+                    // hewan.setSex(request.getSex());
+                    // hewan.setUmur(request.getUmur());
+                    // hewan.setTanggalTerdaftar(request.getTanggalTerdaftar());
+                    hewan.setLatitude(request.getLatitude());
+                    hewan.setLongitude(request.getLongitude());
+                    // hewan.setTanggalLahir(request.getTanggalLahir());
+                    // hewan.setTempatLahir(request.getTempatLahir());
+                    hewan.setTujuanPemeliharaan(request.getTujuanPemeliharaan());
+                    hewan.setIdentifikasiHewan(request.getIdentifikasiHewan());
+                    hewan.setPetugas(petugasResponse);
+                    hewan.setKandang(kandangResponse);
+                    hewan.setJenisHewan(jenisHewanResponse);
+                    hewan.setRumpunHewan(rumpunHewanResponse);
+                    hewan.setPeternak(peternakResponse);
+                    hewanList.add(hewan);
+                } else {
+                    skippedIncomplete++;
+                }
+
+                hewan.setPeternak(peternakResponse);
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
     }
 

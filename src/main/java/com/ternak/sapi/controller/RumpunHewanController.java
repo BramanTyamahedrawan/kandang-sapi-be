@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 import org.apache.hadoop.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -32,8 +33,9 @@ public class RumpunHewanController {
     private RumpunHewanService rumpunhewanService = new RumpunHewanService();
 
     @GetMapping
-    public PagedResponse<RumpunHewan> getRumpunHewans(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                    @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) throws IOException {
+    public PagedResponse<RumpunHewan> getRumpunHewans(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) throws IOException {
         return rumpunhewanService.getAllRumpunHewan(page, size);
     }
 
@@ -97,7 +99,8 @@ public class RumpunHewanController {
 
     @PutMapping("/{rumpunhewanId}")
     public ResponseEntity<?> updateRumpunHewan(@PathVariable String rumpunhewanId,
-                                              @RequestParam("file") MultipartFile file, @ModelAttribute RumpunHewanRequest rumpunhewanRequest) throws IOException {
+            @RequestParam("file") MultipartFile file, @ModelAttribute RumpunHewanRequest rumpunhewanRequest)
+            throws IOException {
         // upload file
         try {
             // Mendapatkan nama file asli
@@ -124,12 +127,13 @@ public class RumpunHewanController {
             String localPath = newFile.getAbsolutePath();
             String uri = "hdfs://hadoop-primary:9000";
             String hdfsDir = "hdfs://hadoop-primary:9000/rumpunhewan/" + newFileName + fileExtension;
-            //             String uri = "hdfs://h-primary:6912";
-            //          String hdfsDir = "hdfs://h-primary:6912/rumpunhewan/" + newFileName + fileExtension;
+            // String uri = "hdfs://h-primary:6912";
+            // String hdfsDir = "hdfs://h-primary:6912/rumpunhewan/" + newFileName +
+            // fileExtension;
             Configuration configuration = new Configuration();
             FileSystem fs = FileSystem.get(URI.create(uri), configuration);
             fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/"+ newFileName + fileExtension ;
+            String savePath = "file/" + newFileName + fileExtension;
 
             newFile.delete();
             RumpunHewan rumpunhewan = rumpunhewanService.updateRumpunHewan(rumpunhewanId, rumpunhewanRequest, savePath);
@@ -147,12 +151,23 @@ public class RumpunHewanController {
                     .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
         }
 
-
     }
 
     @DeleteMapping("/{rumpunhewanId}")
-    public HttpStatus deleteRumpunHewan(@PathVariable (value = "rumpunhewanId") String rumpunhewanId) throws IOException {
+    public HttpStatus deleteRumpunHewan(@PathVariable(value = "rumpunhewanId") String rumpunhewanId)
+            throws IOException {
         rumpunhewanService.deleteRumpunHewanById(rumpunhewanId);
         return HttpStatus.FORBIDDEN;
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> createBulkRumpunHewan(@RequestBody List<RumpunHewanRequest> rumpunhewanRequests) {
+        try {
+            rumpunhewanService.createBulkRumpunHewan(rumpunhewanRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "Bulk Rumpun Hewan Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "An unexpected error occurred."));
+        }
     }
 }
