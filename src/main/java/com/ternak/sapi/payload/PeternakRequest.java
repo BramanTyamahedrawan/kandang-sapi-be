@@ -1,11 +1,14 @@
 package com.ternak.sapi.payload;
 
+import com.ternak.sapi.model.Petugas;
+
 public class PeternakRequest {
     private String idPeternak;
     private String nikPeternak;
     private String namaPeternak;
     private String lokasi;
     private String petugas_id;
+    private String nikPetugas;
     private String tanggalPendaftaran;
     private String noTelepon;
     private String email;
@@ -20,15 +23,22 @@ public class PeternakRequest {
     private String latitude;
     private String longitude;
 
+    private Petugas petugas;
+
     public PeternakRequest() {
     }
 
-    public PeternakRequest(String idPeternak, String nikPeternak, String namaPeternak, String lokasi, String petugas_id, String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir, String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat, String latitude, String longitude) {
+    public PeternakRequest(String idPeternak, String nikPeternak, String namaPeternak, String lokasi, String petugas_id,
+            String nikPetugas,
+            String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir,
+            String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat,
+            String latitude, String longitude) {
         this.idPeternak = idPeternak;
         this.nikPeternak = nikPeternak;
         this.namaPeternak = namaPeternak;
         this.lokasi = lokasi;
         this.petugas_id = petugas_id;
+        this.nikPetugas = nikPetugas;
         this.tanggalPendaftaran = tanggalPendaftaran;
         this.noTelepon = noTelepon;
         this.email = email;
@@ -42,6 +52,15 @@ public class PeternakRequest {
         this.alamat = alamat;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    // Relasi Petugas
+    public Petugas getPetugas() {
+        return petugas;
+    }
+
+    public void setPetugas(Petugas petugas) {
+        this.petugas = petugas;
     }
 
     public String getIdPeternak() {
@@ -82,6 +101,14 @@ public class PeternakRequest {
 
     public void setPetugas_id(String petugas_id) {
         this.petugas_id = petugas_id;
+    }
+
+    public String getNikPetugas() {
+        return nikPetugas;
+    }
+
+    public void setNikPetugas(String nikPetugas) {
+        this.nikPetugas = nikPetugas;
     }
 
     public String getTanggalPendaftaran() {

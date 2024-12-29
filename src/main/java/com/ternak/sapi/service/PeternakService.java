@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,13 +35,14 @@ public class PeternakService {
 
     private static final Logger logger = LoggerFactory.getLogger(PeternakService.class);
 
-
     public PagedResponse<Peternak> getAllPeternak(int page, int size, String userID) throws IOException {
         validatePageNumberAndSize(page, size);
         List<Peternak> peternakResponse = new ArrayList<>();
 
-        if(userID.equalsIgnoreCase("*")) peternakResponse = peternakRepository.findAll(size);
-        if(!userID.equalsIgnoreCase("*")) peternakResponse = peternakRepository.findAllByUserID(userID, size);
+        if (userID.equalsIgnoreCase("*"))
+            peternakResponse = peternakRepository.findAll(size);
+        if (!userID.equalsIgnoreCase("*"))
+            peternakResponse = peternakRepository.findAllByUserID(userID, size);
 
         return new PagedResponse<>(peternakResponse, peternakResponse.size(), "Successfully get data", 200);
     }
@@ -63,7 +67,7 @@ public class PeternakService {
 
         Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugas_id().toString());
 
-        if (petugasResponse.getNamaPetugas()!= null ) {
+        if (petugasResponse.getNamaPetugas() != null) {
             peternak.setIdPeternak(peternakRequest.getIdPeternak());
             peternak.setNikPeternak(peternakRequest.getNikPeternak());
             peternak.setNamaPeternak(peternakRequest.getNamaPeternak());
@@ -92,14 +96,15 @@ public class PeternakService {
     public DefaultResponse<Peternak> getPeternakById(String peternakId) throws IOException {
         // Retrieve Peternak
         Peternak peternakResponse = peternakRepository.findById(peternakId);
-        return new DefaultResponse<>(peternakResponse.isValid() ? peternakResponse : null, peternakResponse.isValid() ? 1 : 0, "Successfully get data");
+        return new DefaultResponse<>(peternakResponse.isValid() ? peternakResponse : null,
+                peternakResponse.isValid() ? 1 : 0, "Successfully get data");
     }
 
     public Peternak updatePeternak(String peternakId, PeternakRequest peternakRequest) throws IOException {
         Peternak peternak = new Peternak();
         Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugas_id().toString());
 
-        if (petugasResponse.getNamaPetugas()!= null ) {
+        if (petugasResponse.getNamaPetugas() != null) {
             peternak.setNikPeternak(peternakRequest.getNikPeternak());
             peternak.setNamaPeternak(peternakRequest.getNamaPeternak());
             peternak.setLokasi(peternakRequest.getLokasi());
@@ -125,84 +130,127 @@ public class PeternakService {
 
     public void deletePeternakById(String peternakId) throws IOException {
         Peternak peternakResponse = peternakRepository.findById(peternakId);
-        if(peternakResponse.isValid()){
+        if (peternakResponse.isValid()) {
             peternakRepository.deleteById(peternakId);
-        }else{
+        } else {
             throw new ResourceNotFoundException("Peternak", "id", peternakId);
         }
     }
 
     private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
+        if (page < 0) {
             throw new BadRequestException("Page number cannot be less than zero.");
         }
 
-        if(size > AppConstants.MAX_PAGE_SIZE) {
+        if (size > AppConstants.MAX_PAGE_SIZE) {
             throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
         }
     }
 
     @Transactional
     public void createBulkPeternak(List<PeternakRequest> peternakRequests) throws IOException {
-        // Extract lists of unique identifiers (NIK, Email, NoTelepon) from the incoming requests
-        List<String> nikList = peternakRequests.stream().map(PeternakRequest::getNikPeternak).collect(Collectors.toList());
-        List<String> emailList = peternakRequests.stream().map(PeternakRequest::getEmail).collect(Collectors.toList());
-        List<String> noTeleponList = peternakRequests.stream().map(PeternakRequest::getNoTelepon).collect(Collectors.toList());
+        System.out.println("Memulai proses penyimpanan data peternak secara bulk...");
 
-        System.out.println(nikList);
+        // Ekstraksi data unik
+        List<String> nikList = peternakRequests.stream()
+                .map(PeternakRequest::getNikPeternak)
+                .collect(Collectors.toList());
+        List<String> emailList = peternakRequests.stream()
+                .map(PeternakRequest::getEmail)
+                .collect(Collectors.toList());
+        List<String> noTelpList = peternakRequests.stream()
+                .map(PeternakRequest::getNoTelepon)
+                .collect(Collectors.toList());
 
-        // Check which NIK, Email, and NoTelepon already exist in a batch using HBase
+        System.out.println("Memeriksa NIK, Email, dan NoTelp yang sudah terdaftar...");
         Set<String> existingNikSet = new HashSet<>(peternakRepository.findExistingNik(nikList));
         Set<String> existingEmailSet = new HashSet<>(peternakRepository.findExistingEmail(emailList));
-        Set<String> existingNoTelpSet = new HashSet<>(peternakRepository.findExistingNoTelp(noTeleponList));
+        Set<String> existingNoTelpSet = new HashSet<>(peternakRepository.findExistingNoTelp(noTelpList));
 
         List<Peternak> peternakList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int skippedExisting = 0;
 
-        // Process each PeternakRequest
         for (PeternakRequest request : peternakRequests) {
-            // Skip if NIK, Email, or NoTelepon already exist
-            if (existingNikSet.contains(request.getNikPeternak())) {
-                System.out.println("NIK Peternak sudah terdaftar: " + request.getNikPeternak());
-                continue;
-            }
-            if (existingEmailSet.contains(request.getEmail())) {
-                System.out.println("Email sudah digunakan: " + request.getEmail());
-                continue;
-            }
-            if (existingNoTelpSet.contains(request.getNoTelepon())) {
-                System.out.println("Nomor Telepon sudah terdaftar: " + request.getNoTelepon());
-                continue;
-            }
+            try {
+                // Validasi data tidak lengkap
+                if (request.getNikPeternak() == null || request.getNamaPeternak() == null ||
+                        request.getNoTelepon() == null || request.getEmail() == null ||
+                        request.getNikPetugas() == null) {
+                    System.out.println("Data tidak lengkap atau nikPetugas null, melewati data: " + request);
+                    skippedIncomplete++;
+                    continue;
+                }
 
-            // Validasi Petugas berdasarkan ID
-            Petugas petugasResponse = petugasRepository.findById(request.getPetugas_id().toString());
-            if (petugasResponse != null && petugasResponse.getNikPetugas() != null) {
-                // Create Peternak object after validation
+                // Skip jika data sudah ada
+                if (existingNikSet.contains(request.getNikPeternak())) {
+                    System.out.println("NIK Peternak sudah terdaftar: " + request.getNikPeternak());
+                    skippedExisting++;
+                    continue;
+                }
+                if (existingEmailSet.contains(request.getEmail())) {
+                    System.out.println("Email sudah digunakan: " + request.getEmail());
+                    skippedExisting++;
+                    continue;
+                }
+                if (existingNoTelpSet.contains(request.getNoTelepon())) {
+                    System.out.println("Nomor Telepon sudah terdaftar: " + request.getNoTelepon());
+                    skippedExisting++;
+                    continue;
+                }
+
+                // Validasi nikPetugas
+                Petugas petugasResponse = petugasRepository.findByNik(request.getNikPetugas());
+                if (petugasResponse == null) {
+                    System.out.println("Petugas dengan NIK " + request.getNikPetugas() + " tidak ditemukan.");
+                    continue;
+                }
+
+                // Buat objek Peternak
                 Peternak peternak = new Peternak();
                 peternak.setIdPeternak(request.getIdPeternak());
                 peternak.setNikPeternak(request.getNikPeternak());
-                peternak.setNamaPeternak(request.getNamaPeternak());
-                peternak.setLokasi(request.getLokasi());
-                peternak.setTanggalPendaftaran(request.getTanggalPendaftaran());
-                peternak.setPetugas(petugasResponse);
-                peternak.setNoTelepon(request.getNoTelepon());
                 peternak.setEmail(request.getEmail());
-                peternak.setJenisKelamin(request.getJenisKelamin());
-                peternak.setTanggalLahir(request.getTanggalLahir());
+                peternak.setNoTelepon(request.getNoTelepon());
+                peternak.setNamaPeternak(request.getNamaPeternak());
+                peternak.setLokasi(request.getLokasi() != null ? request.getLokasi() : "Lokasi tidak diketahui");
+                peternak.setAlamat(request.getAlamat() != null ? request.getAlamat() : "Alamat tidak diketahui");
+                peternak.setTanggalPendaftaran(formatDate(request.getTanggalPendaftaran()));
+                peternak.setPetugas(petugasResponse); // Masukkan objek lengkap Petugas
+                peternak.setTanggalLahir(formatDate(request.getTanggalLahir()));
                 peternak.setIdIsikhnas(request.getIdIsikhnas());
+
                 peternakList.add(peternak);
-            } else {
-                System.out.println("Petugas dengan ID " + request.getPetugas_id() + " tidak ditemukan.");
+                System.out.println("Menambahkan data peternak ke dalam daftar: " + peternak.getNikPeternak());
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data peternak: " + request.getNikPeternak());
+                e.printStackTrace();
             }
         }
 
-
-        // Save only valid Peternak data
         if (!peternakList.isEmpty()) {
+            System.out.println("Menyimpan data peternak yang valid...");
             peternakRepository.saveAll(peternakList);
-            System.out.println("Bulk Peternak berhasil disimpan.");
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + peternakList.size());
         } else {
-            System.out.println("Tidak ada Peternak baru untuk disimpan.");
+            System.out.println("Tidak ada data peternak baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
+                + skippedExisting);
+    }
+
+    // Helper untuk memformat tanggal
+    private String formatDate(String date) {
+        if (date == null || date.isEmpty()) {
+            return "";
+        }
+        try {
+            LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return localDate.toString();
+        } catch (DateTimeParseException e) {
+            System.err.println("Format tanggal tidak valid: " + date);
+            return "";
         }
     }
 }

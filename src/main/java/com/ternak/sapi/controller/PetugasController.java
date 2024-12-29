@@ -2,6 +2,7 @@ package com.ternak.sapi.controller;
 
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.PagedResponse;
+import com.ternak.sapi.payload.PeternakRequest;
 import com.ternak.sapi.payload.ApiResponse;
 import com.ternak.sapi.payload.PetugasRequest;
 import com.ternak.sapi.model.Petugas;
@@ -19,18 +20,22 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/petugas")
 public class PetugasController {
     private PetugasService petugasService = new PetugasService();
+    private static final Logger logger = LoggerFactory.getLogger(PeternakController.class);
 
     PetugasRepository petugasRepository;
 
     @GetMapping
-    public PagedResponse<Petugas> getPetugass(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                              @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                              @RequestParam(value = "userID", defaultValue = "*") String userID) throws IOException {
+    public PagedResponse<Petugas> getPetugass(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "userID", defaultValue = "*") String userID) throws IOException {
         return petugasService.getAllPetugas(page, size, userID);
     }
 
@@ -60,16 +65,15 @@ public class PetugasController {
         return petugasService.getPetugasById(petugasId);
     }
 
-
     @PutMapping("/{petugasId}")
     public ResponseEntity<?> updatePetugas(@PathVariable String petugasId,
-                                           @Valid @RequestBody PetugasRequest petugasRequest) throws IOException {
+            @Valid @RequestBody PetugasRequest petugasRequest) throws IOException {
         Petugas petugas = petugasService.updatePetugas(petugasId, petugasRequest);
 
-        if(petugas == null){
+        if (petugas == null) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse(false, "User ID not found"));
-        }else{
+        } else {
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{petugasId}")
                     .buildAndExpand(petugas.getNikPetugas()).toUri();
@@ -80,10 +84,33 @@ public class PetugasController {
     }
 
     @DeleteMapping("/{petugasId}")
-    public HttpStatus deletePetugas(@PathVariable (value = "petugasId") String petugasId) throws IOException {
+    public HttpStatus deletePetugas(@PathVariable(value = "petugasId") String petugasId) throws IOException {
         petugasService.deletePetugasById(petugasId);
         return HttpStatus.FORBIDDEN;
     }
+
+    // @PostMapping("/bulk")
+    // public ResponseEntity<?> createBulkPeternak(@RequestBody List<PetugasRequest>
+    // petugasRequests) {
+    // try {
+    // // Log jumlah data yang diterima
+    // logger.info("Jumlah data petugas yang diterima: {}", petugasRequests.size());
+
+    // // Log setiap data yang diterima
+    // petugasRequests.forEach(request -> logger.info("Data petugas: {}", request));
+
+    // // Simpan data ke service (jika diperlukan nanti)
+    // // petugasService.createBulkPeternak(petugasRequests);
+
+    // return ResponseEntity.ok(new ApiResponse(true, "Data berhasil diterima,
+    // tetapi belum disimpan."));
+    // } catch (Exception e) {
+    // logger.error("Terjadi kesalahan saat memproses data bulk: ", e);
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body(new ApiResponse(false, "Failed to process bulk data: " +
+    // e.getMessage()));
+    // }
+    // }
 
     @PostMapping("/bulk")
     public ResponseEntity<?> createBulkPetugas(@RequestBody List<PetugasRequest> petugasRequests) {

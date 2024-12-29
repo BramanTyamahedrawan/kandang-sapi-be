@@ -16,18 +16,22 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/peternak")
 public class PeternakController {
     private PeternakService peternakService = new PeternakService();
+    private static final Logger logger = LoggerFactory.getLogger(PeternakController.class);
 
     PeternakRepository peternakRepository;
 
     @GetMapping
-    public PagedResponse<Peternak> getPeternaks(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                              @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                              @RequestParam(value = "userID", defaultValue = "*") String userID) throws IOException {
+    public PagedResponse<Peternak> getPeternaks(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "userID", defaultValue = "*") String userID) throws IOException {
         return peternakService.getAllPeternak(page, size, userID);
     }
 
@@ -57,16 +61,15 @@ public class PeternakController {
         return peternakService.getPeternakById(peternakId);
     }
 
-
     @PutMapping("/{peternakId}")
     public ResponseEntity<?> updatePeternak(@PathVariable String peternakId,
-                                           @Valid @RequestBody PeternakRequest peternakRequest) throws IOException {
+            @Valid @RequestBody PeternakRequest peternakRequest) throws IOException {
         Peternak peternak = peternakService.updatePeternak(peternakId, peternakRequest);
 
-        if(peternak == null){
+        if (peternak == null) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse(false, "Peternak ID / User ID not found"));
-        }else{
+        } else {
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{peternakId}")
                     .buildAndExpand(peternak.getIdPeternak()).toUri();
@@ -77,10 +80,35 @@ public class PeternakController {
     }
 
     @DeleteMapping("/{peternakId}")
-    public HttpStatus deletePeternak(@PathVariable (value = "peternakId") String peternakId) throws IOException {
+    public HttpStatus deletePeternak(@PathVariable(value = "peternakId") String peternakId) throws IOException {
         peternakService.deletePeternakById(peternakId);
         return HttpStatus.FORBIDDEN;
     }
+
+    // @PostMapping("/bulk")
+    // public ResponseEntity<?> createBulkPeternak(@RequestBody
+    // List<PeternakRequest> peternakRequests) {
+    // try {
+    // // Log jumlah data yang diterima
+    // logger.info("Jumlah data peternak yang diterima: {}",
+    // peternakRequests.size());
+
+    // // Log setiap data yang diterima
+    // peternakRequests.forEach(request -> logger.info("Data peternak: {}",
+    // request));
+
+    // // Simpan data ke service (jika diperlukan nanti)
+    // // peternakService.createBulkPeternak(peternakRequests);
+
+    // return ResponseEntity.ok(new ApiResponse(true, "Data berhasil diterima,
+    // tetapi belum disimpan."));
+    // } catch (Exception e) {
+    // logger.error("Terjadi kesalahan saat memproses data bulk: ", e);
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body(new ApiResponse(false, "Failed to process bulk data: " +
+    // e.getMessage()));
+    // }
+    // }
 
     @PostMapping("/bulk")
     public ResponseEntity<?> createBulkPeternak(@RequestBody List<PeternakRequest> peternakRequests) {

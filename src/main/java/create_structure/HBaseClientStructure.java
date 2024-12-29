@@ -24,7 +24,7 @@ public class HBaseClientStructure {
         // CREATE COLLECTION
         // ==============================================================================================
         
-        // Create Tabel Berita
+        // Create Tabel Berita6
         TableName tableBerita = TableName.valueOf("beritadev");
         String[] beritadev = { "main",  "detail" };
         client.deleteTable(tableBerita);

@@ -45,7 +45,8 @@ public class PetugasRepository {
         columnMapping.put("email", "email");
         columnMapping.put("job", "job");
 
-        return client.getDataListByColumn(tablePetugas.toString(), columnMapping, "user", "id", userID, Petugas.class, size);
+        return client.getDataListByColumn(tablePetugas.toString(), columnMapping, "user", "id", userID, Petugas.class,
+                size);
     }
 
     public Petugas save(Petugas petugas) throws IOException {
@@ -68,9 +69,17 @@ public class PetugasRepository {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf(tableName);
 
+        System.out.println("Memulai penyimpanan data ke HBase...");
         List<String> failedRows = new ArrayList<>();
+
         for (Petugas petugas : petugasList) {
             try {
+                if (petugas.getNikPetugas() == null || petugas.getNamaPetugas() == null ||
+                        petugas.getNoTelp() == null || petugas.getEmail() == null) {
+                    System.out.println("Data tidak lengkap, melewati penyimpanan NIK: " + petugas.getNikPetugas());
+                    continue;
+                }
+
                 String rowKey = petugas.getNikPetugas();
 
                 // Insert records into HBase
@@ -81,15 +90,19 @@ public class PetugasRepository {
                 client.insertRecord(tablePetugas, rowKey, "main", "job", petugas.getJob());
                 client.insertRecord(tablePetugas, rowKey, "main", "wilayah", petugas.getWilayah());
                 client.insertRecord(tablePetugas, rowKey, "detail", "created_by", "Polinema");
+
+                System.out.println("Berhasil menyimpan NIK: " + petugas.getNikPetugas());
             } catch (Exception e) {
-                // Log the failure and continue
                 failedRows.add(petugas.getNikPetugas());
-                System.err.println("Failed to insert record for NIK: " + petugas.getNikPetugas() + ", Error: " + e.getMessage());
+                System.err.println("Gagal menyimpan NIK: " + petugas.getNikPetugas() + ", Error: " + e.getMessage());
             }
         }
 
         if (!failedRows.isEmpty()) {
-            throw new IOException("Failed to save records for NIKs: " + String.join(", ", failedRows));
+            System.err.println("Proses selesai dengan beberapa kegagalan. Total gagal: " + failedRows.size());
+            System.err.println("NIK yang gagal disimpan: " + String.join(", ", failedRows));
+        } else {
+            System.out.println("Semua data berhasil disimpan ke HBase.");
         }
 
         return petugasList;
@@ -133,14 +146,15 @@ public class PetugasRepository {
         // Add the mappings to the HashMap
         columnMapping.put("id", "id");
 
-        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "user", "id", UID, Petugas.class);
-        if(petugas.getNikPetugas()!= null){
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "user", "id", UID,
+                Petugas.class);
+        if (petugas.getNikPetugas() != null) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
+
     public boolean deleteById(String petugasId) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         client.deleteRecord(tableName, petugasId);
@@ -153,8 +167,24 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("nikPetugas", "nikPetugas");
 
-        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "nikPetugas", nikPetugas, Petugas.class);
-        return petugas.getNikPetugas() != null;  // Jika ada data dengan nikPetugas yang sama
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "nikPetugas",
+                nikPetugas, Petugas.class);
+        return petugas.getNikPetugas() != null; // Jika ada data dengan nikPetugas yang sama
+    }
+
+    public Petugas findByNik(String nikPetugas) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePetugas = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("nikPetugas", "nikPetugas");
+        columnMapping.put("namaPetugas", "namaPetugas");
+        columnMapping.put("noTelp", "noTelp");
+        columnMapping.put("email", "email");
+        columnMapping.put("job", "job");
+
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "nikPetugas",
+                nikPetugas, Petugas.class);
+        return petugas.getNikPetugas() != null ? petugas : null; // Jika ada data dengan nikPetugas yang sama
     }
 
     public boolean existsByEmail(String email) throws IOException {
@@ -163,8 +193,9 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("email", "email");
 
-        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "email", email, Petugas.class);
-        return petugas.getEmail() != null;  // Jika ada data dengan email yang sama
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "email", email,
+                Petugas.class);
+        return petugas.getEmail() != null; // Jika ada data dengan email yang sama
     }
 
     public boolean existsByNoTelp(String noTelp) throws IOException {
@@ -173,8 +204,9 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("noTelp", "noTelp");
 
-        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "noTelp", noTelp, Petugas.class);
-        return petugas.getNoTelp() != null;  // Jika ada data dengan noTelp yang sama
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "noTelp", noTelp,
+                Petugas.class);
+        return petugas.getNoTelp() != null; // Jika ada data dengan noTelp yang sama
     }
 
     public List<String> findExistingNik(List<String> nikList) throws IOException {
