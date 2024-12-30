@@ -298,6 +298,8 @@ public class PeternakRepository {
         TableName tablePeternak = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("nikPeternak", "nikPeternak");
+        columnMapping.put("namaPeternak", "namaPeternak");
+        columnMapping.put("lokasi", "lokasi");
 
         Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "nikPeternak",
                 nikPeternak, Peternak.class);

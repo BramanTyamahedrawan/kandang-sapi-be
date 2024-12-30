@@ -2,7 +2,6 @@ package com.ternak.sapi.service;
 
 import com.ternak.sapi.repository.UserRepository;
 import com.ternak.sapi.repository.PetugasRepository;
-import com.ternak.sapi.model.User;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.exception.BadRequestException;
@@ -31,9 +30,10 @@ import java.util.stream.Collectors;
 public class PeternakService {
     private PeternakRepository peternakRepository = new PeternakRepository();
     private PetugasRepository petugasRepository = new PetugasRepository();
-    private UserRepository userRepository = new UserRepository();
+    // private UserRepository userRepository = new UserRepository();
 
-    private static final Logger logger = LoggerFactory.getLogger(PeternakService.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(PeternakService.class);
 
     public PagedResponse<Peternak> getAllPeternak(int page, int size, String userID) throws IOException {
         validatePageNumberAndSize(page, size);
