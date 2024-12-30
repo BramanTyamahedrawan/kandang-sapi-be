@@ -1,15 +1,18 @@
 package com.ternak.sapi.repository;
 
-import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Petugas;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 
-import java.io.IOException;
-import java.util.*;
+import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
 
 public class PeternakRepository {
     Configuration conf = HBaseConfiguration.create();
@@ -146,6 +149,7 @@ public class PeternakRepository {
                     client.insertRecord(tablePeternak, rowKey, "petugas", "email",
                             safeString(petugas.getEmail()));
                     client.insertRecord(tablePeternak, rowKey, "petugas", "job", safeString(petugas.getJob()));
+                    client.insertRecord(tablePeternak, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
                     // Tambahkan kolom lainnya sesuai dengan atribut di `Petugas`
                 }
 
@@ -157,7 +161,8 @@ public class PeternakRepository {
                 client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", safeString(peternak.getKabupaten()));
                 client.insertRecord(tablePeternak, rowKey, "main", "latitude", safeString(peternak.getLatitude()));
                 client.insertRecord(tablePeternak, rowKey, "main", "longitude", safeString(peternak.getLongitude()));
-                client.insertRecord(tablePeternak,rowKey, "main", "jenisKelamin", safeString(peternak.getJenisKelamin()));
+                client.insertRecord(tablePeternak, rowKey, "main", "jenisKelamin",
+                        safeString(peternak.getJenisKelamin()));
                 client.insertRecord(tablePeternak, rowKey, "main", "tanggalPendaftaran",
                         safeString(peternak.getTanggalPendaftaran()));
                 client.insertRecord(tablePeternak, rowKey, "main", "tanggalLahir",
@@ -207,7 +212,7 @@ public class PeternakRepository {
 
         columnMapping.put("dusun", "dusun");
         columnMapping.put("desa", "desa");
-        columnMapping.put("kecataman", "kecataman");
+        columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
@@ -300,6 +305,21 @@ public class PeternakRepository {
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
+        columnMapping.put("tanggalPendaftaran", "tanggalPendaftaran");
+
+        columnMapping.put("noTelepon", "noTelepon");
+        columnMapping.put("email", "email");
+        columnMapping.put("jenisKelamin", "jenisKelamin");
+        columnMapping.put("tanggalLahir", "tanggalLahir");
+        columnMapping.put("idIsikhnas", "idIsikhnas");
+
+        columnMapping.put("dusun", "dusun");
+        columnMapping.put("desa", "desa");
+        columnMapping.put("kecamatan", "kecamatan");
+        columnMapping.put("kabupaten", "kabupaten");
+        columnMapping.put("alamat", "alamat");
+        columnMapping.put("latitude", "latitude");
+        columnMapping.put("longitude", "longitude");
 
         Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "nikPeternak",
                 nikPeternak, Peternak.class);

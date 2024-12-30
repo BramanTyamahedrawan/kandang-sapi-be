@@ -1,19 +1,19 @@
 
 package com.ternak.sapi.repository;
 
-import com.ternak.sapi.controller.HewanController;
-import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.Hewan;
-import com.ternak.sapi.model.Kandang;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Petugas;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 
-import java.io.IOException;
-import java.util.*;
+import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Peternak;
 
 public class KandangRepository {
     Configuration conf = HBaseConfiguration.create();
@@ -108,6 +108,32 @@ public class KandangRepository {
                             safeString(peternak.getNikPeternak()));
                     client.insertRecord(tableKandang, rowKey, "peternak", "namaPeternak",
                             safeString(peternak.getNamaPeternak()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "email",
+                            safeString(peternak.getEmail()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "lokasi", safeString(peternak.getLokasi()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "noTelepon",
+                            safeString(peternak.getNoTelepon()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "alamat", safeString(peternak.getAlamat()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "dusun", safeString(peternak.getDusun()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "desa", safeString(peternak.getDesa()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "kecamatan",
+                            safeString(peternak.getKecamatan()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "kabupaten",
+                            safeString(peternak.getKabupaten()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "latitude",
+                            safeString(peternak.getLatitude()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "longitude",
+                            safeString(peternak.getLongitude()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "jenisKelamin",
+                            safeString(peternak.getJenisKelamin()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "tanggalPendaftaran",
+                            safeString(peternak.getTanggalPendaftaran()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "tanggalLahir",
+                            safeString(peternak.getTanggalLahir()));
+                    client.insertRecord(tableKandang, rowKey, "peternak", "idIsikhnas",
+                            safeString(peternak.getIdIsikhnas()));
+                    client.insertRecord(tableKandang, rowKey, "detail", "created_by", "Polinema");
+
                 }
 
                 System.out.println("Berhasil menyimpan data Kandang ID: " + kandang.getIdKandang());
