@@ -215,10 +215,17 @@ public class PeternakService {
                 peternak.setNamaPeternak(request.getNamaPeternak());
                 peternak.setLokasi(request.getLokasi() != null ? request.getLokasi() : "Lokasi tidak diketahui");
                 peternak.setAlamat(request.getAlamat() != null ? request.getAlamat() : "Alamat tidak diketahui");
+                peternak.setDusun(request.getDusun());
+                peternak.setDesa(request.getDesa());
+                peternak.setKecamatan(request.getKecamatan());
+                peternak.setKabupaten(request.getKabupaten());
                 peternak.setTanggalPendaftaran(formatDate(request.getTanggalPendaftaran()));
                 peternak.setPetugas(petugasResponse); // Masukkan objek lengkap Petugas
                 peternak.setTanggalLahir(formatDate(request.getTanggalLahir()));
+                peternak.setJenisKelamin(request.getJenisKelamin());
                 peternak.setIdIsikhnas(request.getIdIsikhnas());
+                peternak.setLongitude(request.getLongitude());
+                peternak.setLatitude(request.getLatitude());
 
                 peternakList.add(peternak);
                 System.out.println("Menambahkan data peternak ke dalam daftar: " + peternak.getNikPeternak());

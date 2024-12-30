@@ -28,12 +28,18 @@ public class PeternakRepository {
         columnMapping.put("lokasi", "lokasi");
         columnMapping.put("petugas", "petugas");
         columnMapping.put("tanggalPendaftaran", "tanggalPendaftaran");
-
         columnMapping.put("noTelepon", "noTelepon");
         columnMapping.put("email", "email");
         columnMapping.put("jenisKelamin", "jenisKelamin");
         columnMapping.put("tanggalLahir", "tanggalLahir");
         columnMapping.put("idIsikhnas", "idIsikhnas");
+        columnMapping.put("dusun", "dusun");
+        columnMapping.put("desa", "desa");
+        columnMapping.put("kecamatan", "kecamatan");
+        columnMapping.put("kabupaten", "kabupaten");
+        columnMapping.put("alamat", "alamat");
+        columnMapping.put("latitude", "latitude");
+        columnMapping.put("longitude", "longitude");
 
         return client.showListTable(tableUsers.toString(), columnMapping, Peternak.class, size);
     }
@@ -58,7 +64,7 @@ public class PeternakRepository {
         columnMapping.put("idIsikhnas", "idIsikhnas");
         columnMapping.put("dusun", "dusun");
         columnMapping.put("desa", "desa");
-        columnMapping.put("kecataman", "kecataman");
+        columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
@@ -145,6 +151,13 @@ public class PeternakRepository {
 
                 client.insertRecord(tablePeternak, rowKey, "main", "lokasi", safeString(peternak.getLokasi()));
                 client.insertRecord(tablePeternak, rowKey, "main", "alamat", safeString(peternak.getAlamat()));
+                client.insertRecord(tablePeternak, rowKey, "main", "dusun", safeString(peternak.getDusun()));
+                client.insertRecord(tablePeternak, rowKey, "main", "desa", safeString(peternak.getDesa()));
+                client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", safeString(peternak.getKecamatan()));
+                client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", safeString(peternak.getKabupaten()));
+                client.insertRecord(tablePeternak, rowKey, "main", "latitude", safeString(peternak.getLatitude()));
+                client.insertRecord(tablePeternak, rowKey, "main", "longitude", safeString(peternak.getLongitude()));
+                client.insertRecord(tablePeternak,rowKey, "main", "jenisKelamin", safeString(peternak.getJenisKelamin()));
                 client.insertRecord(tablePeternak, rowKey, "main", "tanggalPendaftaran",
                         safeString(peternak.getTanggalPendaftaran()));
                 client.insertRecord(tablePeternak, rowKey, "main", "tanggalLahir",
