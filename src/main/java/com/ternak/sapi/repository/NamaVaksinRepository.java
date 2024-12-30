@@ -62,4 +62,18 @@ public class NamaVaksinRepository {
         return namaVaksinList;
     }
 
+    public NamaVaksin findById(String idNamaVaksin) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableNamaVaksin = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idNamaVaksin", "idNamaVaksin");
+        columnMapping.put("nama", "nama");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        return client.showDataTable(tableNamaVaksin.toString(), columnMapping, idNamaVaksin, NamaVaksin.class);
+    }
+
 }

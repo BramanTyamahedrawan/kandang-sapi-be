@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vaksin")
@@ -22,11 +23,12 @@ public class VaksinController {
     private VaksinService vaksinService = new VaksinService();
 
     @GetMapping
-    public PagedResponse<Vaksin> getVaksins(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                    @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                                    @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
-                                                    @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
-                                                    @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
+    public PagedResponse<Vaksin> getVaksins(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
+            @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
+            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
         return vaksinService.getAllVaksin(page, size, peternakID, petugasID, hewanID);
     }
 
@@ -54,15 +56,15 @@ public class VaksinController {
                     .body(new ApiResponse(false, "An unexpected error occurred."));
         }
     }
+
     @GetMapping("/{vaksinId}")
     public DefaultResponse<Vaksin> getVaksinById(@PathVariable String vaksinId) throws IOException {
         return vaksinService.getVaksinById(vaksinId);
     }
 
-
     @PutMapping("/{vaksinId}")
     public ResponseEntity<?> updateVaksin(@PathVariable String vaksinId,
-                                              @Valid @RequestBody VaksinRequest vaksinRequest) throws IOException {
+            @Valid @RequestBody VaksinRequest vaksinRequest) throws IOException {
         Vaksin vaksin = vaksinService.updateVaksin(vaksinId, vaksinRequest);
 
         URI location = ServletUriComponentsBuilder
@@ -74,8 +76,22 @@ public class VaksinController {
     }
 
     @DeleteMapping("/{vaksinId}")
-    public HttpStatus deleteVaksin(@PathVariable (value = "vaksinId") String vaksinId) throws IOException {
+    public HttpStatus deleteVaksin(@PathVariable(value = "vaksinId") String vaksinId) throws IOException {
         vaksinService.deleteVaksinById(vaksinId);
         return HttpStatus.FORBIDDEN;
     }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> createBulkVaksin(@RequestBody List<VaksinRequest> vaksinListRequests) throws IOException {
+        try {
+            vaksinService.createBulkVaksin(vaksinListRequests);
+
+            return ResponseEntity.ok(new ApiResponse(true, "Bulk Nama Vaksin created successfully"));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
 }

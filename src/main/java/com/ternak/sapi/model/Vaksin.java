@@ -1,6 +1,5 @@
 package com.ternak.sapi.model;
 
-
 public class Vaksin {
     private String idVaksin;
     private Peternak peternak;
@@ -9,13 +8,18 @@ public class Vaksin {
     private String namaVaksin;
     private String jenisVaksin;
     private String tglVaksin;
+    private String tglPendataan;
     private String batchVaksin;
     private String vaksinKe;
+    private NamaVaksin namaVaksinTable;
+    private JenisVaksin jenisVaksinTable;
 
     public Vaksin() {
     }
 
-    public Vaksin(String idVaksin, Peternak peternak, Hewan hewan, Petugas petugas, String namaVaksin, String jenisVaksin, String tglVaksin, String batchVaksin, String vaksinKe) {
+    public Vaksin(String idVaksin, Peternak peternak, Hewan hewan, Petugas petugas, String namaVaksin,
+            String jenisVaksin, String tglVaksin, String batchVaksin, String vaksinKe, NamaVaksin namaVaksinTable,
+            JenisVaksin jenisVaksinTable, String tglPendataan) {
         this.idVaksin = idVaksin;
         this.peternak = peternak;
         this.hewan = hewan;
@@ -25,6 +29,9 @@ public class Vaksin {
         this.tglVaksin = tglVaksin;
         this.batchVaksin = batchVaksin;
         this.vaksinKe = vaksinKe;
+        this.namaVaksinTable = namaVaksinTable;
+        this.jenisVaksinTable = jenisVaksinTable;
+        this.tglPendataan = tglPendataan;
     }
 
     public String getIdVaksin() {
@@ -99,11 +106,35 @@ public class Vaksin {
         this.vaksinKe = vaksinKe;
     }
 
+    public NamaVaksin getNamaVaksinTable() {
+        return namaVaksinTable;
+    }
+
+    public void setNamaVaksinTable(NamaVaksin namaVaksinTable) {
+        this.namaVaksinTable = namaVaksinTable;
+    }
+
+    public JenisVaksin getJenisVaksinTable() {
+        return jenisVaksinTable;
+    }
+
+    public void setJenisVaksinTable(JenisVaksin jenisVaksinTable) {
+        this.jenisVaksinTable = jenisVaksinTable;
+    }
+
+    public String getTglPendataan() {
+        return tglPendataan;
+    }
+
+    public void setTglPendataan(String tglPendataan) {
+        this.tglPendataan = tglPendataan;
+    }
+
     public boolean isValid() {
-        return this.idVaksin != null && 
-               this.peternak != null && 
-               this.hewan != null && 
-               this.petugas != null &&
+        return this.idVaksin != null &&
+                this.peternak != null &&
+                this.hewan != null &&
+                this.petugas != null &&
                 this.batchVaksin != null &&
                 this.vaksinKe != null;
     }
@@ -127,6 +158,9 @@ public class Vaksin {
                 break;
             case "this.vaksinKe":
                 this.vaksinKe = value;
+                break;
+            case "this.tglPendataan":
+                this.tglPendataan = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);
