@@ -1,12 +1,7 @@
 package com.ternak.sapi.repository;
 
-import com.ternak.sapi.controller.JenisHewanController;
 import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.JenisHewan;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.TujuanPemeliharaan;
-import com.ternak.sapi.model.JenisHewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;

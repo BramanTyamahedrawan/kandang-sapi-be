@@ -101,6 +101,12 @@ public class HBaseClientStructure {
         client.deleteTable(tableVaksin);
         client.createTable(tableVaksin, vaksindev);
 
+        // Create Tabel Jenis Vaksin
+        TableName tableJenisVaksin = TableName.valueOf("jenisvaksindev");
+        String[] jenisvaksindev = { "main", "detail" };
+        client.deleteTable(tableJenisVaksin);
+        client.createTable(tableJenisVaksin, jenisvaksindev);
+
         // Create Tabel Penghijauan
         TableName tablePenghijauan = TableName.valueOf("penghijauandev");
         String[] penghijauandev = { "main", "detail" };
