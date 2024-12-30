@@ -2,6 +2,8 @@ package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.JenisVaksin;
+import com.ternak.sapi.model.Petugas;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -52,4 +54,19 @@ public class JenisVaksinRepository {
 
         return jenisVaksinList;
     }
+
+    public JenisVaksin findById(String idJenisVaksin) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableJenisVaksin = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idJenisVaksin", "idJenisVaksin");
+        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        return client.showDataTable(tableJenisVaksin.toString(), columnMapping, idJenisVaksin, JenisVaksin.class);
+    }
+
 }

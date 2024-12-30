@@ -4,10 +4,6 @@
  */
 package com.ternak.sapi.payload;
 
-import com.ternak.sapi.model.Hewan;
-import com.ternak.sapi.model.Kandang;
-import com.ternak.sapi.model.Peternak;
-
 public class JenisHewanRequest {
 
     private String idJenisHewan;
