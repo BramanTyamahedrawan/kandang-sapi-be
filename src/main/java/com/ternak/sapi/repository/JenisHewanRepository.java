@@ -92,7 +92,7 @@ public class JenisHewanRepository {
         return value != null ? value : "";
     }
 
-    public JenisHewan findById(String idHewan) throws IOException {
+    public JenisHewan findById(String idJenisHewan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
         TableName tableUsers = TableName.valueOf(tableName);
@@ -103,7 +103,7 @@ public class JenisHewanRepository {
         columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
-        return client.showDataTable(tableUsers.toString(), columnMapping, idHewan, JenisHewan.class);
+        return client.showDataTable(tableUsers.toString(), columnMapping, idJenisHewan, JenisHewan.class);
     }
 
     public JenisHewan update(String jenishewanId, JenisHewan jenishewan) throws IOException {

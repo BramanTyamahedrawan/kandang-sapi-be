@@ -2,27 +2,21 @@ package com.ternak.sapi.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.ternak.sapi.model.JenisHewan;
-import com.ternak.sapi.repository.JenisHewanRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.KandangRequest;
 import com.ternak.sapi.payload.PagedResponse;
-import com.ternak.sapi.payload.PeternakRequest;
+import com.ternak.sapi.repository.JenisHewanRepository;
 import com.ternak.sapi.repository.KandangRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.util.AppConstants;
@@ -63,7 +57,7 @@ public class KandangService {
 
         Kandang kandang = new Kandang();
         Peternak peternakResponse = peternakRepository.findById(kandangRequest.getPeternak_id().toString());
-        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getJenisHewanId().toString());
+        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan().toString());
 
         if (peternakResponse.getNamaPeternak() != null && jenisHewanResponse.getJenis() != null) {
             kandang.setIdKandang(kandangRequest.getIdKandang());
@@ -104,7 +98,7 @@ public class KandangService {
     public Kandang updateKandang(String kandangId, KandangRequest kandangRequest, String savePath) throws IOException {
         Kandang kandang = new Kandang();
         Peternak peternakResponse = peternakRepository.findById(kandangRequest.getPeternak_id().toString());
-        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getJenisHewanId().toString());
+        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan().toString());
 
         if (peternakResponse.getNamaPeternak() != null) {
             kandang.setLuas(kandangRequest.getLuas());
@@ -158,6 +152,11 @@ public class KandangService {
                     System.err.println("Peternak tidak ditemukan, tetapi data kandang tetap diproses: " + request);
                 }
 
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getIdJenisHewan().toString());
+                if (jenisHewanResponse == null) {
+                    System.out.println("Jenis Hewan tidak ditemukan" + request);
+                }
+
                 // Buat objek Kandang
                 Kandang kandang = new Kandang();
                 kandang.setPeternak(peternakResponse);
@@ -171,9 +170,11 @@ public class KandangService {
                 kandang.setLatitude(request.getLatitude());
                 kandang.setLongitude(request.getLongitude());
                 kandang.setNikPeternak(request.getNikPeternak());
-
+                kandang.setIdJenisHewan(request.getIdJenisHewan());
+                kandang.setJenisHewan(jenisHewanResponse);
                 // Tambahkan ke list
                 kandangList.add(kandang);
+                System.out.println("data jenis hewan"+jenisHewanResponse);
                 System.out.println("Menambahkan data kandang ke dalam daftar: " + kandang);
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data: " + request);

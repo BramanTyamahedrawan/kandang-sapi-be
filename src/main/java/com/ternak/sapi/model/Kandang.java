@@ -14,14 +14,14 @@ public class Kandang {
     private String file_path;
     private String namaKandang;
     private String nikPeternak;
-
+    private String idJenisHewan;
     public Kandang() {
     }
 
     public Kandang(String idKandang, Peternak peternak, String luas, JenisHewan jenisHewan,
             String kapasitas,
             String nilaiBangunan, String jenisKandang, String alamat, String latitude, String longitude,
-            String file_path, String namaKandang, String nikPeternak) {
+            String file_path, String namaKandang, String nikPeternak, String idJenisHewan) {
         this.idKandang = idKandang;
         this.peternak = peternak;
         this.luas = luas;
@@ -35,6 +35,7 @@ public class Kandang {
         this.file_path = file_path;
         this.namaKandang = namaKandang;
         this.nikPeternak = nikPeternak;
+        this.idJenisHewan = idJenisHewan;
     }
 
     public String getIdKandang() {
@@ -141,6 +142,14 @@ public class Kandang {
         this.namaKandang = namaKandang;
     }
 
+    public String getIdJenisHewan() {
+        return idJenisHewan;
+    }
+
+    public void setIdJenisHewan(String idJenisHewan) {
+        this.idJenisHewan = idJenisHewan;
+    }
+
     public boolean isValid() {
         return this.idKandang != null &&
                 this.peternak != null &&
@@ -160,6 +169,9 @@ public class Kandang {
         switch (fieldName) {
             case "idKandang":
                 this.idKandang = value;
+                break;
+            case "idJenisHewan":
+                this.idJenisHewan = value;
                 break;
             case "luas":
                 this.luas = value;

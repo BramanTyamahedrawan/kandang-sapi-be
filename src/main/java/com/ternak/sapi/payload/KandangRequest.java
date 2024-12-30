@@ -1,12 +1,13 @@
 package com.ternak.sapi.payload;
 
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Peternak;
 
 public class KandangRequest {
     private String idKandang;
     private String peternak_id;
     private String luas;
-    private String jenisHewanId;
+    private String idJenisHewan;
     private String kapasitas;
     private String jenisKandang;
     private String nilaiBangunan;
@@ -15,20 +16,20 @@ public class KandangRequest {
     private String latitude;
     private String longitude;
     private String nikPeternak;
-
+    private JenisHewan jenisHewan;
     private Peternak peternak;
 
     public KandangRequest() {
     }
 
-    public KandangRequest(String idKandang, String peternak_id, String luas, String jenisHewanId,
+    public KandangRequest(String idKandang, String peternak_id, String luas, String idJenisHewan,
             String kapasitas,
             String jenisKandang, String nilaiBangunan, String alamat, String namaKandang, String jenisKandang1,
-            String latitude, String longitude, String nikPeternak) {
+            String latitude, String longitude, String nikPeternak, JenisHewan jenisHewan) {
         this.idKandang = idKandang;
         this.peternak_id = peternak_id;
         this.luas = luas;
-        this.jenisHewanId = jenisHewanId;
+        this.idJenisHewan = idJenisHewan;
         this.kapasitas = kapasitas;
         this.nikPeternak = nikPeternak;
         this.jenisKandang = jenisKandang;
@@ -37,6 +38,7 @@ public class KandangRequest {
         this.namaKandang = namaKandang;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.jenisHewan = jenisHewan;
     }
 
     // relasi peternak
@@ -80,12 +82,12 @@ public class KandangRequest {
         this.luas = luas;
     }
 
-    public String getJenisHewanId() {
-        return jenisHewanId;
+    public String getIdJenisHewan() {
+        return idJenisHewan;
     }
 
-    public void setJenisHewanId(String jenisHewanId) {
-        this.jenisHewanId = jenisHewanId;
+    public void setIdJenisHewan(String idJenisHewan) {
+        this.idJenisHewan = idJenisHewan;
     }
 
     public String getKapasitas() {
@@ -144,6 +146,14 @@ public class KandangRequest {
         this.namaKandang = namaKandang;
     }
 
+    public JenisHewan getJenisHewan() {
+        return jenisHewan;
+    }
+
+    public void setJenisHewan(JenisHewan jenisHewan) {
+        this.jenisHewan = jenisHewan;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idKandang":
@@ -155,8 +165,8 @@ public class KandangRequest {
             case "luas":
                 this.luas = value;
                 break;
-            case "jenisHewanId":
-                this.jenisHewanId = value;
+            case "idJenisHewan":
+                this.idJenisHewan = value;
                 break;
             case "kapasitas":
                 this.kapasitas = value;

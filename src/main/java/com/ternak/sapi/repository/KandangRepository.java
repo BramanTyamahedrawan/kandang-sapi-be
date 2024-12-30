@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.Peternak;
 
@@ -101,6 +102,17 @@ public class KandangRepository {
                 client.insertRecord(tableKandang, rowKey, "main", "latitude", safeString(kandang.getLatitude()));
                 client.insertRecord(tableKandang, rowKey, "main", "longitude", safeString(kandang.getLongitude()));
 
+                if (kandang.getJenisHewan() != null ) {
+                    JenisHewan jenisHewan = new JenisHewan();
+                    client.insertRecord(tableKandang, rowKey, "jenisHewan", "idJenisHewan",
+                            safeString(jenisHewan.getIdJenisHewan()));
+                    client.insertRecord(tableKandang, rowKey, "jenisHewan", "jenis", safeString(jenisHewan.getJenis()));
+                    client.insertRecord(tableKandang, rowKey, "jenisHewan", "deskripsi",
+                            safeString(jenisHewan.getDeskripsi()));
+                }else{
+                    System.out.println("Jenis Hewan Kosong" + kandang.getIdJenisHewan());
+                }
+
                 // Jika peternak ada, masukkan informasi peternak
                 if (kandang.getPeternak() != null) {
                     Peternak peternak = kandang.getPeternak();
@@ -135,7 +147,7 @@ public class KandangRepository {
                     client.insertRecord(tableKandang, rowKey, "detail", "created_by", "Polinema");
 
                 }
-
+                System.out.println("data id jenis hewan" + kandang.getIdJenisHewan());
                 System.out.println("Berhasil menyimpan data Kandang ID: " + kandang.getIdKandang());
             } catch (Exception e) {
                 failedRows.add(kandang.getIdKandang());
@@ -250,7 +262,7 @@ public class KandangRepository {
         client.insertRecord(tableKandang, kandangId, "peternak", "namaPeternak",
                 kandang.getPeternak().getNamaPeternak());
         client.insertRecord(tableKandang, kandangId, "jenisHewan", "idJenisHewan",
-                kandang.getJenisHewan().getIdJenisHewan());
+                kandang.getIdJenisHewan());
         client.insertRecord(tableKandang, kandangId, "jenisHewan", "jenis", kandang.getJenisHewan().getJenis());
         client.insertRecord(tableKandang, kandangId, "jenisHewan", "deskripsi", kandang.getJenisHewan().getDeskripsi());
         client.insertRecord(tableKandang, kandangId, "detail", "created_by", "Polinema");
