@@ -1,7 +1,5 @@
 package com.ternak.sapi.model;
 
-import java.time.LocalDate;
-
 public class Peternak {
     private String idPeternak;
     private String nikPeternak;
@@ -25,7 +23,10 @@ public class Peternak {
     public Peternak() {
     }
 
-    public Peternak(String idPeternak, String nikPeternak, String namaPeternak, String lokasi, Petugas petugas, String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir, String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat, String latitude, String longitude) {
+    public Peternak(String idPeternak, String nikPeternak, String namaPeternak, String lokasi, Petugas petugas,
+            String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir,
+            String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat,
+            String latitude, String longitude) {
         this.idPeternak = idPeternak;
         this.nikPeternak = nikPeternak;
         this.namaPeternak = namaPeternak;
@@ -53,7 +54,7 @@ public class Peternak {
     public void setIdPeternak(String idPeternak) {
         this.idPeternak = idPeternak;
     }
-    
+
     public String getNikPeternak() {
         return nikPeternak;
     }

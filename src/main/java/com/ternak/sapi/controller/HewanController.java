@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 import org.apache.hadoop.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -33,18 +34,19 @@ public class HewanController {
     private HewanService hewanService = new HewanService();
 
     @GetMapping
-    public PagedResponse<Hewan> getHewans(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
-                                            @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
-                                            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
+    public PagedResponse<Hewan> getHewans(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
+            @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
+            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
         return hewanService.getAllHewan(page, size, peternakID, petugasID, hewanID);
     }
-    
-        @GetMapping("/file/{fileName}")
+
+    @GetMapping("/file/{fileName}")
     public ResponseEntity<byte[]> getFileFromHDFS(@PathVariable String fileName) {
         String uri = "hdfs://hadoop-primary:9000/hewan/" + fileName;
-       // String uri = "hdfs://h-primary:6912/hewan/" + fileName;
+        // String uri = "hdfs://h-primary:6912/hewan/" + fileName;
         Configuration configuration = new Configuration();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -165,7 +167,7 @@ public class HewanController {
             }
         }
     }
-    
+
     @GetMapping("/{idHewan}")
     public DefaultResponse<Hewan> getHewanById(@PathVariable String idHewan) throws IOException {
         return hewanService.getHewanById(idHewan);
@@ -173,7 +175,7 @@ public class HewanController {
 
     @PutMapping("/{idHewan}")
     public ResponseEntity<?> updateHewan(@PathVariable String idHewan,
-                                          @RequestParam("file") MultipartFile file, @ModelAttribute HewanRequest hewanRequest) throws IOException {
+            @RequestParam("file") MultipartFile file, @ModelAttribute HewanRequest hewanRequest) throws IOException {
         // upload file
         try {
             // Mendapatkan nama file asli
@@ -199,13 +201,14 @@ public class HewanController {
             // Mendapatkan local path dari file yang disimpan
             String localPath = newFile.getAbsolutePath();
             String uri = "hdfs://hadoop-primary:9000";
-           String hdfsDir = "hdfs://hadoop-primary:9000/hewan/" + newFileName + fileExtension;
-  //             String uri = "hdfs://h-primary:6912";
-  //          String hdfsDir = "hdfs://h-primary:6912/hewan/" + newFileName + fileExtension;
+            String hdfsDir = "hdfs://hadoop-primary:9000/hewan/" + newFileName + fileExtension;
+            // String uri = "hdfs://h-primary:6912";
+            // String hdfsDir = "hdfs://h-primary:6912/hewan/" + newFileName +
+            // fileExtension;
             Configuration configuration = new Configuration();
             FileSystem fs = FileSystem.get(URI.create(uri), configuration);
             fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/"+ newFileName + fileExtension ;
+            String savePath = "file/" + newFileName + fileExtension;
 
             newFile.delete();
             Hewan hewan = hewanService.updateHewan(idHewan, hewanRequest, savePath);
@@ -223,12 +226,24 @@ public class HewanController {
                     .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
         }
 
-
     }
 
     @DeleteMapping("/{idHewan}")
-    public HttpStatus deleteHewan(@PathVariable (value = "idHewan") String idHewan) throws IOException {
+    public HttpStatus deleteHewan(@PathVariable(value = "idHewan") String idHewan) throws IOException {
         hewanService.deleteHewanById(idHewan);
         return HttpStatus.FORBIDDEN;
     }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> createBulkHewan(@RequestBody List<HewanRequest> hewanRequests) throws IOException {
+        try {
+            System.out.println("Jumlah data yang diterima: " + hewanRequests.size());
+            hewanService.createBulkHewan(hewanRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "Hewan Created Successfully"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
 }

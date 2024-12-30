@@ -1,6 +1,5 @@
 package com.ternak.sapi.model;
 
-
 public class Hewan {
     private String idHewan;
     private String idIsikhnasTernak;
@@ -21,11 +20,16 @@ public class Hewan {
     private String latitude;
     private String longitude;
     private String file_path;
+    private String idIsikhnas;
 
     public Hewan() {
     }
 
-    public Hewan(String idHewan, String kodeEartagNasional, Petugas petugas, Peternak peternak, Kandang kandang, String sex, String umur, String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude, String file_path, String idIsikhnasTernak, String nama, String tujuanPemeliharaan, JenisHewan jenisHewan, RumpunHewan rumpunHewan, String tanggalLahir, String tempatLahir) {
+    public Hewan(String idHewan, String kodeEartagNasional, Petugas petugas, Peternak peternak, Kandang kandang,
+            String sex, String umur, String identifikasiHewan, String tanggalTerdaftar, String latitude,
+            String longitude, String file_path, String idIsikhnasTernak, String nama, String tujuanPemeliharaan,
+            JenisHewan jenisHewan, RumpunHewan rumpunHewan, String tanggalLahir, String tempatLahir,
+            String idIsikhnas) {
         this.idHewan = idHewan;
         this.idIsikhnasTernak = idIsikhnasTernak;
         this.kodeEartagNasional = kodeEartagNasional;
@@ -45,6 +49,7 @@ public class Hewan {
         this.latitude = latitude;
         this.longitude = longitude;
         this.file_path = file_path;
+        this.idIsikhnas = idIsikhnas;
     }
 
     public String getIdHewan() {
@@ -78,7 +83,7 @@ public class Hewan {
     public void setKodeEartagNasional(String kodeEartagNasional) {
         this.kodeEartagNasional = kodeEartagNasional;
     }
-    
+
     public String getSex() {
         return sex;
     }
@@ -102,7 +107,7 @@ public class Hewan {
     public void setIdentifikasiHewan(String identifikasiHewan) {
         this.identifikasiHewan = identifikasiHewan;
     }
-    
+
     public String getTanggalTerdaftar() {
         return tanggalTerdaftar;
     }
@@ -126,7 +131,7 @@ public class Hewan {
     public void setPetugas(Petugas petugas) {
         this.petugas = petugas;
     }
-    
+
     public Kandang getKandang() {
         return kandang;
     }
@@ -199,46 +204,54 @@ public class Hewan {
         this.tujuanPemeliharaan = tujuanPemeliharaan;
     }
 
+    public String getIdIsikhnas() {
+        return idIsikhnas;
+    }
+
+    public void setIdIsikhnas(String idIsikhnas) {
+        this.idIsikhnas = idIsikhnas;
+    }
+
     public boolean isValid() {
-        return this.idHewan != null && 
-               this.petugas != null &&
-               this.peternak != null &&
+        return this.idHewan != null &&
+                this.petugas != null &&
+                this.peternak != null &&
                 this.tanggalLahir != null &&
                 this.tempatLahir != null;
     }
-    
+
     public void set(String fieldName, String value) {
-          switch (fieldName) {
-             case "idHewan":
+        switch (fieldName) {
+            case "idHewan":
                 this.idHewan = value;
                 break;
-             case "idIsikhnasTernak":
+            case "idIsikhnasTernak":
                 this.idIsikhnasTernak = value;
                 break;
-             case "kodeEartagNasional":
+            case "kodeEartagNasional":
                 this.kodeEartagNasional = value;
                 break;
-              case "nama":
-                  this.nama = value;
-                  break;
+            case "nama":
+                this.nama = value;
+                break;
             case "sex":
                 this.sex = value;
                 break;
             case "umur":
                 this.umur = value;
                 break;
-              case "tanggalLahir":
-                  this.tanggalLahir = value;
-                  break;
-              case "tempatLahir":
-                  this.tempatLahir = value;
-                  break;
+            case "tanggalLahir":
+                this.tanggalLahir = value;
+                break;
+            case "tempatLahir":
+                this.tempatLahir = value;
+                break;
             case "identifikasiHewan":
                 this.identifikasiHewan = value;
                 break;
-              case "tujuanPemeliharaan":
-                  this.tujuanPemeliharaan = value;
-                  break;
+            case "tujuanPemeliharaan":
+                this.tujuanPemeliharaan = value;
+                break;
             case "tanggalTerdaftar":
                 this.tanggalTerdaftar = value;
                 break;
@@ -250,6 +263,9 @@ public class Hewan {
                 break;
             case "file_path":
                 this.file_path = value;
+                break;
+            case "idIsikhnas":
+                this.idIsikhnas = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

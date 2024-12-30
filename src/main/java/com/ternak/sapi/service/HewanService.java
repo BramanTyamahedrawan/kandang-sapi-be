@@ -15,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class HewanService {
@@ -152,52 +154,70 @@ public class HewanService {
     }
 
     @Transactional
-    public void createBulkTernakHewan(List<HewanRequest> hewanRequest) throws IOException {
-        System.out.println("Memulai proses penyimpanan data peternak secara bulk...");
+    public void createBulkHewan(List<HewanRequest> hewanRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data Ternak Hewan secara bulk...");
 
         List<Hewan> hewanList = new ArrayList<>();
+        Set<String> existingIds = new HashSet<>(); // Set untuk melacak idHewan yang sudah diproses
         int skippedIncomplete = 0;
         int skippedExisting = 0;
 
-        for (HewanRequest request : hewanRequest) {
+        for (HewanRequest request : hewanRequests) {
             try {
+                // Cek apakah idHewan sudah ada di Set
+                if (existingIds.contains(request.getIdHewan())) {
+                    System.err.println("Duplicate idHewan ditemukan, data di-skip: " + request.getIdHewan());
+                    skippedExisting++;
+                    continue; // Lewati iterasi jika idHewan duplikat
+                }
+
+                // Buat objek Hewan
                 Hewan hewan = new Hewan();
                 hewan.setIdHewan(request.getIdHewan());
                 hewan.setKodeEartagNasional(request.getKodeEartagNasional());
+                hewan.setSex(request.getSex());
+                hewan.setLatitude(request.getLatitude());
+                hewan.setLongitude(request.getLongitude());
+                hewan.setTanggalLahir(request.getTanggalLahir());
+                hewan.setTempatLahir(request.getTempatLahir());
 
-                Peternak peternakResponse = peternakRepository.findById(request.getPeternak_id().toString());
-                Petugas petugasResponse = petugasRepository.findById(request.getPetugas_id().toString());
+                // Fetch relasi data dari repository
+                Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
+                Petugas petugasResponse = petugasRepository.findByNik(request.getNikPetugas());
                 Kandang kandangResponse = kandangRepository.findById(request.getKandang_id().toString());
                 JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getJenisHewanId().toString());
                 RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(request.getRumpunHewanId().toString());
 
-                if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
-                        && kandangResponse.getAlamat() != null && jenisHewanResponse.getJenis() != null
-                        && rumpunHewanResponse.getRumpun() != null) {
-                    // hewan.setSex(request.getSex());
-                    // hewan.setUmur(request.getUmur());
-                    // hewan.setTanggalTerdaftar(request.getTanggalTerdaftar());
-                    hewan.setLatitude(request.getLatitude());
-                    hewan.setLongitude(request.getLongitude());
-                    // hewan.setTanggalLahir(request.getTanggalLahir());
-                    // hewan.setTempatLahir(request.getTempatLahir());
-                    hewan.setTujuanPemeliharaan(request.getTujuanPemeliharaan());
-                    hewan.setIdentifikasiHewan(request.getIdentifikasiHewan());
-                    hewan.setPetugas(petugasResponse);
-                    hewan.setKandang(kandangResponse);
-                    hewan.setJenisHewan(jenisHewanResponse);
-                    hewan.setRumpunHewan(rumpunHewanResponse);
-                    hewan.setPeternak(peternakResponse);
-                    hewanList.add(hewan);
-                } else {
-                    skippedIncomplete++;
-                }
-
+                // Set relasi ke objek Hewan
+                hewan.setPetugas(petugasResponse);
                 hewan.setPeternak(peternakResponse);
+                hewan.setKandang(kandangResponse);
+                hewan.setJenisHewan(jenisHewanResponse);
+                hewan.setRumpunHewan(rumpunHewanResponse);
+
+                // Tambahkan idHewan ke Set dan Hewan ke List
+                existingIds.add(request.getIdHewan());
+                hewanList.add(hewan);
+
+                System.out.println("Menambahkan data hewan ke dalam daftar: " + hewan.getIdHewan());
+
             } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
+                System.err.println("Terjadi kesalahan saat memproses data hewan: " + request.getIdHewan());
+                e.printStackTrace();
+                skippedIncomplete++;
             }
         }
+
+        if (!hewanList.isEmpty()) {
+            System.out.println("Menyimpan data hewan yang valid...");
+            hewanRepository.saveAll(hewanList);
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + hewanList.size());
+        } else {
+            System.out.println("Tidak ada data hewan baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
+                + skippedExisting);
     }
 
 }

@@ -17,11 +17,17 @@ public class HewanRequest {
     private String tanggalTerdaftar;
     private String latitude;
     private String longitude;
+    private String idIsikhnas;
+    private String nikPetugas;
+    private String nikPeternak;
 
     public HewanRequest() {
     }
 
-    public HewanRequest(String idHewan, String kodeEartagNasional,String petugas_id, String peternak_id, String kandang_id, String rumpunHewanId, String jenisHewanId,  String sex, String umur, String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude) {
+    public HewanRequest(String idHewan, String kodeEartagNasional, String petugas_id, String peternak_id,
+            String kandang_id, String rumpunHewanId, String jenisHewanId, String sex, String umur, String tanggalLahir,
+            String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude, String tempatLahir,
+            String idIsikhnas, String nikPetugas, String nikPeternak) {
         this.idHewan = idHewan;
         this.kodeEartagNasional = kodeEartagNasional;
         this.petugas_id = petugas_id;
@@ -31,10 +37,15 @@ public class HewanRequest {
         this.rumpunHewanId = rumpunHewanId;
         this.sex = sex;
         this.umur = umur;
+        this.tanggalLahir = tanggalLahir;
         this.identifikasiHewan = identifikasiHewan;
         this.tanggalTerdaftar = tanggalTerdaftar;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.tempatLahir = tempatLahir;
+        this.idIsikhnas = idIsikhnas;
+        this.nikPetugas = nikPetugas;
+        this.nikPeternak = nikPeternak;
     }
 
     public String getIdHewan() {
@@ -44,7 +55,7 @@ public class HewanRequest {
     public void setIdHewan(String idHewan) {
         this.idHewan = idHewan;
     }
-    
+
     public String getKodeEartagNasional() {
         return kodeEartagNasional;
     }
@@ -165,6 +176,30 @@ public class HewanRequest {
         this.tujuanPemeliharaan = tujuanPemeliharaan;
     }
 
+    public String getIdIsikhnas() {
+        return idIsikhnas;
+    }
+
+    public void setIdIsikhnas(String idIsikhnas) {
+        this.idIsikhnas = idIsikhnas;
+    }
+
+    public String getNikPetugas() {
+        return nikPetugas;
+    }
+
+    public void setNikPetugas(String nikPetugas) {
+        this.nikPetugas = nikPetugas;
+    }
+
+    public String getNikPeternak() {
+        return nikPeternak;
+    }
+
+    public void setNikPeternak(String nikPeternak) {
+        this.nikPeternak = nikPeternak;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idHewan":
@@ -188,17 +223,32 @@ public class HewanRequest {
             case "umur":
                 this.umur = value;
                 break;
+            case "tanggalLahir":
+                this.tanggalLahir = value;
+                break;
             case "identifikasiHewan":
                 this.identifikasiHewan = value;
                 break;
             case "tanggalTerdaftar":
                 this.tanggalTerdaftar = value;
                 break;
+            case "tempatLahir":
+                this.tempatLahir = value;
+                break;
             case "latitude":
                 this.latitude = value;
                 break;
             case "longitude":
                 this.longitude = value;
+                break;
+            case "idIsikhnas":
+                this.idIsikhnas = value;
+                break;
+            case "nikPetugas":
+                this.nikPetugas = value;
+                break;
+            case "nikPeternak":
+                this.nikPeternak = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

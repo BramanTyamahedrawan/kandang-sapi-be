@@ -4,6 +4,11 @@ package com.ternak.sapi.repository;
 import com.ternak.sapi.controller.HewanController;
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.model.Hewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -146,44 +151,50 @@ public class HewanRepository {
                         safeString(hewan.getIdHewan()));
                 client.insertRecord(tableHewan, rowKey, "main", "kodeEartagNasional",
                         safeString(hewan.getKodeEartagNasional()));
+                client.insertRecord(tableHewan, rowKey, "main", "sex", safeString(hewan.getSex()));
+                client.insertRecord(tableHewan, rowKey, "main", "tanggalLahir", safeString(hewan.getTanggalLahir()));
+                client.insertRecord(tableHewan, rowKey, "main", "tempatLahir", safeString(hewan.getTempatLahir()));
 
                 if (hewan.getPeternak() != null) {
-                    client.insertRecord(tableHewan, rowKey, "peternak", "idPeternak",
-                            safeString(hewan.getPeternak().getIdPeternak()));
+                    Peternak peternak = hewan.getPeternak();
+                    // client.insertRecord(tableHewan, rowKey, "peternak", "idPeternak",
+                    // safeString(peternak.getIdPeternak()));
                     client.insertRecord(tableHewan, rowKey, "peternak", "nikPeternak",
-                            safeString(hewan.getPeternak().getNikPeternak()));
+                            safeString(peternak.getNikPeternak()));
                     client.insertRecord(tableHewan, rowKey, "peternak", "namaPeternak",
-                            safeString(hewan.getPeternak().getNamaPeternak()));
+                            safeString(peternak.getNamaPeternak()));
                 }
 
                 if (hewan.getPetugas() != null) {
+                    Petugas petugas = hewan.getPetugas();
                     client.insertRecord(tableHewan, rowKey, "petugas", "nikPetugas",
-                            safeString(hewan.getPetugas().getNikPetugas()));
+                            safeString(petugas.getNikPetugas()));
                     client.insertRecord(tableHewan, rowKey, "petugas", "namaPetugas",
-                            safeString(hewan.getPetugas().getNamaPetugas()));
+                            safeString(petugas.getNamaPetugas()));
                 }
 
                 if (hewan.getKandang() != null) {
+                    Kandang kandang = hewan.getKandang();
                     client.insertRecord(tableHewan, rowKey, "kandang", "idKandang",
-                            safeString(hewan.getKandang().getIdKandang()));
+                            safeString(kandang.getIdKandang()));
+                    client.insertRecord(tableHewan, rowKey, "kandang", "namaKandang",
+                            safeString(kandang.getNamaKandang()));
                 }
 
                 if (hewan.getJenisHewan() != null) {
+                    JenisHewan jenisHewan = hewan.getJenisHewan();
                     client.insertRecord(tableHewan, rowKey, "jenisHewan", "idJenisHewan",
-                            safeString(hewan.getJenisHewan().getIdJenisHewan()));
+                            safeString(jenisHewan.getIdJenisHewan()));
                     client.insertRecord(tableHewan, rowKey, "jenisHewan", "jenis",
-                            safeString(hewan.getJenisHewan().getJenis()));
-                    client.insertRecord(tableHewan, rowKey, "jenisHewan", "deskripsi",
-                            safeString(hewan.getJenisHewan().getDeskripsi()));
+                            safeString(jenisHewan.getJenis()));
                 }
 
                 if (hewan.getRumpunHewan() != null) {
+                    RumpunHewan rumpunHewan = hewan.getRumpunHewan();
                     client.insertRecord(tableHewan, rowKey, "rumpunHewan", "idRumpunHewan",
-                            safeString(hewan.getRumpunHewan().getIdRumpunHewan()));
+                            safeString(rumpunHewan.getIdRumpunHewan()));
                     client.insertRecord(tableHewan, rowKey, "rumpunHewan", "rumpun",
-                            safeString(hewan.getRumpunHewan().getRumpun()));
-                    client.insertRecord(tableHewan, rowKey, "rumpunHewan", "deskripsi",
-                            safeString(hewan.getRumpunHewan().getDeskripsi()));
+                            safeString(rumpunHewan.getRumpun()));
                 }
 
                 client.insertRecord(tableHewan, rowKey, "detail", "created_by", "Polinema");
