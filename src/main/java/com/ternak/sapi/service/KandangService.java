@@ -143,22 +143,37 @@ public class KandangService {
 
         List<Kandang> kandangList = new ArrayList<>();
         int skippedIncomplete = 0;
+        int dataTidakLengkap = 0;
 
         for (KandangRequest request : kandangRequests) {
             try {
-                // Validasi jika peternak tidak ditemukan, tetapi tetap lanjut
-                Peternak peternakResponse = peternakRepository.findById(request.getPeternak_id());
+                if (request.getIdKandang() == null || request.getNikPeternak() == null) {
+                    System.out.println("Data kandang tidak lengkap: " + request);
+                    dataTidakLengkap++;
+                    continue;
+                }
+
+                // Validasi: Temukan Peternak berdasarkan NIK
+                Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
                 if (peternakResponse == null) {
-                    System.out.println("Peternak dengan ID : " + request.getPeternak_id() + " tidak ditemukan");
+                    System.out.println("Peternak dengan NIK: " + request.getNikPeternak()
+                            + " tidak ditemukan. Membuat default peternak.");
+                    peternakResponse = new Peternak();
+                    peternakResponse.setNikPeternak(request.getNikPeternak());
+                    peternakResponse.setNamaPeternak("Peternak Tidak Diketahui");
                 }
 
-                JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getIdJenisHewan().toString());
-                if (jenisHewanResponse == null) {
-                    System.out.println("Jenis Hewan dengan ID : " + request.getIdJenisHewan() + " tidak ditemukan");
+                JenisHewan jenisHewanResponse = null;
+                if (request.getIdJenisHewan() != null) {
+                    jenisHewanResponse = jenisHewanRepository.findById(request.getIdJenisHewan().toString());
+                    if (jenisHewanResponse == null) {
+                        System.out.println("Jenis Hewan dengan ID: " + request.getIdJenisHewan() + " tidak ditemukan");
+                    }
                 }
-
                 // Buat objek Kandang
                 Kandang kandang = new Kandang();
+                kandang.setPeternak(peternakResponse);
+                kandang.setJenisHewan(jenisHewanResponse);
                 kandang.setIdKandang(request.getIdKandang());
                 kandang.setAlamat(request.getAlamat());
                 kandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
@@ -170,8 +185,7 @@ public class KandangService {
                 kandang.setLongitude(request.getLongitude());
                 kandang.setNikPeternak(request.getNikPeternak());
                 kandang.setIdJenisHewan(request.getIdJenisHewan());
-                kandang.setPeternak(peternakResponse);
-                kandang.setJenisHewan(jenisHewanResponse);
+
                 // Tambahkan ke list
                 kandangList.add(kandang);
                 System.out.println("data jenis hewan" + jenisHewanResponse);
@@ -191,7 +205,9 @@ public class KandangService {
             System.out.println("Tidak ada data kandang baru yang valid untuk disimpan.");
         }
 
-        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete);
+        System.out.println("Proses selesai.");
+        System.out.println("Data tidak lengkap: " + dataTidakLengkap);
+        System.out.println("Data yang di-skip karena kesalahan: " + skippedIncomplete);
     }
 
 }

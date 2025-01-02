@@ -218,12 +218,22 @@ public class PeternakRepository {
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
 
-        Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "idPeternak",
-                idPeternak, Peternak.class);
+        Peternak peternak = null;
+        try {
+            peternak = client.getDataByColumn(
+                    tablePeternak.toString(),
+                    columnMapping,
+                    "main",
+                    "idPeternak",
+                    idPeternak,
+                    Peternak.class);
+            System.out.println("Data Peternak ditemukan: " + peternak);
+        } catch (Exception e) {
+            System.err.println("Error saat mengambil data Peternak ID: " + idPeternak + ", Error: " + e.getMessage());
+        }
 
-        System.out.println("Data Peternak ditemukan: by id" + peternak);
+        return (peternak != null && peternak.getIdPeternak() != null) ? peternak : null;
 
-        return peternak.getIdPeternak() != null ? peternak : null;
     }
 
     public Peternak update(String peternakId, Peternak peternak) throws IOException {
@@ -325,8 +335,23 @@ public class PeternakRepository {
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
 
-        Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "nikPeternak",
-                nikPeternak, Peternak.class);
+        // Peternak peternak = client.getDataByColumn(tablePeternak.toString(),
+        // columnMapping, "main", "nikPeternak",
+        // nikPeternak, Peternak.class);
+
+        Peternak peternak = null;
+        try {
+            peternak = client.getDataByColumn(
+                    tablePeternak.toString(),
+                    columnMapping,
+                    "main",
+                    "nikPeternak",
+                    nikPeternak,
+                    Peternak.class);
+            System.out.println("Data Peternak ditemukan: " + peternak);
+        } catch (Exception e) {
+            System.err.println("Error saat mengambil data Peternak NIK: " + nikPeternak + ", Error: " + e.getMessage());
+        }
 
         System.out.println("Data Peternak ditemukan: by nik" + peternak);
 
