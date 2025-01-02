@@ -147,19 +147,18 @@ public class KandangService {
         for (KandangRequest request : kandangRequests) {
             try {
                 // Validasi jika peternak tidak ditemukan, tetapi tetap lanjut
-                Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
+                Peternak peternakResponse = peternakRepository.findById(request.getPeternak_id());
                 if (peternakResponse == null) {
-                    System.err.println("Peternak tidak ditemukan, tetapi data kandang tetap diproses: " + request);
+                    System.out.println("Peternak dengan ID : " + request.getPeternak_id() + " tidak ditemukan");
                 }
 
                 JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getIdJenisHewan().toString());
                 if (jenisHewanResponse == null) {
-                    System.out.println("Jenis Hewan tidak ditemukan" + request);
+                    System.out.println("Jenis Hewan dengan ID : " + request.getIdJenisHewan() + " tidak ditemukan");
                 }
 
                 // Buat objek Kandang
                 Kandang kandang = new Kandang();
-                kandang.setPeternak(peternakResponse);
                 kandang.setIdKandang(request.getIdKandang());
                 kandang.setAlamat(request.getAlamat());
                 kandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
@@ -171,10 +170,11 @@ public class KandangService {
                 kandang.setLongitude(request.getLongitude());
                 kandang.setNikPeternak(request.getNikPeternak());
                 kandang.setIdJenisHewan(request.getIdJenisHewan());
+                kandang.setPeternak(peternakResponse);
                 kandang.setJenisHewan(jenisHewanResponse);
                 // Tambahkan ke list
                 kandangList.add(kandang);
-                System.out.println("data jenis hewan"+jenisHewanResponse);
+                System.out.println("data jenis hewan" + jenisHewanResponse);
                 System.out.println("Menambahkan data kandang ke dalam daftar: " + kandang);
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data: " + request);

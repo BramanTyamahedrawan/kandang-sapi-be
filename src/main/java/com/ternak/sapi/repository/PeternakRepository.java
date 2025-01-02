@@ -190,10 +190,10 @@ public class PeternakRepository {
         return value != null ? value : "";
     }
 
-    public Peternak findById(String peternakId) throws IOException {
+    public Peternak findById(String idPeternak) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        TableName tableUsers = TableName.valueOf(tableName);
+        TableName tablePeternak = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
@@ -218,8 +218,12 @@ public class PeternakRepository {
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
 
-        return client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "idPeternak", peternakId,
-                Peternak.class);
+        Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "idPeternak",
+                idPeternak, Peternak.class);
+
+        System.out.println("Data Peternak ditemukan: by id" + peternak);
+
+        return peternak.getIdPeternak() != null ? peternak : null;
     }
 
     public Peternak update(String peternakId, Peternak peternak) throws IOException {
@@ -324,7 +328,7 @@ public class PeternakRepository {
         Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "nikPeternak",
                 nikPeternak, Peternak.class);
 
-        System.out.println("Data Peternak ditemukan: " + peternak);
+        System.out.println("Data Peternak ditemukan: by nik" + peternak);
 
         return peternak.getNikPeternak() != null ? peternak : null;
     }

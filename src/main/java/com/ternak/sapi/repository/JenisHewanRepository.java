@@ -95,7 +95,7 @@ public class JenisHewanRepository {
     public JenisHewan findById(String idJenisHewan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        TableName tableUsers = TableName.valueOf(tableName);
+        TableName tableJenisHewan = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
@@ -103,7 +103,12 @@ public class JenisHewanRepository {
         columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
-        return client.showDataTable(tableUsers.toString(), columnMapping, idJenisHewan, JenisHewan.class);
+        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping, "main",
+                "idJenisHewan",
+                idJenisHewan, JenisHewan.class);
+
+        System.out.println("Jenis Hewan ditemukan " + jenisHewan);
+        return jenisHewan.getIdJenisHewan() != null ? jenisHewan : null;
     }
 
     public JenisHewan update(String jenishewanId, JenisHewan jenishewan) throws IOException {

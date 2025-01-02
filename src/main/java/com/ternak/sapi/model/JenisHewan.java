@@ -9,7 +9,7 @@ public class JenisHewan {
     private String jenis;
     private String deskripsi;
 
-    public JenisHewan(){
+    public JenisHewan() {
     }
 
     public JenisHewan(String idJenisHewan, String jenis, String deskripsi) {
@@ -42,13 +42,13 @@ public class JenisHewan {
         this.deskripsi = deskripsi;
     }
 
-    public boolean isValid(){
+    public boolean isValid() {
         return this.jenis != null &&
-               this.deskripsi != null;
+                this.deskripsi != null;
     }
-    
-    public void set(String fieldName, String value){
-        switch (fieldName){
+
+    public void set(String fieldName, String value) {
+        switch (fieldName) {
             case "idJenisHewan":
                 this.idJenisHewan = value;
                 break;

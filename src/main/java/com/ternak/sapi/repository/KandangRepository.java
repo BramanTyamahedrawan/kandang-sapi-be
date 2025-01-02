@@ -102,20 +102,21 @@ public class KandangRepository {
                 client.insertRecord(tableKandang, rowKey, "main", "latitude", safeString(kandang.getLatitude()));
                 client.insertRecord(tableKandang, rowKey, "main", "longitude", safeString(kandang.getLongitude()));
 
-                if (kandang.getJenisHewan() != null ) {
+                if (kandang.getJenisHewan() != null) {
                     JenisHewan jenisHewan = new JenisHewan();
                     client.insertRecord(tableKandang, rowKey, "jenisHewan", "idJenisHewan",
                             safeString(jenisHewan.getIdJenisHewan()));
                     client.insertRecord(tableKandang, rowKey, "jenisHewan", "jenis", safeString(jenisHewan.getJenis()));
                     client.insertRecord(tableKandang, rowKey, "jenisHewan", "deskripsi",
                             safeString(jenisHewan.getDeskripsi()));
-                }else{
-                    System.out.println("Jenis Hewan Kosong" + kandang.getIdJenisHewan());
+                    client.insertRecord(tableKandang, rowKey, "detail", "created_by", "Polinema");
                 }
 
                 // Jika peternak ada, masukkan informasi peternak
                 if (kandang.getPeternak() != null) {
                     Peternak peternak = kandang.getPeternak();
+                    client.insertRecord(tableKandang, rowKey, "peternak", "idPeternak",
+                            safeString(peternak.getIdPeternak()));
                     client.insertRecord(tableKandang, rowKey, "peternak", "nikPeternak",
                             safeString(peternak.getNikPeternak()));
                     client.insertRecord(tableKandang, rowKey, "peternak", "namaPeternak",
