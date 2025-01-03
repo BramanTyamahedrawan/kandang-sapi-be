@@ -1,6 +1,7 @@
 package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.TujuanPemeliharaan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -18,6 +19,20 @@ public class TujuanPemeliharaanRepository {
     Configuration conf = HBaseConfiguration.create();
     String tableName = "tujuanpemeliharaandev";
 
+    public List<TujuanPemeliharaan> findAll(int size) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idTujuanPemeliharaan", "idTujuanPemeliharaan");
+        columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
+        columnMapping.put("deskripsi", "deskripsi");
+        return client.showListTable(tableUsers.toString(), columnMapping, TujuanPemeliharaan.class, size);
+    }
+
+
     public List<TujuanPemeliharaan> saveAll(List<TujuanPemeliharaan> tujuanPemeliharaanList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableTujuanPemeliharaan = TableName.valueOf(tableName);
@@ -29,7 +44,7 @@ public class TujuanPemeliharaanRepository {
             try {
                 String rowKey = safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan());
 
-                client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "idJenisHewan",
+                client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "idTujuanPemeliharaan",
                         safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan()));
                 client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "tujuanPemeliharaan",
                         safeString(tujuanPemeliharaan.getTujuanPemeliharaan()));
