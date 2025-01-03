@@ -1,8 +1,11 @@
 package com.ternak.sapi.controller;
 
 // import com.ternak.sapi.config.PathConfig;
+import com.ternak.sapi.model.Berita;
+import com.ternak.sapi.model.TujuanPemeliharaan;
 import com.ternak.sapi.payload.*;
 import com.ternak.sapi.service.TujuanPemeliharaanService;
+import com.ternak.sapi.util.AppConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,12 @@ import java.util.List;
 public class TujuanPemeliharaanController {
 
     private TujuanPemeliharaanService tujuanPemeliharaanService = new TujuanPemeliharaanService();
+
+    @GetMapping
+    public PagedResponse<TujuanPemeliharaan> getTujuanPemeliharaan(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                                   @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) throws IOException {
+        return tujuanPemeliharaanService.getAllTujuanPemeliharaan(page, size);
+    }
 
     @PostMapping("/bulk")
     public ResponseEntity<?> createBulkTujuanPemeliharaan(
