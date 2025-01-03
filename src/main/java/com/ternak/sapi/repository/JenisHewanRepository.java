@@ -111,6 +111,24 @@ public class JenisHewanRepository {
         return jenisHewan.getIdJenisHewan() != null ? jenisHewan : null;
     }
 
+    public JenisHewan findByJenis(String jenis) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableJenisHewan = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idJenisHewan", "idJenisHewan");
+        columnMapping.put("jenis", "jenis");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping, "main", "jenis",
+                jenis, JenisHewan.class);
+
+        System.out.println("Jenis Hewan ditemukan by jenis" + jenisHewan);
+        return jenisHewan.getJenis() != null ? jenisHewan : null;
+    }
+
     public JenisHewan update(String jenishewanId, JenisHewan jenishewan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 

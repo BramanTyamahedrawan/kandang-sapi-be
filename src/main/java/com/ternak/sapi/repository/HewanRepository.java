@@ -1,7 +1,6 @@
 
 package com.ternak.sapi.repository;
 
-import com.ternak.sapi.controller.HewanController;
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
@@ -9,11 +8,9 @@ import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.RumpunHewan;
-import com.ternak.sapi.model.Hewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.thirdparty.org.checkerframework.checker.units.qual.s;
 
 import java.io.IOException;
 import java.util.*;
@@ -214,6 +211,108 @@ public class HewanRepository {
         return hewanList;
     }
 
+    public List<Hewan> saveImport(List<Hewan> hewanList) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableHewan = TableName.valueOf(tableName);
+
+        System.out.println("Memulai penyimpanan data ke HBase...");
+        List<String> failedRows = new ArrayList<>();
+
+        for (Hewan hewan : hewanList) {
+            try {
+
+                if (hewan.getPeternak() != null) {
+                    Peternak peternak = hewan.getPeternak();
+                    if (peternak.getIdPeternak() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak", "idPeternak",
+                                safeString(peternak.getIdPeternak()));
+                    }
+                    if (peternak.getNikPeternak() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak", "nikPeternak",
+                                safeString(peternak.getNikPeternak()));
+                    }
+                    if (peternak.getNamaPeternak() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak", "namaPeternak",
+                                safeString(peternak.getNamaPeternak()));
+                    }
+                    if (peternak.getAlamat() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak",
+                                "alamat",
+                                safeString(peternak.getAlamat()));
+                    }
+                    if (peternak.getDesa() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak",
+                                "desa",
+                                safeString(peternak.getDesa()));
+                    }
+                    if (peternak.getKecamatan() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak",
+                                "kecamatan",
+                                safeString(peternak.getKecamatan()));
+                    }
+                    if (peternak.getKabupaten() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak",
+                                "kabupaten",
+                                safeString(peternak.getKabupaten()));
+                    }
+                    if (peternak.getProvinsi() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak",
+                                "provinsi",
+                                safeString(peternak.getProvinsi()));
+                    }
+                    if (peternak.getEmail() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak",
+                                "email",
+                                safeString(peternak.getEmail()));
+                    }
+                    if (peternak.getNoTelepon() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "peternak",
+                                "noTelepon",
+                                safeString(peternak.getNoTelepon()));
+                    }
+                }
+
+                if (hewan.getJenisHewan() != null) {
+                    JenisHewan jenisHewan = hewan.getJenisHewan();
+                    if (jenisHewan.getJenis() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "jenisHewan", "idJenisHewan",
+                                safeString(jenisHewan.getIdJenisHewan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "jenisHewan", "jenis",
+                                safeString(jenisHewan.getJenis()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "jenisHewan", "deskripsi",
+                                safeString(jenisHewan.getDeskripsi()));
+                    }
+                }
+
+                String rowKey = safeString(hewan.getIdHewan());
+
+                client.insertRecord(tableHewan, rowKey, "main", "idHewan",
+                        safeString(hewan.getIdHewan()));
+                client.insertRecord(tableHewan, rowKey, "main", "noKartuTernak", safeString(hewan.getNoKartuTernak()));
+                client.insertRecord(tableHewan, rowKey, "main", "kodeEartagNasional",
+                        safeString(hewan.getKodeEartagNasional()));
+                client.insertRecord(tableHewan, rowKey, "main", "identifikasiHewan",
+                        safeString(hewan.getIdentifikasiHewan()));
+                client.insertRecord(tableHewan, rowKey, "main", "sex", safeString(hewan.getSex()));
+                client.insertRecord(tableHewan, rowKey, "main", "umur", safeString(hewan.getUmur()));
+                client.insertRecord(tableHewan, rowKey, "main", "tanggalTerdaftar",
+                        safeString(hewan.getTanggalTerdaftar()));
+
+                System.out.println("Berhasil menyimpan Ternak: " + hewan.getIdHewan());
+            } catch (Exception e) {
+                failedRows.add(hewan.getIdHewan());
+                System.err.println(
+                        "Failed to insert record for ID: " + hewan.getIdHewan() + ", Error: "
+                                + e.getMessage());
+            }
+        }
+        if (!failedRows.isEmpty()) {
+            throw new IOException("Failed to save records for ID Hewan: " + String.join(", ", failedRows));
+        }
+
+        return hewanList;
+    }
+
     private String safeString(String value) {
         return value != null ? value : "";
     }
@@ -250,7 +349,7 @@ public class HewanRepository {
         return client.showDataTable(tableUsers.toString(), columnMapping, idHewan, Hewan.class);
     }
 
-    public List<Hewan> findHewanByPeternak(String peternakId, int size) throws IOException {
+    public List<Hewan> findHewanByPeternak(String idPeternak, int size) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
         TableName tableUsers = TableName.valueOf(tableName);
@@ -271,7 +370,7 @@ public class HewanRepository {
         columnMapping.put("file_path", "file_path");
 
         List<Hewan> hewan = client.getDataListByColumn(tableUsers.toString(), columnMapping, "peternak", "nikPeternak",
-                peternakId, Hewan.class, size);
+                idPeternak, Hewan.class, size);
 
         return hewan;
     }
@@ -461,4 +560,5 @@ public class HewanRepository {
                 kodeEartagNasional, Hewan.class);
         return hewan.getKodeEartagNasional() != null; // True jika kode eartag sudah ada
     }
+
 }

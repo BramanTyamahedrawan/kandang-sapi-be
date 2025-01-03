@@ -1,6 +1,5 @@
 package com.ternak.sapi.service;
 
-import com.ternak.sapi.repository.UserRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.Peternak;
@@ -12,8 +11,6 @@ import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;

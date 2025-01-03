@@ -5,6 +5,7 @@ public class Hewan {
     private String idIsikhnasTernak;
     private String kodeEartagNasional;
     private String nama;
+    private String noKartuTernak;
     private Petugas petugas;
     private Peternak peternak;
     private Kandang kandang;
@@ -25,7 +26,8 @@ public class Hewan {
     public Hewan() {
     }
 
-    public Hewan(String idHewan, String kodeEartagNasional, Petugas petugas, Peternak peternak, Kandang kandang,
+    public Hewan(String idHewan, String kodeEartagNasional, String noKartuTernak, Petugas petugas, Peternak peternak,
+            Kandang kandang,
             String sex, String umur, String identifikasiHewan, String tanggalTerdaftar, String latitude,
             String longitude, String file_path, String idIsikhnasTernak, String nama, String tujuanPemeliharaan,
             JenisHewan jenisHewan, RumpunHewan rumpunHewan, String tanggalLahir, String tempatLahir,
@@ -33,6 +35,7 @@ public class Hewan {
         this.idHewan = idHewan;
         this.idIsikhnasTernak = idIsikhnasTernak;
         this.kodeEartagNasional = kodeEartagNasional;
+        this.noKartuTernak = noKartuTernak;
         this.nama = nama;
         this.petugas = petugas;
         this.peternak = peternak;
@@ -82,6 +85,14 @@ public class Hewan {
 
     public void setKodeEartagNasional(String kodeEartagNasional) {
         this.kodeEartagNasional = kodeEartagNasional;
+    }
+
+    public String getNoKartuTernak() {
+        return noKartuTernak;
+    }
+
+    public void setNoKartuTernak(String noKartuTernak) {
+        this.noKartuTernak = noKartuTernak;
     }
 
     public String getSex() {
@@ -230,6 +241,9 @@ public class Hewan {
                 break;
             case "kodeEartagNasional":
                 this.kodeEartagNasional = value;
+                break;
+            case "noKartuTernak":
+                this.noKartuTernak = value;
                 break;
             case "nama":
                 this.nama = value;

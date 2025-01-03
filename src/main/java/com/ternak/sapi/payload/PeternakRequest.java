@@ -22,6 +22,7 @@ public class PeternakRequest {
     private String alamat;
     private String latitude;
     private String longitude;
+    private String provinsi;
 
     private Petugas petugas;
 
@@ -32,7 +33,7 @@ public class PeternakRequest {
             String nikPetugas,
             String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir,
             String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat,
-            String latitude, String longitude) {
+            String latitude, String longitude, String provinsi) {
         this.idPeternak = idPeternak;
         this.nikPeternak = nikPeternak;
         this.namaPeternak = namaPeternak;
@@ -52,6 +53,7 @@ public class PeternakRequest {
         this.alamat = alamat;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.provinsi = provinsi;
     }
 
     // Relasi Petugas
@@ -215,6 +217,14 @@ public class PeternakRequest {
         this.longitude = longitude;
     }
 
+    public String getProvinsi() {
+        return provinsi;
+    }
+
+    public void setProvinsi(String provinsi) {
+        this.provinsi = provinsi;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idPeternak":
@@ -270,6 +280,9 @@ public class PeternakRequest {
                 break;
             case "longitude":
                 this.longitude = value;
+                break;
+            case "provinsi":
+                this.provinsi = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

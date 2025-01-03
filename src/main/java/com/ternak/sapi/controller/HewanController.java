@@ -2,8 +2,6 @@ package com.ternak.sapi.controller;
 
 import com.ternak.sapi.config.PathConfig;
 import com.ternak.sapi.model.Hewan;
-import com.ternak.sapi.model.Hewan;
-import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.payload.*;
 import com.ternak.sapi.service.HewanService;
 import com.ternak.sapi.util.AppConstants;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -232,6 +229,18 @@ public class HewanController {
     public HttpStatus deleteHewan(@PathVariable(value = "idHewan") String idHewan) throws IOException {
         hewanService.deleteHewanById(idHewan);
         return HttpStatus.FORBIDDEN;
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<?> createHewanImport(@RequestBody List<HewanRequest> hewanRequests) throws IOException {
+        try {
+            System.out.println("Jumlah data yang diterima: " + hewanRequests.size());
+            hewanService.createHewanImport(hewanRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "Hewan Created Successfully"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/bulk")

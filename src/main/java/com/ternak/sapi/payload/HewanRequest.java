@@ -6,6 +6,7 @@ public class HewanRequest {
     private String petugas_id;
     private String peternak_id;
     private String kandang_id;
+    private String noKartuTernak;
     private String jenisHewanId;
     private String rumpunHewanId;
     private String sex;
@@ -20,16 +21,33 @@ public class HewanRequest {
     private String idIsikhnas;
     private String nikPetugas;
     private String nikPeternak;
+    private String jenis;
+    private String namaPeternak;
+    private String dusun;
+    private String desa;
+    private String kecamatan;
+    private String kabupaten;
+    private String alamat;
+    private String provinsi;
+    private String email;
+    private String jenisKelamin;
+    private String noTelepon;
+    private String lokasi;
+    private String tanggalPendaftaran;
 
     public HewanRequest() {
     }
 
-    public HewanRequest(String idHewan, String kodeEartagNasional, String petugas_id, String peternak_id,
+    public HewanRequest(String idHewan, String kodeEartagNasional, String noKartuTernak, String petugas_id,
+            String peternak_id,
             String kandang_id, String rumpunHewanId, String jenisHewanId, String sex, String umur, String tanggalLahir,
             String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude, String tempatLahir,
-            String idIsikhnas, String nikPetugas, String nikPeternak) {
+            String idIsikhnas, String nikPetugas, String nikPeternak, String jenis, String namaPeternak, String dusun,
+            String desa, String kecamatan, String kabupaten, String alamat, String provinsi, String email,
+            String jenisKelamin, String noTelepon, String lokasi, String tanggalPendaftaran) {
         this.idHewan = idHewan;
         this.kodeEartagNasional = kodeEartagNasional;
+        this.noKartuTernak = noKartuTernak;
         this.petugas_id = petugas_id;
         this.peternak_id = peternak_id;
         this.kandang_id = kandang_id;
@@ -46,6 +64,19 @@ public class HewanRequest {
         this.idIsikhnas = idIsikhnas;
         this.nikPetugas = nikPetugas;
         this.nikPeternak = nikPeternak;
+        this.jenis = jenis;
+        this.namaPeternak = namaPeternak;
+        this.dusun = dusun;
+        this.desa = desa;
+        this.kecamatan = kecamatan;
+        this.kabupaten = kabupaten;
+        this.alamat = alamat;
+        this.provinsi = provinsi;
+        this.email = email;
+        this.jenisKelamin = jenisKelamin;
+        this.noTelepon = noTelepon;
+        this.lokasi = lokasi;
+        this.tanggalPendaftaran = tanggalPendaftaran;
     }
 
     public String getIdHewan() {
@@ -62,6 +93,14 @@ public class HewanRequest {
 
     public void setKodeEartagNasional(String kodeEartagNasional) {
         this.kodeEartagNasional = kodeEartagNasional;
+    }
+
+    public String getNoKartuTernak() {
+        return noKartuTernak;
+    }
+
+    public void setNoKartuTernak(String noKartuTernak) {
+        this.noKartuTernak = noKartuTernak;
     }
 
     public String getPetugas_id() {
@@ -200,6 +239,111 @@ public class HewanRequest {
         this.nikPeternak = nikPeternak;
     }
 
+    public String getJenis() {
+        return jenis;
+    }
+
+    public void setJenis(String jenis) {
+        this.jenis = jenis;
+    }
+
+    // peternak
+    public String getNamaPeternak() {
+        return namaPeternak;
+    }
+
+    public void setNamaPeternak(String namaPeternak) {
+        this.namaPeternak = namaPeternak;
+    }
+
+    public String getDusun() {
+        return dusun;
+    }
+
+    public void setDusun(String dusun) {
+        this.dusun = dusun;
+    }
+
+    public String getDesa() {
+        return desa;
+    }
+
+    public void setDesa(String desa) {
+        this.desa = desa;
+    }
+
+    public String getKecamatan() {
+        return kecamatan;
+    }
+
+    public void setKecamatan(String kecamatan) {
+        this.kecamatan = kecamatan;
+    }
+
+    public String getKabupaten() {
+        return kabupaten;
+    }
+
+    public void setKabupaten(String kabupaten) {
+        this.kabupaten = kabupaten;
+    }
+
+    public String getAlamat() {
+        return alamat;
+    }
+
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
+    }
+
+    public String getProvinsi() {
+        return provinsi;
+    }
+
+    public void setProvinsi(String provinsi) {
+        this.provinsi = provinsi;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getJenisKelamin() {
+        return jenisKelamin;
+    }
+
+    public void setJenisKelamin(String jenisKelamin) {
+        this.jenisKelamin = jenisKelamin;
+    }
+
+    public String getNoTelepon() {
+        return noTelepon;
+    }
+
+    public void setNoTelepon(String noTelepon) {
+        this.noTelepon = noTelepon;
+    }
+
+    public String getLokasi() {
+        return lokasi;
+    }
+
+    public void setLokasi(String lokasi) {
+        this.lokasi = lokasi;
+    }
+
+    public String getTanggalPendaftaran() {
+        return tanggalPendaftaran;
+    }
+
+    public void setTanggalPendaftaran(String tanggalPendaftaran) {
+        this.tanggalPendaftaran = tanggalPendaftaran;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idHewan":
@@ -207,6 +351,9 @@ public class HewanRequest {
                 break;
             case "kodeEartagNasional":
                 this.kodeEartagNasional = value;
+                break;
+            case "noKartuTernak":
+                this.noKartuTernak = value;
                 break;
             case "petugas_id":
                 this.petugas_id = value;
@@ -249,6 +396,45 @@ public class HewanRequest {
                 break;
             case "nikPeternak":
                 this.nikPeternak = value;
+                break;
+            case "jenis":
+                this.jenis = value;
+                break;
+            case "namaPeternak":
+                this.namaPeternak = value;
+                break;
+            case "dusun":
+                this.dusun = value;
+                break;
+            case "desa":
+                this.desa = value;
+                break;
+            case "kecamatan":
+                this.kecamatan = value;
+                break;
+            case "kabupaten":
+                this.kabupaten = value;
+                break;
+            case "alamat":
+                this.alamat = value;
+                break;
+            case "provinsi":
+                this.provinsi = value;
+                break;
+            case "email":
+                this.email = value;
+                break;
+            case "jenisKelamin":
+                this.jenisKelamin = value;
+                break;
+            case "noTelepon":
+                this.noTelepon = value;
+                break;
+            case "lokasi":
+                this.lokasi = value;
+                break;
+            case "tanggalPendaftaran":
+                this.tanggalPendaftaran = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

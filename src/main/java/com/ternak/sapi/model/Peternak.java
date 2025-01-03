@@ -16,6 +16,7 @@ public class Peternak {
     private String desa;
     private String kecamatan;
     private String kabupaten;
+    private String provinsi;
     private String alamat;
     private String latitude;
     private String longitude;
@@ -26,7 +27,7 @@ public class Peternak {
     public Peternak(String idPeternak, String nikPeternak, String namaPeternak, String lokasi, Petugas petugas,
             String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir,
             String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat,
-            String latitude, String longitude) {
+            String latitude, String longitude, String provinsi) {
         this.idPeternak = idPeternak;
         this.nikPeternak = nikPeternak;
         this.namaPeternak = namaPeternak;
@@ -45,6 +46,7 @@ public class Peternak {
         this.alamat = alamat;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.provinsi = provinsi;
     }
 
     public String getIdPeternak() {
@@ -191,6 +193,14 @@ public class Peternak {
         this.longitude = longitude;
     }
 
+    public String getProvinsi() {
+        return provinsi;
+    }
+
+    public void setProvinsi(String provinsi) {
+        this.provinsi = provinsi;
+    }
+
     public boolean isValid() {
         return this.idPeternak != null &&
                 this.nikPeternak != null &&
@@ -209,7 +219,8 @@ public class Peternak {
                 this.kabupaten != null &&
                 this.alamat != null &&
                 this.latitude != null &&
-                this.longitude != null;
+                this.longitude != null &&
+                this.provinsi != null;
     }
 
     public void set(String fieldName, String value) {
@@ -261,6 +272,9 @@ public class Peternak {
                 break;
             case "longitude":
                 this.longitude = value;
+                break;
+            case "provinsi":
+                this.provinsi = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

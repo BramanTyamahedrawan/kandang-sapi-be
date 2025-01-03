@@ -112,6 +112,38 @@ public class PeternakRepository {
         return peternak;
     }
 
+    public Peternak saveByNIKPeternak(Peternak peternak) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tablePeternak = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("nikPeternak", "nikPeternak");
+
+        String rowKey = peternak.getNikPeternak();
+
+        client.insertRecord(tablePeternak, rowKey, "main", "idPeternak", peternak.getIdPeternak());
+        client.insertRecord(tablePeternak, rowKey, "main", "nikPeternak", peternak.getNikPeternak());
+        client.insertRecord(tablePeternak, rowKey, "main", "namaPeternak", peternak.getNamaPeternak());
+        client.insertRecord(tablePeternak, rowKey, "main", "lokasi", peternak.getLokasi());
+        client.insertRecord(tablePeternak, rowKey, "main", "tanggalPendaftaran", peternak.getTanggalPendaftaran());
+
+        client.insertRecord(tablePeternak, rowKey, "main", "noTelepon", peternak.getNoTelepon());
+        client.insertRecord(tablePeternak, rowKey, "main", "email", peternak.getEmail());
+        client.insertRecord(tablePeternak, rowKey, "main", "jenisKelamin", peternak.getJenisKelamin());
+        client.insertRecord(tablePeternak, rowKey, "main", "tanggalLahir", peternak.getTanggalLahir());
+        client.insertRecord(tablePeternak, rowKey, "main", "idIsikhnas", peternak.getIdIsikhnas());
+
+        client.insertRecord(tablePeternak, rowKey, "main", "dusun", peternak.getIdIsikhnas());
+        client.insertRecord(tablePeternak, rowKey, "main", "desa", peternak.getDesa());
+        client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", peternak.getKecamatan());
+        client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", peternak.getKabupaten());
+        client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
+        client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
+        client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
+
+        return peternak;
+    }
+
     public List<Peternak> saveAll(List<Peternak> peternakList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePeternak = TableName.valueOf(tableName);
@@ -316,6 +348,7 @@ public class PeternakRepository {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePeternak = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("idPeternak", "idPeternak");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
@@ -335,28 +368,32 @@ public class PeternakRepository {
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
 
-        // Peternak peternak = client.getDataByColumn(tablePeternak.toString(),
-        // columnMapping, "main", "nikPeternak",
-        // nikPeternak, Peternak.class);
-
-        Peternak peternak = null;
-        try {
-            peternak = client.getDataByColumn(
-                    tablePeternak.toString(),
-                    columnMapping,
-                    "main",
-                    "nikPeternak",
-                    nikPeternak,
-                    Peternak.class);
-            System.out.println("Data Peternak ditemukan: " + peternak);
-        } catch (Exception e) {
-            System.err.println("Error saat mengambil data Peternak NIK: " + nikPeternak + ", Error: " + e.getMessage());
-        }
+        Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main", "nikPeternak",
+                nikPeternak, Peternak.class);
 
         System.out.println("Data Peternak ditemukan: by nik" + peternak);
 
         return peternak.getNikPeternak() != null ? peternak : null;
     }
+
+    // Peternak peternak = client.getDataByColumn(tablePeternak.toString(),
+    // columnMapping, "main", "nikPeternak",
+    // nikPeternak, Peternak.class);
+
+    // Peternak peternak = null;
+    // try {
+    // peternak = client.getDataByColumn(
+    // tablePeternak.toString(),
+    // columnMapping,
+    // "main",
+    // "nikPeternak",
+    // nikPeternak,
+    // Peternak.class);
+    // System.out.println("Data Peternak ditemukan: " + peternak);
+    // } catch (Exception e) {
+    // System.err.println("Error saat mengambil data Peternak NIK: " + nikPeternak +
+    // ", Error: " + e.getMessage());
+    // }
 
     public List<String> findExistingNamaPetugas(List<String> namaPetugasList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
