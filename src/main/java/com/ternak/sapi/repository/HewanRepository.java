@@ -284,6 +284,26 @@ public class HewanRepository {
                     }
                 }
 
+                if (hewan.getPetugas() != null) {
+                    Petugas petugas = hewan.getPetugas();
+                    if (petugas.getNamaPetugas() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "petugas", "nikPetugas",
+                                safeString(petugas.getNikPetugas()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "petugas", "namaPetugas",
+                                safeString(petugas.getNamaPetugas()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "petugas", "email",
+                                safeString(petugas.getEmail()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "petugas", "noTelepon",
+                                safeString(petugas.getNoTelp()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "petugas", "job",
+                                safeString(petugas.getJob()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "petugas", "wilayah",
+                                safeString(petugas.getWilayah()));
+
+                    }
+
+                }
+
                 String rowKey = safeString(hewan.getIdHewan());
 
                 client.insertRecord(tableHewan, rowKey, "main", "idHewan",
@@ -349,7 +369,7 @@ public class HewanRepository {
         return client.showDataTable(tableUsers.toString(), columnMapping, idHewan, Hewan.class);
     }
 
-    public List<Hewan> findHewanByPeternak(String idPeternak, int size) throws IOException {
+    public List<Hewan> findHewanByPeternak(String peternakID, int size) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
         TableName tableUsers = TableName.valueOf(tableName);
@@ -370,7 +390,7 @@ public class HewanRepository {
         columnMapping.put("file_path", "file_path");
 
         List<Hewan> hewan = client.getDataListByColumn(tableUsers.toString(), columnMapping, "peternak", "nikPeternak",
-                idPeternak, Hewan.class, size);
+                peternakID, Hewan.class, size);
 
         return hewan;
     }

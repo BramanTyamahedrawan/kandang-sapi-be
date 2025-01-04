@@ -32,17 +32,17 @@ public class HewanService {
     // private static final Logger logger =
     // LoggerFactory.getLogger(HewanService.class);
 
-    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakId, String petugasId, String kandangId)
+    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakID, String petugasId, String kandangId)
             throws IOException {
         validatePageNumberAndSize(page, size);
 
         // Retrieve Polls
         List<Hewan> hewanResponse = new ArrayList<>();
 
-        if (peternakId.equalsIgnoreCase("*")) {
+        if (peternakID.equalsIgnoreCase("*")) {
             hewanResponse = hewanRepository.findAll(size);
         } else {
-            hewanResponse = hewanRepository.findHewanByPeternak(peternakId, size);
+            hewanResponse = hewanRepository.findHewanByPeternak(peternakID, size);
         }
 
         return new PagedResponse<>(hewanResponse, hewanResponse.size(), "Successfully get data", 200);
@@ -378,9 +378,45 @@ public class HewanService {
                     }
                 }
 
+                System.out.println("Petugas diterima dari frontend: " + request.getNamaPetugas());
+
+                Petugas petugasResponse = null;
+
+                if (request.getNamaPetugas() == null || request.getNamaPetugas().trim().isEmpty()) {
+                    System.out.println("Nama Petugas kosong. Data ini tidak akan diproses.");
+                    continue;
+                } else {
+                    // Coba cari petugas berdasarkan nama dari frontend
+                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                    if (petugasResponse == null) {
+                        // Jika nama petugas tidak ditemukan, tambahkan petugas baru berdasarkan nama
+                        // dari frontend
+                        System.out.println("Nama Petugas tidak ditemukan di database. Membuat petugas baru...");
+
+                        Petugas newPetugas = new Petugas();
+                        newPetugas
+                                .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
+                                        : "nik belum dimasukkan");
+                        newPetugas.setNamaPetugas(request.getNamaPetugas());
+                        newPetugas.setEmail(
+                                request.getEmailPetugas() != null ? request.getEmailPetugas() : "-");
+                        newPetugas.setNoTelp(
+                                request.getNoTeleponPetugas() != null ? request.getNoTeleponPetugas() : "-");
+                        newPetugas.setJob(request.getJob() != null ? request.getJob() : "Pendataan");
+                        newPetugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
+
+                        petugasResponse = petugasRepository.saveImport(newPetugas);
+
+                        System.out.println("Petugas baru berhasil dibuat: " + newPetugas.getNamaPetugas());
+                    } else {
+                        System.out.println("Petugas ditemukan di database: " + petugasResponse.getNamaPetugas());
+                    }
+                }
+
                 // Set relasi ke objek Hewan
                 hewan.setPeternak(peternakResponse);
                 hewan.setJenisHewan(jenisHewanResponse);
+                hewan.setPetugas(petugasResponse);
 
                 // Tambahkan idHewan ke Set dan Hewan ke List
                 existingIds.add(request.getIdHewan());

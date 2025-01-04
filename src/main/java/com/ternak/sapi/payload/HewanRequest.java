@@ -4,10 +4,8 @@ public class HewanRequest {
     private String idHewan;
     private String kodeEartagNasional;
     private String petugas_id;
-    private String peternak_id;
     private String kandang_id;
     private String noKartuTernak;
-    private String jenisHewanId;
     private String rumpunHewanId;
     private String sex;
     private String umur;
@@ -18,10 +16,13 @@ public class HewanRequest {
     private String tanggalTerdaftar;
     private String latitude;
     private String longitude;
-    private String idIsikhnas;
-    private String nikPetugas;
-    private String nikPeternak;
+
+    // jenis hewan
     private String jenis;
+    private String jenisHewanId;
+
+    // peternak
+    private String nikPeternak;
     private String namaPeternak;
     private String dusun;
     private String desa;
@@ -33,7 +34,17 @@ public class HewanRequest {
     private String jenisKelamin;
     private String noTelepon;
     private String lokasi;
+    private String idIsikhnas;
     private String tanggalPendaftaran;
+    private String peternak_id;
+
+    // petugas
+    private String nikPetugas;
+    private String namaPetugas;
+    private String emailPetugas;
+    private String noTeleponPetugas;
+    private String job;
+    private String wilayah;
 
     public HewanRequest() {
     }
@@ -44,7 +55,9 @@ public class HewanRequest {
             String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude, String tempatLahir,
             String idIsikhnas, String nikPetugas, String nikPeternak, String jenis, String namaPeternak, String dusun,
             String desa, String kecamatan, String kabupaten, String alamat, String provinsi, String email,
-            String jenisKelamin, String noTelepon, String lokasi, String tanggalPendaftaran) {
+            String jenisKelamin, String noTelepon, String lokasi, String tanggalPendaftaran, String tujuanPemeliharaan,
+            String jenisHewan, String namaPetugas, String emailPetugas, String noTeleponPetugas, String job,
+            String wilayah) {
         this.idHewan = idHewan;
         this.kodeEartagNasional = kodeEartagNasional;
         this.noKartuTernak = noKartuTernak;
@@ -77,6 +90,12 @@ public class HewanRequest {
         this.noTelepon = noTelepon;
         this.lokasi = lokasi;
         this.tanggalPendaftaran = tanggalPendaftaran;
+        this.tujuanPemeliharaan = tujuanPemeliharaan;
+        this.namaPetugas = namaPetugas;
+        this.emailPetugas = emailPetugas;
+        this.noTeleponPetugas = noTeleponPetugas;
+        this.job = job;
+        this.wilayah = wilayah;
     }
 
     public String getIdHewan() {
@@ -342,6 +361,47 @@ public class HewanRequest {
 
     public void setTanggalPendaftaran(String tanggalPendaftaran) {
         this.tanggalPendaftaran = tanggalPendaftaran;
+    }
+
+    // petugas
+    public String getNamaPetugas() {
+        return namaPetugas;
+    }
+
+    public void setNamaPetugas(String namaPetugas) {
+        this.namaPetugas = namaPetugas;
+    }
+
+    public String getEmailPetugas() {
+        return emailPetugas;
+    }
+
+    public void setEmailPetugas(String emailPetugas) {
+        this.emailPetugas = emailPetugas;
+    }
+
+    public String getNoTeleponPetugas() {
+        return noTeleponPetugas;
+    }
+
+    public void setNoTeleponPetugas(String noTeleponPetugas) {
+        this.noTeleponPetugas = noTeleponPetugas;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getWilayah() {
+        return wilayah;
+    }
+
+    public void setWilayah(String wilayah) {
+        this.wilayah = wilayah;
     }
 
     public void set(String fieldName, String value) {

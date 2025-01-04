@@ -65,6 +65,22 @@ public class PetugasRepository {
         return petugas;
     }
 
+    public Petugas saveImport(Petugas petugas) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        String rowKey = petugas.getNikPetugas();
+
+        TableName tablePetugas = TableName.valueOf(tableName);
+        client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
+        client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
+        client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
+        client.insertRecord(tablePetugas, rowKey, "main", "email", petugas.getEmail());
+        client.insertRecord(tablePetugas, rowKey, "main", "job", petugas.getJob());
+        client.insertRecord(tablePetugas, rowKey, "main", "wilayah", petugas.getWilayah());
+        client.insertRecord(tablePetugas, rowKey, "detail", "created_by", "Polinema");
+        return petugas;
+    }
+
     public List<Petugas> saveAll(List<Petugas> petugasList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf(tableName);
@@ -185,6 +201,21 @@ public class PetugasRepository {
         Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "nikPetugas",
                 nikPetugas, Petugas.class);
         return petugas.getNikPetugas() != null ? petugas : null; // Jika ada data dengan nikPetugas yang sama
+    }
+
+    public Petugas findByNamaPetugas(String namaPetugas) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePetugas = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("nikPetugas", "nikPetugas");
+        columnMapping.put("namaPetugas", "namaPetugas");
+        columnMapping.put("noTelp", "noTelp");
+        columnMapping.put("email", "email");
+        columnMapping.put("job", "job");
+
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "namaPetugas",
+                namaPetugas, Petugas.class);
+        return petugas.getNamaPetugas() != null ? petugas : null; // Jika ada data dengan namaPetugas yang sama
     }
 
     public boolean existsByEmail(String email) throws IOException {
