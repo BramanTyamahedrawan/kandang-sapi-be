@@ -144,22 +144,43 @@ public class HewanRepository {
             try {
                 String rowKey = safeString(hewan.getIdHewan());
 
-                client.insertRecord(tableHewan, rowKey, "main", "idHewan",
-                        safeString(hewan.getIdHewan()));
-                client.insertRecord(tableHewan, rowKey, "main", "kodeEartagNasional",
-                        safeString(hewan.getKodeEartagNasional()));
-                client.insertRecord(tableHewan, rowKey, "main", "sex", safeString(hewan.getSex()));
-                client.insertRecord(tableHewan, rowKey, "main", "tanggalLahir", safeString(hewan.getTanggalLahir()));
-                client.insertRecord(tableHewan, rowKey, "main", "tempatLahir", safeString(hewan.getTempatLahir()));
-
                 if (hewan.getPeternak() != null) {
                     Peternak peternak = hewan.getPeternak();
-                    // client.insertRecord(tableHewan, rowKey, "peternak", "idPeternak",
-                    // safeString(peternak.getIdPeternak()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "idPeternak",
+                            safeString(peternak.getIdPeternak()));
                     client.insertRecord(tableHewan, rowKey, "peternak", "nikPeternak",
                             safeString(peternak.getNikPeternak()));
                     client.insertRecord(tableHewan, rowKey, "peternak", "namaPeternak",
                             safeString(peternak.getNamaPeternak()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "email",
+                            safeString(peternak.getEmail()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "lokasi",
+                            safeString(peternak.getLokasi()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "noTelepon",
+                            safeString(peternak.getNoTelepon()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "alamat",
+                            safeString(peternak.getAlamat()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "dusun",
+                            safeString(peternak.getDusun()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "desa",
+                            safeString(peternak.getDesa()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "kecamatan",
+                            safeString(peternak.getKecamatan()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "kabupaten",
+                            safeString(peternak.getKabupaten()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "latitude",
+                            safeString(peternak.getLatitude()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "longitude",
+                            safeString(peternak.getLongitude()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "jenisKelamin",
+                            safeString(peternak.getJenisKelamin()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "tanggalPendaftaran",
+                            safeString(peternak.getTanggalPendaftaran()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "tanggalLahir",
+                            safeString(peternak.getTanggalLahir()));
+                    client.insertRecord(tableHewan, rowKey, "peternak", "idIsikhnas",
+                            safeString(peternak.getIdIsikhnas()));
+                    client.insertRecord(tableHewan, rowKey, "detail", "created_by", "Polinema");
                 }
 
                 if (hewan.getPetugas() != null) {
@@ -168,31 +189,47 @@ public class HewanRepository {
                             safeString(petugas.getNikPetugas()));
                     client.insertRecord(tableHewan, rowKey, "petugas", "namaPetugas",
                             safeString(petugas.getNamaPetugas()));
+                    client.insertRecord(tableHewan, rowKey, "petugas", "email",
+                            safeString(petugas.getEmail()));
+                    client.insertRecord(tableHewan, rowKey, "petugas", "job", safeString(petugas.getJob()));
+                    client.insertRecord(tableHewan, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
                 }
 
-                if (hewan.getKandang() != null) {
-                    Kandang kandang = hewan.getKandang();
-                    client.insertRecord(tableHewan, rowKey, "kandang", "idKandang",
-                            safeString(kandang.getIdKandang()));
-                    client.insertRecord(tableHewan, rowKey, "kandang", "namaKandang",
-                            safeString(kandang.getNamaKandang()));
-                }
+                // if (hewan.getKandang() != null) {
+                // Kandang kandang = hewan.getKandang();
+                // client.insertRecord(tableHewan, rowKey, "kandang", "idKandang",
+                // safeString(kandang.getIdKandang()));
+                // client.insertRecord(tableHewan, rowKey, "kandang", "namaKandang",
+                // safeString(kandang.getNamaKandang()));
+                // }
 
                 if (hewan.getJenisHewan() != null) {
                     JenisHewan jenisHewan = hewan.getJenisHewan();
-                    client.insertRecord(tableHewan, rowKey, "jenisHewan", "idJenisHewan",
-                            safeString(jenisHewan.getIdJenisHewan()));
-                    client.insertRecord(tableHewan, rowKey, "jenisHewan", "jenis",
-                            safeString(jenisHewan.getJenis()));
+                    if (jenisHewan.getJenis() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "jenisHewan", "idJenisHewan",
+                                safeString(jenisHewan.getIdJenisHewan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "jenisHewan", "jenis",
+                                safeString(jenisHewan.getJenis()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "jenisHewan", "deskripsi",
+                                safeString(jenisHewan.getDeskripsi()));
+                    }
                 }
 
-                if (hewan.getRumpunHewan() != null) {
-                    RumpunHewan rumpunHewan = hewan.getRumpunHewan();
-                    client.insertRecord(tableHewan, rowKey, "rumpunHewan", "idRumpunHewan",
-                            safeString(rumpunHewan.getIdRumpunHewan()));
-                    client.insertRecord(tableHewan, rowKey, "rumpunHewan", "rumpun",
-                            safeString(rumpunHewan.getRumpun()));
-                }
+                client.insertRecord(tableHewan, rowKey, "main", "idHewan",
+                        safeString(hewan.getIdHewan()));
+                client.insertRecord(tableHewan, rowKey, "main", "kodeEartagNasional",
+                        safeString(hewan.getKodeEartagNasional()));
+                client.insertRecord(tableHewan, rowKey, "main", "sex", safeString(hewan.getSex()));
+                client.insertRecord(tableHewan, rowKey, "main", "tanggalLahir", safeString(hewan.getTanggalLahir()));
+                client.insertRecord(tableHewan, rowKey, "main", "tempatLahir", safeString(hewan.getTempatLahir()));
+
+                // if (hewan.getRumpunHewan() != null) {
+                // RumpunHewan rumpunHewan = hewan.getRumpunHewan();
+                // client.insertRecord(tableHewan, rowKey, "rumpunHewan", "idRumpunHewan",
+                // safeString(rumpunHewan.getIdRumpunHewan()));
+                // client.insertRecord(tableHewan, rowKey, "rumpunHewan", "rumpun",
+                // safeString(rumpunHewan.getRumpun()));
+                // }
 
                 client.insertRecord(tableHewan, rowKey, "detail", "created_by", "Polinema");
                 System.out.println("Data berhasil disimpan ke HBase: " + hewan.getIdHewan());
@@ -381,6 +418,7 @@ public class HewanRepository {
         columnMapping.put("peternak", "peternak");
         columnMapping.put("petugas", "petugas");
         columnMapping.put("kandang", "kandang");
+        columnMapping.put("jenisHewan", "jenisHewan");
         columnMapping.put("sex", "sex");
         columnMapping.put("umur", "umur");
         columnMapping.put("identifikasiHewan", "identifikasiHewan");
@@ -407,6 +445,7 @@ public class HewanRepository {
         columnMapping.put("peternak", "peternak");
         columnMapping.put("petugas", "petugas");
         columnMapping.put("kandang", "kandang");
+        columnMapping.put("jenisHewan", "jenisHewan");
         columnMapping.put("sex", "sex");
         columnMapping.put("umur", "umur");
         columnMapping.put("identifikasiHewan", "identifikasiHewan");
@@ -433,6 +472,7 @@ public class HewanRepository {
         columnMapping.put("peternak", "peternak");
         columnMapping.put("petugas", "petugas");
         columnMapping.put("kandang", "kandang");
+        columnMapping.put("jenisHewan", "jenisHewan");
         columnMapping.put("sex", "sex");
         columnMapping.put("umur", "umur");
         columnMapping.put("identifikasiHewan", "identifikasiHewan");
@@ -443,6 +483,33 @@ public class HewanRepository {
 
         List<Hewan> hewan = client.getDataListByColumn(tableUsers.toString(), columnMapping, "petugas", "nikPetugas",
                 petugasId, Hewan.class, size);
+
+        return hewan;
+    }
+
+    public List<Hewan> findHewanByJenisHewan(String jenis, int size) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idHewan", "idHewan");
+        columnMapping.put("kodeEartagNasional", "kodeEartagNasional");
+        columnMapping.put("peternak", "peternak");
+        columnMapping.put("petugas", "petugas");
+        columnMapping.put("kandang", "kandang");
+        columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("sex", "sex");
+        columnMapping.put("umur", "umur");
+        columnMapping.put("identifikasiHewan", "identifikasiHewan");
+        columnMapping.put("tanggalTerdaftar", "tanggalTerdaftar");
+        columnMapping.put("latitude", "latitude");
+        columnMapping.put("longitude", "longitude");
+        columnMapping.put("file_path", "file_path");
+
+        List<Hewan> hewan = client.getDataListByColumn(tableUsers.toString(), columnMapping, "jenisHewan", "jenis",
+                jenis, Hewan.class, size);
 
         return hewan;
     }

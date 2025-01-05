@@ -112,6 +112,11 @@ public class JenisHewanRepository {
     }
 
     public JenisHewan findByJenis(String jenis) throws IOException {
+        if (jenis == null || jenis.isEmpty()) {
+            System.err.println("Parameter jenis tidak boleh null atau kosong.");
+            return null;
+        }
+
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
         TableName tableJenisHewan = TableName.valueOf(tableName);
@@ -125,8 +130,15 @@ public class JenisHewanRepository {
         JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping, "main", "jenis",
                 jenis, JenisHewan.class);
 
-        System.out.println("Jenis Hewan ditemukan by jenis" + jenisHewan);
-        return jenisHewan.getJenis() != null ? jenisHewan : null;
+        System.out.println("Mencari data Jenis Hewan dengan jenis: " + jenis);
+
+        if (jenisHewan == null || jenisHewan.getJenis() == null) {
+            System.out.println("Jenis Hewan tidak ditemukan untuk jenis: " + jenis);
+            return null;
+        }
+
+        System.out.println("Jenis Hewan ditemukan by jenis: " + jenisHewan);
+        return jenisHewan;
     }
 
     public JenisHewan update(String jenishewanId, JenisHewan jenishewan) throws IOException {

@@ -172,32 +172,56 @@ public class HewanService {
                     continue; // Lewati iterasi jika idHewan duplikat
                 }
 
+                Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
+                if (peternakResponse == null) {
+                    System.out.println("Peternak dengan NIK: " + request.getNikPeternak()
+                            + " tidak ditemukan. Membuat default peternak.");
+                    peternakResponse = new Peternak();
+                    peternakResponse.setNikPeternak(request.getNikPeternak());
+                    peternakResponse.setNamaPeternak("Peternak Tidak Diketahui");
+                }
+
+                Petugas petugasResponse = petugasRepository.findByNik(request.getNikPetugas());
+                if (petugasResponse == null) {
+                    System.out.println("Petugas dengan NIK: " + request.getNikPetugas()
+                            + " tidak ditemukan. Membuat default petugas.");
+                    petugasResponse = new Petugas();
+                    petugasResponse.setNikPetugas(request.getNikPetugas());
+                    petugasResponse.setNamaPetugas("Petugas Tidak Diketahui");
+                }
+
+                System.out.println("Jenis diterima dari frontend: " + request.getJenis());
+
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
+                if (jenisHewanResponse == null) {
+                    System.out.println("Jenis Hewan tidak ditemukan: " + request.getJenis());
+                    jenisHewanResponse = new JenisHewan();
+                    jenisHewanResponse.setJenis("Jenis Hewan Tidak Diketahui");
+                }
+
                 // Buat objek Hewan
                 Hewan hewan = new Hewan();
+                hewan.setPetugas(petugasResponse);
+                hewan.setPeternak(peternakResponse);
+                hewan.setJenisHewan(jenisHewanResponse);
                 hewan.setIdHewan(request.getIdHewan());
                 hewan.setKodeEartagNasional(request.getKodeEartagNasional());
                 hewan.setSex(request.getSex());
-                hewan.setLatitude(request.getLatitude());
-                hewan.setLongitude(request.getLongitude());
                 hewan.setTanggalLahir(request.getTanggalLahir());
                 hewan.setTempatLahir(request.getTempatLahir());
 
                 // Fetch relasi data dari repository
-                Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
-                Petugas petugasResponse = petugasRepository.findByNik(request.getNikPetugas());
-                Kandang kandangResponse = kandangRepository.findById(request.getKandang_id().toString());
-                JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getJenisHewanId().toString());
-                RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(request.getRumpunHewanId().toString());
+                // Kandang kandangResponse =
+                // kandangRepository.findById(request.getKandang_id().toString());
+                // RumpunHewan rumpunHewanResponse =
+                // rumpunHewanRepository.findById(request.getRumpunHewanId().toString());
 
                 // Set relasi ke objek Hewan
-                hewan.setPetugas(petugasResponse);
-                hewan.setPeternak(peternakResponse);
-                hewan.setKandang(kandangResponse);
-                hewan.setJenisHewan(jenisHewanResponse);
-                hewan.setRumpunHewan(rumpunHewanResponse);
+                // hewan.setKandang(kandangResponse);
+                // hewan.setRumpunHewan(rumpunHewanResponse);
 
                 // Tambahkan idHewan ke Set dan Hewan ke List
-                existingIds.add(request.getIdHewan());
+                // existingIds.add(request.getIdHewan());
                 hewanList.add(hewan);
 
                 System.out.println("Menambahkan data hewan ke dalam daftar: " + hewan.getIdHewan());
