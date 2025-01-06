@@ -11,11 +11,11 @@ public class Hewan {
     private Kandang kandang;
     private JenisHewan jenisHewan;
     private RumpunHewan rumpunHewan;
+    private TujuanPemeliharaan tujuanPemeliharaan;
     private String sex;
     private String umur;
     private String tanggalLahir;
     private String tempatLahir;
-    private String tujuanPemeliharaan;
     private String identifikasiHewan;
     private String tanggalTerdaftar;
     private String latitude;
@@ -29,9 +29,9 @@ public class Hewan {
     public Hewan(String idHewan, String kodeEartagNasional, String noKartuTernak, Petugas petugas, Peternak peternak,
             Kandang kandang,
             String sex, String umur, String identifikasiHewan, String tanggalTerdaftar, String latitude,
-            String longitude, String file_path, String idIsikhnasTernak, String nama, String tujuanPemeliharaan,
+            String longitude, String file_path, String idIsikhnasTernak, String nama,
             JenisHewan jenisHewan, RumpunHewan rumpunHewan, String tanggalLahir, String tempatLahir,
-            String idIsikhnas) {
+            String idIsikhnas,TujuanPemeliharaan tujuanPemeliharaan) {
         this.idHewan = idHewan;
         this.idIsikhnasTernak = idIsikhnasTernak;
         this.kodeEartagNasional = kodeEartagNasional;
@@ -207,11 +207,11 @@ public class Hewan {
         this.tempatLahir = tempatLahir;
     }
 
-    public String getTujuanPemeliharaan() {
+    public TujuanPemeliharaan getTujuanPemeliharaan() {
         return tujuanPemeliharaan;
     }
 
-    public void setTujuanPemeliharaan(String tujuanPemeliharaan) {
+    public void setTujuanPemeliharaan(TujuanPemeliharaan tujuanPemeliharaan) {
         this.tujuanPemeliharaan = tujuanPemeliharaan;
     }
 
@@ -262,9 +262,6 @@ public class Hewan {
                 break;
             case "identifikasiHewan":
                 this.identifikasiHewan = value;
-                break;
-            case "tujuanPemeliharaan":
-                this.tujuanPemeliharaan = value;
                 break;
             case "tanggalTerdaftar":
                 this.tanggalTerdaftar = value;

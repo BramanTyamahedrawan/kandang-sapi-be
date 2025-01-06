@@ -115,6 +115,17 @@ public class RumpunHewanRepository {
         return rumpunhewan;
     }
 
+    public RumpunHewan findByRumpun (String rumpun) throws IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableRumpun = TableName.valueOf(tableName);
+        Map<String,String> columnMapping = new HashMap<>();
+        columnMapping.put("rumpun","rumpun");
+        columnMapping.put("deskripsi","deskripsi");
+
+        RumpunHewan rumpunHewan = client.getDataByColumn(tableRumpun.toString(), columnMapping,"main","rumpun", rumpun,RumpunHewan.class);
+        return rumpunHewan.getRumpun() != null ? rumpunHewan : null;
+    }
+
     public boolean deleteById(String rumpunhewanId) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         client.deleteRecord(tableName, rumpunhewanId);

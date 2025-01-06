@@ -2,6 +2,7 @@ package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.model.TujuanPemeliharaan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -32,6 +33,15 @@ public class TujuanPemeliharaanRepository {
         return client.showListTable(tableUsers.toString(), columnMapping, TujuanPemeliharaan.class, size);
     }
 
+    public TujuanPemeliharaan findByTujuan (String tujuan) throws IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableTujuan = TableName.valueOf(tableName);
+        Map<String, String > columnMapping = new HashMap<>();
+        columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
+        columnMapping.put("deskrisi", "deskripsi");
+        TujuanPemeliharaan tujuanPemeliharaan = client.getDataByColumn(tableTujuan.toString(), columnMapping, "main", "tujuanPemeliharaan", tujuan,TujuanPemeliharaan.class);
+        return tujuanPemeliharaan.getTujuanPemeliharaan() != null ? tujuanPemeliharaan : null;
+    }
 
     public List<TujuanPemeliharaan> saveAll(List<TujuanPemeliharaan> tujuanPemeliharaanList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);

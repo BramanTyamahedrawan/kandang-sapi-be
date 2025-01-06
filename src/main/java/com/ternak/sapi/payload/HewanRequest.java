@@ -4,14 +4,11 @@ public class HewanRequest {
     private String idHewan;
     private String kodeEartagNasional;
     private String petugas_id;
-    private String kandang_id;
     private String noKartuTernak;
-    private String rumpunHewanId;
     private String sex;
     private String umur;
     private String tanggalLahir;
     private String tempatLahir;
-    private String tujuanPemeliharaan;
     private String identifikasiHewan;
     private String tanggalTerdaftar;
     private String latitude;
@@ -46,6 +43,17 @@ public class HewanRequest {
     private String job;
     private String wilayah;
 
+    // Kandang
+    private String kandang_id;
+    private String namaKandang;
+
+    //  Rumpun Hewan
+    private String rumpunHewan;
+    private String rumpunHewanId;
+
+    // Tujuan Pemeliharaan
+    private String tujuanPemeliharaan;
+
     public HewanRequest() {
     }
 
@@ -57,7 +65,7 @@ public class HewanRequest {
             String desa, String kecamatan, String kabupaten, String alamat, String provinsi, String email,
             String jenisKelamin, String noTelepon, String lokasi, String tanggalPendaftaran, String tujuanPemeliharaan,
             String jenisHewan, String namaPetugas, String emailPetugas, String noTeleponPetugas, String job,
-            String wilayah) {
+            String wilayah, String rumpunHewan, String namaKandang) {
         this.idHewan = idHewan;
         this.kodeEartagNasional = kodeEartagNasional;
         this.noKartuTernak = noKartuTernak;
@@ -96,6 +104,8 @@ public class HewanRequest {
         this.noTeleponPetugas = noTeleponPetugas;
         this.job = job;
         this.wilayah = wilayah;
+        this.rumpunHewan = rumpunHewan;
+        this.namaKandang = namaKandang;
     }
 
     public String getIdHewan() {
@@ -404,6 +414,24 @@ public class HewanRequest {
         this.wilayah = wilayah;
     }
 
+    // Kandang
+    public String getNamaKandang() {
+        return namaKandang;
+    }
+
+    public void setNamaKandang(String namaKandang) {
+        this.namaKandang = namaKandang;
+    }
+
+    // Rumpun
+    public String getRumpunHewan() {
+        return rumpunHewan;
+    }
+
+    public void setRumpunHewan(String rumpunHewan) {
+        this.rumpunHewan = rumpunHewan;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idHewan":
@@ -495,6 +523,15 @@ public class HewanRequest {
                 break;
             case "tanggalPendaftaran":
                 this.tanggalPendaftaran = value;
+                break;
+            case "rumpunHewan":
+                this.rumpunHewan = value;
+                break;
+            case "tujuanPemeliharaan":
+                this.tujuanPemeliharaan = value;
+                break;
+            case "namaKandang":
+                this.namaKandang = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

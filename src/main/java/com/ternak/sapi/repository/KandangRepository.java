@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ternak.sapi.model.RumpunHewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -208,6 +209,18 @@ public class KandangRepository {
                 columnMapping.put("namaKandang", "namaKandang");
                 return client.showDataTable(tableUsers.toString(), columnMapping, kandangId, Kandang.class);
         }
+
+        public Kandang findByNamaKandang (String namaKandang) throws IOException{
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKandang = TableName.valueOf(tableName);
+                Map<String,String> columnMapping = new HashMap<>();
+
+                columnMapping.put("idKandang", "idKandang");
+                columnMapping.put("namaKandang", "namaKandang");
+                Kandang kandang = client.getDataByColumn(tableKandang.toString(), columnMapping,"main","namaKandang",namaKandang,Kandang.class);
+                return kandang.getNamaKandang() != null ? kandang : null;
+        }
+
 
         public List<Kandang> findKandangByPeternak(String peternakID, int size) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);

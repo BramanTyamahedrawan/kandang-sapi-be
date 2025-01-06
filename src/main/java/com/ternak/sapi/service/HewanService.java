@@ -8,6 +8,7 @@ import com.ternak.sapi.payload.HewanRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.*;
 import com.ternak.sapi.util.AppConstants;
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.stereotype.Service;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class HewanService {
     private KandangRepository kandangRepository = new KandangRepository();
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
     private RumpunHewanRepository rumpunHewanRepository = new RumpunHewanRepository();
+    private TujuanPemeliharaanRepository tujuanPemeliharaanRepository = new TujuanPemeliharaanRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(HewanService.class);
@@ -78,7 +80,7 @@ public class HewanService {
             hewan.setLongitude(hewanRequest.getLongitude());
             hewan.setTanggalLahir(hewanRequest.getTanggalLahir());
             hewan.setTempatLahir(hewanRequest.getTempatLahir());
-            hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
+//            hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
             hewan.setFile_path(savePath);
             hewan.setIdentifikasiHewan(hewanRequest.getIdentifikasiHewan());
 
@@ -120,7 +122,7 @@ public class HewanService {
             hewan.setLongitude(hewanRequest.getLongitude());
             hewan.setTanggalLahir(hewanRequest.getTanggalLahir());
             hewan.setTempatLahir(hewanRequest.getTempatLahir());
-            hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
+//            hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
             hewan.setFile_path(savePath);
             hewan.setIdentifikasiHewan(hewanRequest.getIdentifikasiHewan());
 
@@ -163,6 +165,9 @@ public class HewanService {
         int skippedIncomplete = 0;
         int skippedExisting = 0;
 
+
+
+
         for (HewanRequest request : hewanRequests) {
             try {
                 // Cek apakah idHewan sudah ada di Set
@@ -199,29 +204,44 @@ public class HewanService {
                     jenisHewanResponse.setJenis("Jenis Hewan Tidak Diketahui");
                 }
 
+                Kandang kandangResponse = kandangRepository.findByNamaKandang(request.getNamaKandang());
+                if(kandangResponse == null){
+                    System.out.println("Nama Kandang Tidak ditemukan");
+                    kandangResponse = new Kandang();
+                    kandangResponse.setNamaKandang("Nama Kandang Tidak Diketahui");
+                }
+
+                RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpunHewan());
+                if(rumpunHewanResponse == null){
+                    System.out.println("Rumpun Hewan Tidak ditemukan");
+                    rumpunHewanResponse = new RumpunHewan();
+                    rumpunHewanResponse.setRumpun("Rumpun Hewan Tidak Diketahui");
+                }
+
+                TujuanPemeliharaan tujuanPemeliharaan = tujuanPemeliharaanRepository.findByTujuan(request.getTujuanPemeliharaan());
+                if(tujuanPemeliharaan == null){
+                    System.out.println("Tujuan Pemeliharaan Tidak Ditemukan");
+                    tujuanPemeliharaan = new TujuanPemeliharaan();
+                    tujuanPemeliharaan.setTujuanPemeliharaan("Tujuan Pemeliharaan Tidak Diketahui");
+                }
+
                 // Buat objek Hewan
                 Hewan hewan = new Hewan();
                 hewan.setPetugas(petugasResponse);
                 hewan.setPeternak(peternakResponse);
                 hewan.setJenisHewan(jenisHewanResponse);
+                hewan.setKandang(kandangResponse);
+                hewan.setRumpunHewan(rumpunHewanResponse);
+                hewan.setTujuanPemeliharaan(tujuanPemeliharaan);
                 hewan.setIdHewan(request.getIdHewan());
                 hewan.setKodeEartagNasional(request.getKodeEartagNasional());
                 hewan.setSex(request.getSex());
+                hewan.setUmur(request.getUmur());
+                hewan.setIdentifikasiHewan(request.getIdentifikasiHewan());
                 hewan.setTanggalLahir(request.getTanggalLahir());
                 hewan.setTempatLahir(request.getTempatLahir());
+                hewan.setTanggalTerdaftar(request.getTanggalTerdaftar());
 
-                // Fetch relasi data dari repository
-                // Kandang kandangResponse =
-                // kandangRepository.findById(request.getKandang_id().toString());
-                // RumpunHewan rumpunHewanResponse =
-                // rumpunHewanRepository.findById(request.getRumpunHewanId().toString());
-
-                // Set relasi ke objek Hewan
-                // hewan.setKandang(kandangResponse);
-                // hewan.setRumpunHewan(rumpunHewanResponse);
-
-                // Tambahkan idHewan ke Set dan Hewan ke List
-                // existingIds.add(request.getIdHewan());
                 hewanList.add(hewan);
 
                 System.out.println("Menambahkan data hewan ke dalam daftar: " + hewan.getIdHewan());
@@ -457,7 +477,7 @@ public class HewanService {
 
         if (!hewanList.isEmpty()) {
             System.out.println("Menyimpan data hewan yang valid...");
-            hewanRepository.saveAll(hewanList);
+            hewanRepository.saveImport(hewanList);
             System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + hewanList.size());
         } else {
             System.out.println("Tidak ada data hewan baru yang valid untuk disimpan.");

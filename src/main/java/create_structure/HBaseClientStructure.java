@@ -32,7 +32,7 @@ public class HBaseClientStructure {
         
         // Create Tabel Hewan
         TableName tableHewan = TableName.valueOf("hewandev");
-        String[] hewandev = { "main", "petugas", "peternak", "kandang", "jenisHewan", "rumpunHewan", "detail" };
+        String[] hewandev = { "main", "petugas", "peternak", "kandang", "jenisHewan", "rumpunHewan","tujuanPemeliharaan", "detail" };
         client.deleteTable(tableHewan);
         client.createTable(tableHewan, hewandev);
         
