@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VaksinService {
@@ -151,10 +150,68 @@ public class VaksinService {
 
         for (VaksinRequest request : vaksinRequests) {
             try {
+                if (vaksinRepository.existsByIdVaksin(request.getIdVaksin())) {
+                    System.out.println("Data vaksin dengan ID " + request.getIdVaksin() + " sudah terdaftar.");
+                    skippedExisting++;
+                    continue;
+                }
+
+                Petugas petugasResponse = petugasRepository.findByNik(request.getNikPetugas());
+
+                if (petugasResponse == null) {
+                    System.out
+                            .println("Data petugas vaksin dengan NIK " + request.getNikPetugas() + " tidak ditemukan.");
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                Hewan hewanResponse = hewanRepository.findByNoEartag(request.getKodeEartagNasional());
+                if (hewanResponse == null) {
+                    System.out.println("Data hewan dengan ID " + request.getKodeEartagNasional() + " tidak ditemukan.");
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                if (request.getVaksinKe() == null) {
+                    System.out.println(
+                            "Data vaksin Ke-  " + request.getVaksinKe() + " tidak memiliki urutan vaksin.");
+                    skippedIncomplete++;
+                    continue;
+                }
+
                 JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findById(request.getJenisVaksinTable());
-                NamaVaksin namaVaksinResponse = namaVaksinRepository.findById(request.getNamaVaksinTable());
-                Peternak peternakResponse = peternakRepository.findById(request.getPeternak_id());
-                Petugas petugasResponse = petugasRepository.findById(request.getPetugas_id());
+
+                if (jenisVaksinResponse == null) {
+                    System.out.println("Data jenis vaksin dengan jenis " + request.getJenisVaksinTable()
+                            + " tidak ditemukan. Membuat Default jenis vaksin");
+
+                    JenisVaksin jenisVaksin = new JenisVaksin();
+                    jenisVaksin.setIdJenisVaksin(request.getJenisVaksinTable());
+                    jenisVaksin.setNamaVaksin("nama vaksin tidak valid");
+                    jenisVaksin.setDeskripsi("deskripsi tidak valid");
+                }
+
+                NamaVaksin namaVaksinResponse = namaVaksinRepository
+                        .findNamaVaksinByJenisVaksin(request.getNamaVaksinTable());
+                if (namaVaksinResponse == null) {
+                    System.out.println("Data nama vaksin dengan nama " + request.getNamaVaksinTable()
+                            + " tidak ditemukan. Membuat Default nama vaksin");
+
+                    NamaVaksin namaVaksin = new NamaVaksin();
+                    namaVaksin.setIdNamaVaksin(request.getNamaVaksinTable());
+                    namaVaksin.setNamaVaksin("nama vaksin tidak valid");
+                    namaVaksin.setDeskripsi("deskripsi tidak valid");
+                }
+
+                Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
+                if (peternakResponse == null) {
+                    System.out.println("Data peternak dengan NIK " + request.getNikPeternak()
+                            + " tidak ditemukan. Membuat peternak default");
+
+                    Peternak peternak = new Peternak();
+                    peternak.setNikPeternak(request.getNikPeternak());
+                    peternak.setNamaPeternak("nama peternak tidak valid");
+                }
 
                 Vaksin vaksin = new Vaksin();
                 vaksin.setIdVaksin(request.getIdVaksin());
@@ -167,6 +224,7 @@ public class VaksinService {
                 vaksin.setPetugas(petugasResponse);
                 vaksin.setNamaVaksinTable(namaVaksinResponse);
                 vaksin.setJenisVaksinTable(jenisVaksinResponse);
+                vaksin.setHewan(hewanResponse);
 
                 // namaVaksin.setJenisVaksin(jenisVaksinResponse);
 

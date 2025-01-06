@@ -6,6 +6,7 @@ import com.ternak.sapi.model.JenisVaksin;
 import com.ternak.sapi.model.NamaVaksin;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Hewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -306,22 +307,70 @@ public class VaksinRepository {
                     client.insertRecord(tableVaksin, rowKey, "main", "namaJenisVaksin",
                             safeString(jenisVaksin.getNamaVaksin()));
                 }
-
                 if (vaksin.getPeternak() != null) {
                     Peternak peternak = vaksin.getPeternak();
-                    client.insertRecord(tableVaksin, rowKey, "main", "idPeternak",
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "idPeternak",
                             safeString(peternak.getIdPeternak()));
-                    client.insertRecord(tableVaksin, rowKey, "main", "nikPeternak",
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "nikPeternak",
                             safeString(peternak.getNikPeternak()));
-                    client.insertRecord(tableVaksin, rowKey, "main", "namaPeternak",
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "namaPeternak",
                             safeString(peternak.getNamaPeternak()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "email",
+                            safeString(peternak.getEmail()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "lokasi",
+                            safeString(peternak.getLokasi()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "noTelepon",
+                            safeString(peternak.getNoTelepon()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "alamat",
+                            safeString(peternak.getAlamat()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "dusun",
+                            safeString(peternak.getDusun()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "desa",
+                            safeString(peternak.getDesa()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "kecamatan",
+                            safeString(peternak.getKecamatan()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "kabupaten",
+                            safeString(peternak.getKabupaten()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "latitude",
+                            safeString(peternak.getLatitude()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "longitude",
+                            safeString(peternak.getLongitude()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "jenisKelamin",
+                            safeString(peternak.getJenisKelamin()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "tanggalPendaftaran",
+                            safeString(peternak.getTanggalPendaftaran()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "tanggalLahir",
+                            safeString(peternak.getTanggalLahir()));
+                    client.insertRecord(tableVaksin, rowKey, "peternak", "idIsikhnas",
+                            safeString(peternak.getIdIsikhnas()));
+                    client.insertRecord(tableVaksin, rowKey, "detail", "created_by", "Polinema");
+
                 }
 
                 if (vaksin.getPetugas() != null) {
                     Petugas petugas = vaksin.getPetugas();
-                    client.insertRecord(tableVaksin, rowKey, "main", "nikPetugas", safeString(petugas.getNikPetugas()));
-                    client.insertRecord(tableVaksin, rowKey, "main", "namaPetugas",
+                    client.insertRecord(tableVaksin, rowKey, "petugas", "nikPetugas",
+                            safeString(petugas.getNikPetugas()));
+                    client.insertRecord(tableVaksin, rowKey, "petugas", "namaPetugas",
                             safeString(petugas.getNamaPetugas()));
+                    client.insertRecord(tableVaksin, rowKey, "petugas", "email", safeString(petugas.getEmail()));
+                    client.insertRecord(tableVaksin, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
+                }
+
+                if (vaksin.getHewan() != null) {
+                    Hewan hewan = vaksin.getHewan();
+                    client.insertRecord(tableVaksin, rowKey, "hewan", "idHewan",
+                            safeString(hewan.getIdHewan()));
+                    client.insertRecord(tableVaksin, rowKey, "hewan", "kodeEartagNasional",
+                            safeString(hewan.getKodeEartagNasional()));
+                    client.insertRecord(tableVaksin, rowKey, "hewan", "sex", safeString(hewan.getSex()));
+                    client.insertRecord(tableVaksin, rowKey, "hewan", "tanggalLahir",
+                            safeString(hewan.getTanggalLahir()));
+                    client.insertRecord(tableVaksin, rowKey, "hewan", "tempatLahir",
+                            safeString(hewan.getTempatLahir()));
+                    client.insertRecord(tableVaksin, rowKey, "hewan", "umur", safeString(hewan.getUmur()));
+                    client.insertRecord(tableVaksin, rowKey, "hewan", "identifikasiHewan",
+                            safeString(hewan.getIdentifikasiHewan()));
                 }
 
                 client.insertRecord(tableVaksin, rowKey, "detail", "created_by", "Polinema");

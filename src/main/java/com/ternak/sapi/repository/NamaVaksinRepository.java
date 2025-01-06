@@ -1,6 +1,8 @@
 package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.JenisVaksin;
 import com.ternak.sapi.model.NamaVaksin;
 
@@ -19,6 +21,37 @@ public class NamaVaksinRepository {
     Configuration conf = HBaseConfiguration.create();
     String tableName = "namavaksindev";
 
+    public List<NamaVaksin> findAll(int size) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idNamaVaksin", "idNamaVaksin");
+        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        return client.showListTable(tableUsers.toString(), columnMapping, NamaVaksin.class, size);
+    }
+
+    public List<NamaVaksin> findAllByUserID(String userID, int size) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idNamaVaksin", "idNamaVaksin");
+        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        return client.getDataListByColumn(tableUsers.toString(), columnMapping, "user", "id", userID, NamaVaksin.class,
+                size);
+    }
+
     public List<NamaVaksin> saveAll(List<NamaVaksin> namaVaksinList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableNamaVaksin = TableName.valueOf(tableName);
@@ -30,18 +63,22 @@ public class NamaVaksinRepository {
             try {
                 String rowKey = safeString(namaVaksin.getIdNamaVaksin());
 
+                if (namaVaksin.getJenisVaksin() != null) {
+                    JenisVaksin jenisVaksin = namaVaksin.getJenisVaksin();
+                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin", "idJenisVaksin",
+                            safeString(jenisVaksin.getIdJenisVaksin()));
+                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin", "namaVaksin",
+                            safeString(jenisVaksin.getNamaVaksin()));
+                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin", "deskripsi",
+                            safeString(jenisVaksin.getDeskripsi()));
+                }
+
+                client.insertRecord(tableNamaVaksin, rowKey, "main", "idNamaVaksin",
+                        safeString(namaVaksin.getIdNamaVaksin()));
                 client.insertRecord(tableNamaVaksin, rowKey, "main", "namaVaksin",
                         safeString(namaVaksin.getNamaVaksin()));
                 client.insertRecord(tableNamaVaksin, rowKey, "main", "deskripsi",
                         safeString(namaVaksin.getDeskripsi()));
-
-                if (namaVaksin.getJenisVaksin() != null) {
-                    JenisVaksin jenisVaksin = namaVaksin.getJenisVaksin();
-                    client.insertRecord(tableNamaVaksin, rowKey, "main", "idJenisVaksin",
-                            safeString(jenisVaksin.getIdJenisVaksin()));
-                    client.insertRecord(tableNamaVaksin, rowKey, "main", "namaJenisVaksin",
-                            safeString(jenisVaksin.getNamaVaksin()));
-                }
 
                 client.insertRecord(tableNamaVaksin, rowKey, "detail", "created_by", "Polinema");
 
@@ -70,10 +107,29 @@ public class NamaVaksinRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idNamaVaksin", "idNamaVaksin");
-        columnMapping.put("nama", "nama");
+        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("namaVaksin", "namaVaksin");
         columnMapping.put("deskripsi", "deskripsi");
 
         return client.showDataTable(tableNamaVaksin.toString(), columnMapping, idNamaVaksin, NamaVaksin.class);
+    }
+
+    public NamaVaksin findNamaVaksinByJenisVaksin(String namaVaksinId) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idNamaVaksin", "idNamaVaksin");
+        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        NamaVaksin namaVaksin = client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "namaVaksin",
+                namaVaksinId, NamaVaksin.class);
+
+        return namaVaksin;
     }
 
 }

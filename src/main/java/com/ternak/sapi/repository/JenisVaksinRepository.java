@@ -2,6 +2,7 @@ package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.JenisVaksin;
+import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 
 import org.apache.hadoop.conf.Configuration;
@@ -18,6 +19,35 @@ public class JenisVaksinRepository {
 
     Configuration conf = HBaseConfiguration.create();
     String tableName = "jenisvaksindev";
+
+    public List<JenisVaksin> findAll(int size) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idJenisVaksin", "idJenisVaksin");
+        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        return client.showListTable(tableUsers.toString(), columnMapping, JenisVaksin.class, size);
+    }
+
+    public List<JenisVaksin> findAllByUserID(String userID, int size) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idJenisVaksin", "idJenisVaksin");
+        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        return client.getDataListByColumn(tableUsers.toString(), columnMapping, "user", "id", userID, JenisVaksin.class,
+                size);
+    }
 
     public List<JenisVaksin> saveAll(List<JenisVaksin> jenisVaksinList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
