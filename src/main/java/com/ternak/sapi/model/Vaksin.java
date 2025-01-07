@@ -5,32 +5,28 @@ public class Vaksin {
     private Peternak peternak;
     private Hewan hewan;
     private Petugas petugas;
-    private String namaVaksin;
-    private String jenisVaksin;
     private String tglVaksin;
     private String tglPendataan;
     private String batchVaksin;
     private String vaksinKe;
-    private NamaVaksin namaVaksinTable;
-    private JenisVaksin jenisVaksinTable;
+    private NamaVaksin namaVaksin;
+    private JenisVaksin jenisVaksin;
 
     public Vaksin() {
     }
 
-    public Vaksin(String idVaksin, Peternak peternak, Hewan hewan, Petugas petugas, String namaVaksin,
-            String jenisVaksin, String tglVaksin, String batchVaksin, String vaksinKe, NamaVaksin namaVaksinTable,
-            JenisVaksin jenisVaksinTable, String tglPendataan) {
+    public Vaksin(String idVaksin, Peternak peternak, Hewan hewan, Petugas petugas,
+          String tglVaksin, String batchVaksin, String vaksinKe, NamaVaksin namaVaksin,
+            JenisVaksin jenisVaksin, String tglPendataan) {
         this.idVaksin = idVaksin;
         this.peternak = peternak;
         this.hewan = hewan;
         this.petugas = petugas;
-        this.namaVaksin = namaVaksin;
-        this.jenisVaksin = jenisVaksin;
         this.tglVaksin = tglVaksin;
         this.batchVaksin = batchVaksin;
         this.vaksinKe = vaksinKe;
-        this.namaVaksinTable = namaVaksinTable;
-        this.jenisVaksinTable = jenisVaksinTable;
+        this.namaVaksin = namaVaksin;
+        this.jenisVaksin = jenisVaksin;
         this.tglPendataan = tglPendataan;
     }
 
@@ -66,21 +62,7 @@ public class Vaksin {
         this.petugas = petugas;
     }
 
-    public String getNamaVaksin() {
-        return namaVaksin;
-    }
 
-    public void setNamaVaksin(String namaVaksin) {
-        this.namaVaksin = namaVaksin;
-    }
-
-    public String getJenisVaksin() {
-        return jenisVaksin;
-    }
-
-    public void setJenisVaksin(String jenisVaksin) {
-        this.jenisVaksin = jenisVaksin;
-    }
 
     public String getTglVaksin() {
         return tglVaksin;
@@ -106,20 +88,20 @@ public class Vaksin {
         this.vaksinKe = vaksinKe;
     }
 
-    public NamaVaksin getNamaVaksinTable() {
-        return namaVaksinTable;
+    public JenisVaksin getJenisVaksin() {
+        return jenisVaksin;
     }
 
-    public void setNamaVaksinTable(NamaVaksin namaVaksinTable) {
-        this.namaVaksinTable = namaVaksinTable;
+    public void setJenisVaksin(JenisVaksin jenisVaksin) {
+        this.jenisVaksin = jenisVaksin;
     }
 
-    public JenisVaksin getJenisVaksinTable() {
-        return jenisVaksinTable;
+    public NamaVaksin getNamaVaksin() {
+        return namaVaksin;
     }
 
-    public void setJenisVaksinTable(JenisVaksin jenisVaksinTable) {
-        this.jenisVaksinTable = jenisVaksinTable;
+    public void setNamaVaksin(NamaVaksin namaVaksin) {
+        this.namaVaksin = namaVaksin;
     }
 
     public String getTglPendataan() {
@@ -143,12 +125,6 @@ public class Vaksin {
         switch (fieldName) {
             case "this.idVaksin":
                 this.idVaksin = value;
-                break;
-            case "this.namaVaksin":
-                this.namaVaksin = value;
-                break;
-            case "this.jenisVaksin":
-                this.jenisVaksin = value;
                 break;
             case "this.tglVaksin":
                 this.tglVaksin = value;

@@ -164,6 +164,8 @@ public class KandangRepository {
                                                 safeString(kandang.getLatitude()));
                                 client.insertRecord(tableKandang, rowKey, "main", "longitude",
                                                 safeString(kandang.getLongitude()));
+                                client.insertRecord(tableKandang, rowKey, "main", "kapasitas",
+                                        safeString(kandang.getKapasitas()));
                                 System.out.println("Berhasil menyimpan data Kandang ID: " + kandang.getIdKandang());
 
                                 System.out.println("data id jenis hewan" + kandang.getIdJenisHewan());

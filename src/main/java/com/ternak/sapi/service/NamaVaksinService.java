@@ -2,36 +2,46 @@ package com.ternak.sapi.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.ternak.sapi.repository.JenisHewanRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.JenisVaksin;
-import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.NamaVaksin;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Petugas;
-import com.ternak.sapi.payload.KandangRequest;
 import com.ternak.sapi.payload.NamaVaksinRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.NamaVaksinRepository;
-import com.ternak.sapi.repository.PeternakRepository;
-import com.ternak.sapi.repository.JenisVaksinRepository;
 import com.ternak.sapi.util.AppConstants;
+import com.ternak.sapi.repository.JenisVaksinRepository;
 
 public class NamaVaksinService {
 
     private NamaVaksinRepository namaVaksinRepository = new NamaVaksinRepository();
     private JenisVaksinRepository jenisVaksinRepository = new JenisVaksinRepository();
+
+    public PagedResponse<NamaVaksin> getAllNamaVaksin(int page, int size, String userID) throws IOException {
+        validatePageNumberAndSize(page, size);
+        List<NamaVaksin> namaVaksinResponse = new ArrayList<>();
+
+        if (userID.equalsIgnoreCase("*"))
+            namaVaksinResponse = namaVaksinRepository.findAll(size);
+        if (!userID.equalsIgnoreCase("*"))
+            namaVaksinResponse = namaVaksinRepository.findAllByUserID(userID, size);
+
+        return new PagedResponse<>(namaVaksinResponse, namaVaksinResponse.size(), "Successfully get data", 200);
+    }
+
+    private void validatePageNumberAndSize(int page, int size) {
+        if (page < 0) {
+            throw new BadRequestException("Page number cannot be less than zero.");
+        }
+
+        if (size > AppConstants.MAX_PAGE_SIZE) {
+            throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
+        }
+    }
 
     @Transactional
     public void createBulkNamaVaksin(List<NamaVaksinRequest> namaVaksinRequests) throws IOException {
@@ -44,7 +54,16 @@ public class NamaVaksinService {
 
         for (NamaVaksinRequest request : namaVaksinRequests) {
             try {
+                System.out.println("Jenis Vaksin diterima dari frontend: " + request.getIdJenisVaksin());
+
                 JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findById(request.getIdJenisVaksin());
+                if (jenisVaksinResponse == null) {
+                    System.err.println("Data jenis vaksin tidak ditemukan: " + request.getIdJenisVaksin());
+                    jenisVaksinResponse = new JenisVaksin();
+                    jenisVaksinResponse.setIdJenisVaksin("id jenis vaksin tidak valid");
+                    jenisVaksinResponse.setJenisVaksin("nama vaksin tidak valid");
+
+                }
 
                 NamaVaksin namaVaksin = new NamaVaksin();
                 namaVaksin.setIdNamaVaksin(request.getIdNamaVaksin());

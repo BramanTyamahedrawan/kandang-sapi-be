@@ -185,6 +185,7 @@ public class KandangService {
                 kandang.setLongitude(request.getLongitude());
                 kandang.setNikPeternak(request.getNikPeternak());
                 kandang.setIdJenisHewan(request.getIdJenisHewan());
+                kandang.setKapasitas(request.getKapasitas());
 
                 // Tambahkan ke list
                 kandangList.add(kandang);

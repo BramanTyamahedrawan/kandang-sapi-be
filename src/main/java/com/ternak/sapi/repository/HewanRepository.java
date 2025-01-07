@@ -417,6 +417,39 @@ public class HewanRepository {
         return client.showDataTable(tableUsers.toString(), columnMapping, idHewan, Hewan.class);
     }
 
+    public Hewan findByNoEartag(String kodeEartagNasional) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("idHewan", "idHewan");
+        columnMapping.put("kodeEartagNasional", "kodeEartagNasional");
+
+        columnMapping.put("peternak", "peternak");
+        columnMapping.put("petugas", "petugas");
+        columnMapping.put("kandang", "kandang");
+        columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("rumpunHewan", "rumpunHewan");
+
+        columnMapping.put("sex", "sex");
+        columnMapping.put("umur", "umur");
+        columnMapping.put("tanggalLahir", "tanggalLahir");
+        columnMapping.put("tempatLahir", "tempatLahir");
+        columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
+
+        columnMapping.put("identifikasiHewan", "identifikasiHewan");
+        columnMapping.put("tanggalTerdaftar", "tanggalTerdaftar");
+
+        columnMapping.put("latitude", "latitude");
+        columnMapping.put("longitude", "longitude");
+        columnMapping.put("file_path", "file_path");
+
+        Hewan hewan = client.getDataByColumn(tableName.toString(),columnMapping,"main","kodeEartagNasional",kodeEartagNasional,Hewan.class);
+        return  hewan.getKodeEartagNasional() != null ? hewan : null;
+    }
+
     public List<Hewan> findHewanByPeternak(String peternakID, int size) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 

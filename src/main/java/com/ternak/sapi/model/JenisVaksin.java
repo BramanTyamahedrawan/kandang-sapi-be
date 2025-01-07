@@ -2,15 +2,15 @@ package com.ternak.sapi.model;
 
 public class JenisVaksin {
     private String idJenisVaksin;
-    private String namaVaksin;
+    private String jenisVaksin;
     private String deskripsi;
 
     public JenisVaksin() {
     }
 
-    public JenisVaksin(String idJenisVaksin, String namaVaksin, String deskripsi) {
+    public JenisVaksin(String idJenisVaksin, String jenisVaksin, String deskripsi) {
         this.idJenisVaksin = idJenisVaksin;
-        this.namaVaksin = namaVaksin;
+        this.jenisVaksin = jenisVaksin;
         this.deskripsi = deskripsi;
     }
 
@@ -22,12 +22,12 @@ public class JenisVaksin {
         this.idJenisVaksin = idJenisVaksin;
     }
 
-    public String getNamaVaksin() {
-        return namaVaksin;
+    public String getJenisVaksin() {
+        return jenisVaksin;
     }
 
-    public void setNamaVaksin(String namaVaksin) {
-        this.namaVaksin = namaVaksin;
+    public void setJenisVaksin(String jenisVaksin) {
+        this.jenisVaksin = jenisVaksin;
     }
 
     public String getDeskripsi() {
@@ -43,8 +43,8 @@ public class JenisVaksin {
             case "idJenisVaksin":
                 this.idJenisVaksin = value;
                 break;
-            case "namaVaksin":
-                this.namaVaksin = value;
+            case "jenisVaksin":
+                this.jenisVaksin = value;
                 break;
             case "deskripsi":
                 this.deskripsi = value;
