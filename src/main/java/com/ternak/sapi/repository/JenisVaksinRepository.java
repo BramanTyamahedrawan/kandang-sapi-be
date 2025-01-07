@@ -100,7 +100,10 @@ public class JenisVaksinRepository {
         return client.showDataTable(tableJenisVaksin.toString(), columnMapping, idJenisVaksin, JenisVaksin.class);
     }
 
+
     public JenisVaksin findByJenisVaksin(String jenis) throws IOException {
+
+
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
         TableName tableJenisVaksin = TableName.valueOf(tableName);
@@ -108,11 +111,13 @@ public class JenisVaksinRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idJenisVaksin", "idJenisVaksin");
+
         columnMapping.put("jenisVaksin", "jenisVaksin");
         columnMapping.put("deskripsi", "deskripsi");
 
         JenisVaksin jenisVaksin = client.getDataByColumn(tableName.toString(),columnMapping,"main", "jenisVaksin",jenis, JenisVaksin.class);
         return jenisVaksin.getJenisVaksin() != null ? jenisVaksin : null;
+
     }
 
 }

@@ -115,7 +115,6 @@ public class VaksinRequest {
         this.vaksinKe = vaksinKe;
     }
 
-
     public String getTglPendataan() {
         return tglPendataan;
     }

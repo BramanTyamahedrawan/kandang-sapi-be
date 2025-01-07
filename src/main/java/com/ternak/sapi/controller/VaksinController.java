@@ -28,6 +28,8 @@ public class VaksinController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
             @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
             @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
+            @RequestParam(value = "idNamaVaksin", defaultValue = "*") String idNamaVaksin,
+            @RequestParam(value = "idJenisVaksin", defaultValue = "*") String idJenisVaksin,
             @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
         return vaksinService.getAllVaksin(page, size, peternakID, petugasID, hewanID);
     }
@@ -82,15 +84,14 @@ public class VaksinController {
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<?> createBulkVaksin(@RequestBody List<VaksinRequest> vaksinListRequests) throws IOException {
+    public ResponseEntity<?> createBulkVaksin(@RequestBody List<VaksinRequest> vaksinRequests) {
         try {
-            vaksinService.createBulkVaksin(vaksinListRequests);
-
-            return ResponseEntity.ok(new ApiResponse(true, "Bulk Nama Vaksin created successfully"));
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, e.getMessage()));
+            System.out.println("Payload diterima: " + vaksinRequests);
+            vaksinService.createBulkVaksin(vaksinRequests);
+            return ResponseEntity.ok("Data berhasil diproses.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Terjadi kesalahan.");
         }
     }
 

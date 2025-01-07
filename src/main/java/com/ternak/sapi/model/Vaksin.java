@@ -15,8 +15,10 @@ public class Vaksin {
     public Vaksin() {
     }
 
-    public Vaksin(String idVaksin, Peternak peternak, Hewan hewan, Petugas petugas,
-          String tglVaksin, String batchVaksin, String vaksinKe, NamaVaksin namaVaksin,
+
+    public Vaksin(String idVaksin, Peternak peternak, Hewan hewan, Petugas petugas, String tglVaksin,
+            String batchVaksin, String vaksinKe, NamaVaksin namaVaksin,
+
             JenisVaksin jenisVaksin, String tglPendataan) {
         this.idVaksin = idVaksin;
         this.peternak = peternak;
@@ -63,7 +65,6 @@ public class Vaksin {
     }
 
 
-
     public String getTglVaksin() {
         return tglVaksin;
     }
@@ -87,6 +88,7 @@ public class Vaksin {
     public void setVaksinKe(String vaksinKe) {
         this.vaksinKe = vaksinKe;
     }
+
 
     public JenisVaksin getJenisVaksin() {
         return jenisVaksin;
