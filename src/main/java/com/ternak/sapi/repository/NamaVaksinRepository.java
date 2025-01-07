@@ -114,10 +114,15 @@ public class NamaVaksinRepository {
         return client.showDataTable(tableNamaVaksin.toString(), columnMapping, idNamaVaksin, NamaVaksin.class);
     }
 
-    public NamaVaksin findNamaVaksinByJenisVaksin(String namaVaksinId) throws IOException {
+    public NamaVaksin findByNama(String namaVaksin) throws IOException {
+        if (namaVaksin == null || namaVaksin.isEmpty()) {
+            System.err.println("Parameter jenis tidak boleh null atau kosong.");
+            return null;
+        }
+
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        TableName tableUsers = TableName.valueOf(tableName);
+        TableName tableNamaVaksin = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
@@ -126,10 +131,18 @@ public class NamaVaksinRepository {
         columnMapping.put("namaVaksin", "namaVaksin");
         columnMapping.put("deskripsi", "deskripsi");
 
-        NamaVaksin namaVaksin = client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "namaVaksin",
-                namaVaksinId, NamaVaksin.class);
+        NamaVaksin result = client.getDataByColumn(tableNamaVaksin.toString(), columnMapping, "main", "namaVaksin",
+                namaVaksin, NamaVaksin.class);
 
-        return namaVaksin;
+        System.out.println("Mencari data Nama Vaksin dengan jenis: " + namaVaksin);
+
+        if (result == null || result.getNamaVaksin() == null) {
+            System.out.println("Nama Vaksin tidak ditemukan untuk nama: " + namaVaksin);
+            return null;
+        }
+
+        System.out.println("Nama Vaksin ditemukan by nama: " + namaVaksin);
+        return result;
     }
 
 }

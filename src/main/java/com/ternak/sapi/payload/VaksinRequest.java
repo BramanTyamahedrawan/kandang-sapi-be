@@ -10,8 +10,6 @@ public class VaksinRequest {
     private String tglVaksin;
     private String batchVaksin;
     private String vaksinKe;
-    private String namaVaksinTable;
-    private String jenisVaksinTable;
     private String tglPendataan;
     private String nikPetugas;
     private String namaPetugas;
@@ -24,7 +22,7 @@ public class VaksinRequest {
     }
 
     public VaksinRequest(String idVaksin, String peternak_id, String hewan_id, String petugas_id,
-            String namaVaksin, String jenisVaksin, String tglVaksin, String namaVaksinTable, String jenisVaksinTable,
+            String namaVaksin, String jenisVaksin, String tglVaksin,
             String tglPendataan, String nikPetugas, String namaPetugas, String nikPeternak, String namaPeternak,
             String noTelp, String kodeEartagNasional) {
         this.idVaksin = idVaksin;
@@ -36,8 +34,6 @@ public class VaksinRequest {
         this.tglVaksin = tglVaksin;
         this.batchVaksin = "";
         this.vaksinKe = "";
-        this.namaVaksinTable = namaVaksinTable;
-        this.jenisVaksinTable = jenisVaksinTable;
         this.tglPendataan = tglPendataan;
         this.nikPetugas = nikPetugas;
         this.namaPetugas = namaPetugas;
@@ -117,22 +113,6 @@ public class VaksinRequest {
 
     public void setVaksinKe(String vaksinKe) {
         this.vaksinKe = vaksinKe;
-    }
-
-    public String getNamaVaksinTable() {
-        return namaVaksinTable;
-    }
-
-    public void setNamaVaksinTable(String namaVaksinTable) {
-        this.namaVaksinTable = namaVaksinTable;
-    }
-
-    public String getJenisVaksinTable() {
-        return jenisVaksinTable;
-    }
-
-    public void setJenisVaksinTable(String jenisVaksinTable) {
-        this.jenisVaksinTable = jenisVaksinTable;
     }
 
     public String getTglPendataan() {
@@ -219,12 +199,6 @@ public class VaksinRequest {
                 break;
             case "vaksinKe":
                 this.vaksinKe = value;
-                break;
-            case "namaVaksinTable":
-                this.namaVaksinTable = value;
-                break;
-            case "jenisVaksinTable":
-                this.jenisVaksinTable = value;
                 break;
             case "tglPendataan":
                 this.tglPendataan = value;

@@ -75,8 +75,8 @@ public class VaksinService {
         if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
                 && hewanResponse.getIdHewan() != null) {
             vaksin.setIdVaksin(vaksinRequest.getIdVaksin());
-            vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
-            vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
+            // vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
+            // vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
             vaksin.setBatchVaksin(vaksinRequest.getBatchVaksin());
             vaksin.setVaksinKe(vaksinRequest.getVaksinKe());
@@ -105,8 +105,8 @@ public class VaksinService {
         Hewan hewanResponse = hewanRepository.findById(vaksinRequest.getHewan_id().toString());
         if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
                 && hewanResponse.getIdHewan() != null) {
-            vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
-            vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
+            // vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
+            // vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
             vaksin.setPeternak(peternakResponse);
             vaksin.setPetugas(petugasResponse);
@@ -172,35 +172,11 @@ public class VaksinService {
                     continue;
                 }
 
-                if (request.getVaksinKe() == null) {
+                if (request.getVaksinKe() == null && request.getVaksinKe() == null) {
                     System.out.println(
                             "Data vaksin Ke-  " + request.getVaksinKe() + " tidak memiliki urutan vaksin.");
                     skippedIncomplete++;
                     continue;
-                }
-
-                JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findById(request.getJenisVaksinTable());
-
-                if (jenisVaksinResponse == null) {
-                    System.out.println("Data jenis vaksin dengan jenis " + request.getJenisVaksinTable()
-                            + " tidak ditemukan. Membuat Default jenis vaksin");
-
-                    JenisVaksin jenisVaksin = new JenisVaksin();
-                    jenisVaksin.setIdJenisVaksin(request.getJenisVaksinTable());
-                    jenisVaksin.setNamaVaksin("nama vaksin tidak valid");
-                    jenisVaksin.setDeskripsi("deskripsi tidak valid");
-                }
-
-                NamaVaksin namaVaksinResponse = namaVaksinRepository
-                        .findNamaVaksinByJenisVaksin(request.getNamaVaksinTable());
-                if (namaVaksinResponse == null) {
-                    System.out.println("Data nama vaksin dengan nama " + request.getNamaVaksinTable()
-                            + " tidak ditemukan. Membuat Default nama vaksin");
-
-                    NamaVaksin namaVaksin = new NamaVaksin();
-                    namaVaksin.setIdNamaVaksin(request.getNamaVaksinTable());
-                    namaVaksin.setNamaVaksin("nama vaksin tidak valid");
-                    namaVaksin.setDeskripsi("deskripsi tidak valid");
                 }
 
                 Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());
@@ -213,6 +189,13 @@ public class VaksinService {
                     peternak.setNamaPeternak("nama peternak tidak valid");
                 }
 
+                NamaVaksin namaVaksinResponse = namaVaksinRepository.findByNama(request.getNamaVaksin());
+                if (namaVaksinResponse == null) {
+                    System.out.println("Data nama vaksin dengan nama " + request.getNamaVaksin() + " tidak ditemukan.");
+                    skippedIncomplete++;
+                    continue;
+                }
+
                 Vaksin vaksin = new Vaksin();
                 vaksin.setIdVaksin(request.getIdVaksin());
                 vaksin.setTglVaksin(request.getTglVaksin());
@@ -222,8 +205,8 @@ public class VaksinService {
 
                 vaksin.setPeternak(peternakResponse);
                 vaksin.setPetugas(petugasResponse);
-                vaksin.setNamaVaksinTable(namaVaksinResponse);
-                vaksin.setJenisVaksinTable(jenisVaksinResponse);
+                // vaksin.setNamaVaksinTable(namaVaksinResponse);
+                // vaksin.setJenisVaksinTable(jenisVaksinResponse);
                 vaksin.setHewan(hewanResponse);
 
                 // namaVaksin.setJenisVaksin(jenisVaksinResponse);
@@ -238,9 +221,10 @@ public class VaksinService {
         if (!vaksinList.isEmpty()) {
             System.out.println("Menyimpan data vaksin yang valid...");
             vaksinRepository.saveAll(vaksinList);
-            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + vaksinList.size());
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " +
+                    vaksinList.size());
         } else {
-            System.out.println("Tidak ada data peternak baru yang valid untuk disimpan.");
+            System.out.println("Tidak ada data peternak baru yang valid untukdisimpan.");
         }
 
         System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
