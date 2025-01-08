@@ -21,7 +21,8 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/peternak")
-public class PeternakController {
+public class
+PeternakController {
     private PeternakService peternakService = new PeternakService();
     private static final Logger logger = LoggerFactory.getLogger(PeternakController.class);
 
@@ -114,6 +115,17 @@ public class PeternakController {
     public ResponseEntity<?> createBulkPeternak(@RequestBody List<PeternakRequest> peternakRequests) {
         try {
             peternakService.createBulkPeternak(peternakRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "All Peternak Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<?> createImportPeternak(@RequestBody List<PeternakRequest> peternakRequests) {
+        try {
+            peternakService.createImportPeternak(peternakRequests);
             return ResponseEntity.ok(new ApiResponse(true, "All Peternak Created Successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

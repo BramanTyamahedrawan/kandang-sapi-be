@@ -1,15 +1,17 @@
 package com.ternak.sapi.repository;
 
-import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.JenisHewan;
-import com.ternak.sapi.model.RumpunHewan;
-import com.ternak.sapi.model.TujuanPemeliharaan;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 
-import java.io.IOException;
-import java.util.*;
+import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.TujuanPemeliharaan;
 
 public class TujuanPemeliharaanRepository {
 
@@ -33,13 +35,14 @@ public class TujuanPemeliharaanRepository {
         return client.showListTable(tableUsers.toString(), columnMapping, TujuanPemeliharaan.class, size);
     }
 
-    public TujuanPemeliharaan findByTujuan (String tujuan) throws IOException{
+    public TujuanPemeliharaan findByTujuan(String tujuan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableTujuan = TableName.valueOf(tableName);
-        Map<String, String > columnMapping = new HashMap<>();
+        Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
         columnMapping.put("deskrisi", "deskripsi");
-        TujuanPemeliharaan tujuanPemeliharaan = client.getDataByColumn(tableTujuan.toString(), columnMapping, "main", "tujuanPemeliharaan", tujuan,TujuanPemeliharaan.class);
+        TujuanPemeliharaan tujuanPemeliharaan = client.getDataByColumn(tableTujuan.toString(), columnMapping, "main",
+                "tujuanPemeliharaan", tujuan, TujuanPemeliharaan.class);
         return tujuanPemeliharaan.getTujuanPemeliharaan() != null ? tujuanPemeliharaan : null;
     }
 
@@ -77,5 +80,20 @@ public class TujuanPemeliharaanRepository {
         }
 
         return tujuanPemeliharaanList;
+    }
+
+    public TujuanPemeliharaan saveImport(TujuanPemeliharaan tujuanPemeliharaan) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        String rowKey = tujuanPemeliharaan.getIdTujuanPemeliharaan();
+        TableName tableTujuanPemeliharaan = TableName.valueOf(tableName);
+        client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "idTujuanPemeliharaan",
+                safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan()));
+        client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "tujuanPemeliharaan",
+                safeString(tujuanPemeliharaan.getTujuanPemeliharaan()));
+        client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "deskripsi",
+                safeString(tujuanPemeliharaan.getDeskripsi()));
+        client.insertRecord(tableTujuanPemeliharaan, rowKey, "detail", "created_by", "Polinema");
+        return tujuanPemeliharaan;
     }
 }

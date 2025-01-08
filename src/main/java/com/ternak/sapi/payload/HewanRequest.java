@@ -49,10 +49,13 @@ public class HewanRequest {
 
     //  Rumpun Hewan
     private String rumpunHewan;
+    private String deskripsiRumpun;
     private String rumpunHewanId;
 
     // Tujuan Pemeliharaan
+    private String idTujuanPemeliharaan;
     private String tujuanPemeliharaan;
+    private String deskripsiTujuanPemeliharaan;
 
     public HewanRequest() {
     }
@@ -432,6 +435,30 @@ public class HewanRequest {
         this.rumpunHewan = rumpunHewan;
     }
 
+    public void setDeskripsiRumpun(String deskripsiRumpun) {
+        this.deskripsiRumpun = deskripsiRumpun;
+    }
+
+    public String getDeskripsiRumpun() {
+        return deskripsiRumpun;
+    }
+
+    public void setDeskripsiTujuanPemeliharaan(String deskripsiTujuanPemeliharaan) {
+        this.deskripsiTujuanPemeliharaan = deskripsiTujuanPemeliharaan;
+    }
+
+    public String getDeskripsiTujuanPemeliharaan() {
+        return deskripsiTujuanPemeliharaan;
+    }
+
+    public void setIdTujuanPemeliharaan(String idTujuanPemeliharaan) {
+        this.idTujuanPemeliharaan = idTujuanPemeliharaan;
+    }
+
+    public String getIdTujuanPemeliharaan() {
+        return idTujuanPemeliharaan;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idHewan":
@@ -532,6 +559,15 @@ public class HewanRequest {
                 break;
             case "namaKandang":
                 this.namaKandang = value;
+                break;
+            case "deskripsiRumpun":
+                this.deskripsiRumpun = value;
+                break;
+            case "idTujuanPemeliharaan":
+                this.idTujuanPemeliharaan = value;
+                break;
+            case "deskripsiTujuanPemeliharaan":
+                this.deskripsiTujuanPemeliharaan = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

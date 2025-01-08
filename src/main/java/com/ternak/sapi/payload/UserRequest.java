@@ -1,121 +1,103 @@
-package com.ternak.sapi.model;
+package com.ternak.sapi.payload;
 
 import java.time.Instant;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-public class User {
+public class UserRequest {
     private String id;
     private String nik;
     private String name;
     private String username;
-    private String alamat;
-    @Email
     private String email;
     private String password;
-    @NotBlank
+    private String alamat;
     private String role;
-
     private Instant createdAt;
-
-    public User() {
-
+    public UserRequest() {
     }
 
-    public User(String id,String nik, String name, String username, String email, String alamat, String password, String role,
-            Instant createdAt) {
-        this.name = name;
+    public UserRequest(String id, String nik, String name, String username, String email, String password,
+            String alamat, String role, Instant createdAt) {
         this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
         this.nik = nik;
-        this.alamat = alamat;
-        this.createdAt = createdAt;
-    }
-
-    public User(String name, String username, String email, String password, String role, Instant createdAt) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.alamat = alamat;
         this.role = role;
         this.createdAt = createdAt;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getAlamat() {
-        return alamat;
-    }
-
-    public void setAlamat(String alamat) {
-        this.alamat = alamat;
-    }
-
-    public String getNik() {
-        return nik;
+    public String getId() {
+        return id;
     }
 
     public void setNik(String nik) {
         this.nik = nik;
     }
 
+    public String getNik() {
+        return nik;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
+    }
+
+    public String getAlamat() {
+        return alamat;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getPassword() {
+        return password;
     }
 
     public void setRole(String role) {
         this.role = role;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    public String getRole() {
+        return role;
     }
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
     public void set(String fieldName, String value) {
@@ -123,11 +105,11 @@ public class User {
             case "id":
                 this.id = value;
                 break;
-            case "name":
-                this.name = value;
-                break;
             case "nik":
                 this.nik = value;
+                break;
+            case "name":
+                this.name = value;
                 break;
             case "username":
                 this.username = value;
@@ -135,18 +117,16 @@ public class User {
             case "email":
                 this.email = value;
                 break;
-            case "alamat":
-                this.alamat = value;
-                break;
             case "password":
                 this.password = value;
+                break;
+            case "alamat":
+                this.alamat = value;
                 break;
             case "role":
                 this.role = value;
                 break;
-            case "createdAt":
-                this.createdAt = Instant.parse(value);
-                break;
+
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);
         }

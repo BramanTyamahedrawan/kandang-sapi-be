@@ -62,7 +62,7 @@ public class PeternakService {
 
         Peternak peternak = new Peternak();
 
-        Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugas_id().toString());
+        Petugas petugasResponse = petugasRepository.findByNamaPetugas(peternakRequest.getNamaPetugas());
 
         if (petugasResponse.getNamaPetugas() != null) {
             peternak.setIdPeternak(peternakRequest.getIdPeternak());
@@ -216,9 +216,9 @@ public class PeternakService {
                 peternak.setDesa(request.getDesa());
                 peternak.setKecamatan(request.getKecamatan());
                 peternak.setKabupaten(request.getKabupaten());
-                peternak.setTanggalPendaftaran(formatDate(request.getTanggalPendaftaran()));
+                peternak.setTanggalPendaftaran(request.getTanggalPendaftaran());
                 peternak.setPetugas(petugasResponse); // Masukkan objek lengkap Petugas
-                peternak.setTanggalLahir(formatDate(request.getTanggalLahir()));
+                peternak.setTanggalLahir(request.getTanggalLahir());
                 peternak.setJenisKelamin(request.getJenisKelamin());
                 peternak.setIdIsikhnas(request.getIdIsikhnas());
                 peternak.setLongitude(request.getLongitude());
@@ -238,6 +238,131 @@ public class PeternakService {
             System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + peternakList.size());
         } else {
             System.out.println("Tidak ada data peternak baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
+                + skippedExisting);
+    }
+
+    @Transactional
+    public void createImportPeternak(List<PeternakRequest> peternakRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data peternak secara bulk...");
+
+        // Ekstraksi data unik
+        List<String> nikList = peternakRequests.stream()
+                .map(PeternakRequest::getNikPeternak)
+                .collect(Collectors.toList());
+        List<String> emailList = peternakRequests.stream()
+                .map(PeternakRequest::getEmail)
+                .collect(Collectors.toList());
+        List<String> noTelpList = peternakRequests.stream()
+                .map(PeternakRequest::getNoTelepon)
+                .collect(Collectors.toList());
+
+        System.out.println("Memeriksa NIK, Email, dan NoTelp yang sudah terdaftar...");
+        Set<String> existingNikSet = new HashSet<>(peternakRepository.findExistingNik(nikList));
+        Set<String> existingEmailSet = new HashSet<>(peternakRepository.findExistingEmail(emailList));
+        Set<String> existingNoTelpSet = new HashSet<>(peternakRepository.findExistingNoTelp(noTelpList));
+
+        List<Peternak> peternakList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int skippedExisting = 0;
+
+        for (PeternakRequest request : peternakRequests) {
+            try {
+                // Validasi data tidak lengkap
+                if (request.getNikPeternak() == null || request.getNamaPeternak() == null ||
+                        request.getNoTelepon() == null || request.getEmail() == null) {
+                    System.out.println("Data tidak lengkap atau nikPeternak null, melewati data: " + request);
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                // Skip jika data sudah ada
+                if (existingNikSet.contains(request.getNikPeternak())) {
+                    System.out.println("NIK Peternak sudah terdaftar: " + request.getNikPeternak());
+                    skippedExisting++;
+                    continue;
+                }
+                if (existingEmailSet.contains(request.getEmail())) {
+                    System.out.println("Email sudah digunakan: " + request.getEmail());
+                    skippedExisting++;
+                    continue;
+                }
+                if (existingNoTelpSet.contains(request.getNoTelepon())) {
+                    System.out.println("Nomor Telepon sudah terdaftar: " + request.getNoTelepon());
+                    skippedExisting++;
+                    continue;
+                }
+
+                Petugas petugasResponse = null;
+
+                if (request.getNamaPetugas() == null || request.getNamaPetugas().trim().isEmpty()) {
+                    System.out.println("Nama Petugas kosong. Data ini tidak akan diproses.");
+                    continue;
+                } else {
+                    // Coba cari petugas berdasarkan nama dari frontend
+                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                    if (petugasResponse == null) {
+                        // Jika nama petugas tidak ditemukan, tambahkan petugas baru berdasarkan nama
+                        // dari frontend
+                        System.out.println("Nama Petugas tidak ditemukan di database. Membuat petugas baru...");
+
+                        Petugas newPetugas = new Petugas();
+                        newPetugas
+                                .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
+                                        : "nik belum dimasukkan");
+                        newPetugas.setNamaPetugas(request.getNamaPetugas());
+                        newPetugas.setEmail(
+                                request.getEmailPetugas() != null ? request.getEmailPetugas() : "-");
+                        newPetugas.setNoTelp(
+                                request.getNoTeleponPetugas() != null ? request.getNoTeleponPetugas() : "-");
+                        newPetugas.setJob(request.getJob() != null ? request.getJob() : "Pendataan");
+                        newPetugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
+
+                        petugasResponse = petugasRepository.saveImport(newPetugas);
+
+                        System.out.println("Petugas baru berhasil dibuat: " + newPetugas.getNamaPetugas());
+                    } else {
+                        System.out.println("Petugas ditemukan di database: " + petugasResponse.getNamaPetugas());
+                    }
+                }
+
+                // Buat objek Peternak
+                Peternak peternak = new Peternak();
+                peternak.setIdPeternak(request.getIdPeternak());
+                peternak.setNikPeternak(request.getNikPeternak());
+                peternak.setEmail(request.getEmail());
+                peternak.setNoTelepon(request.getNoTelepon());
+                peternak.setNamaPeternak(request.getNamaPeternak());
+                peternak.setLokasi(request.getLokasi() != null ? request.getLokasi() : "Lokasi tidak diketahui");
+                peternak.setAlamat(request.getAlamat() != null ? request.getAlamat() : "Alamat tidak diketahui");
+                peternak.setDusun(request.getDusun() != null ? request.getDusun() : "Dusun tidak diketahui");
+                peternak.setDesa(request.getDesa());
+                peternak.setKecamatan(request.getKecamatan());
+                peternak.setKabupaten(request.getKabupaten());
+                peternak.setTanggalPendaftaran(request.getTanggalPendaftaran());
+                peternak.setPetugas(petugasResponse); // Masukkan objek lengkap Petugas
+                peternak.setTanggalLahir(request.getTanggalLahir());
+                peternak.setJenisKelamin(request.getJenisKelamin());
+                peternak.setIdIsikhnas(request.getIdIsikhnas());
+                peternak.setLongitude(request.getLongitude());
+                peternak.setLatitude(request.getLatitude());
+                peternakList.add(peternak);
+                System.out.println("Menambahkan data peternak ke dalam daftar: " + peternak.getNikPeternak());
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data peternak: " + request.getNikPeternak());
+                e.printStackTrace();
+            }
+        }
+
+        if (!peternakList.isEmpty()) {
+            System.out.println("Menyimpan data peternak yang valid...");
+            peternakRepository.saveAll(peternakList);
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + peternakList.size());
+        } else {
+            System.out.println("Tidak ada data peternak baru yang valid untuk disimpan.");
+
         }
 
         System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "

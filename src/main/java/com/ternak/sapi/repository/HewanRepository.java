@@ -1,15 +1,24 @@
 
 package com.ternak.sapi.repository;
 
-import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
-import org.checkerframework.checker.units.qual.K;
 
-import java.io.IOException;
-import java.util.*;
+import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.RumpunHewan;
+import com.ternak.sapi.model.TujuanPemeliharaan;
 
 public class HewanRepository {
     Configuration conf = HBaseConfiguration.create();
@@ -32,7 +41,7 @@ public class HewanRepository {
         columnMapping.put("kandang", "kandang");
         columnMapping.put("jenisHewan", "jenisHewan");
         columnMapping.put("rumpunHewan", "rumpunHewan");
-        columnMapping.put("tujuanPemeliharaan","tujuanPemeliharaan");
+        columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
 
         columnMapping.put("sex", "sex");
         columnMapping.put("umur", "umur");
@@ -69,9 +78,10 @@ public class HewanRepository {
         if (hewan.getTempatLahir() != null) {
             client.insertRecord(tableHewan, rowKey, "main", "tempatLahir", hewan.getTempatLahir());
         }
-//        if (hewan.getTujuanPemeliharaan() != null) {
-//            client.insertRecord(tableHewan, rowKey, "main", "tujuanPemeliharaan", hewan.getTujuanPemeliharaan());
-//        }
+        // if (hewan.getTujuanPemeliharaan() != null) {
+        // client.insertRecord(tableHewan, rowKey, "main", "tujuanPemeliharaan",
+        // hewan.getTujuanPemeliharaan());
+        // }
         if (hewan.getIdentifikasiHewan() != null) {
             client.insertRecord(tableHewan, rowKey, "main", "identifikasiHewan", hewan.getIdentifikasiHewan());
         }
@@ -191,11 +201,13 @@ public class HewanRepository {
                     client.insertRecord(tableHewan, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
                 }
 
-                if(hewan.getKandang() != null){
+                if (hewan.getKandang() != null) {
                     Kandang kandang = hewan.getKandang();
-                    if(kandang.getNamaKandang() != null){
-                     client.insertRecord(tableHewan,safeString(hewan.getIdHewan()),"kandang","idKandang",safeString(kandang.getIdKandang()));
-                     client.insertRecord(tableHewan,safeString(hewan.getIdHewan()),"kandang","namaKandang",safeString(kandang.getNamaKandang()));
+                    if (kandang.getNamaKandang() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "kandang", "idKandang",
+                                safeString(kandang.getIdKandang()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "kandang", "namaKandang",
+                                safeString(kandang.getNamaKandang()));
                     }
                 }
 
@@ -211,21 +223,27 @@ public class HewanRepository {
                     }
                 }
 
-                if(hewan.getRumpunHewan() != null){
+                if (hewan.getRumpunHewan() != null) {
                     RumpunHewan rumpunHewan = hewan.getRumpunHewan();
-                    if(rumpunHewan.getRumpun() != null) {
-                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan", "idRumpunHewan", safeString(rumpunHewan.getIdRumpunHewan()));
-                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()),"rumpunHewan","rumpun", safeString(rumpunHewan.getRumpun()));
-                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan","deskripsi", safeString(rumpunHewan.getDeskripsi()));
+                    if (rumpunHewan.getRumpun() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan", "idRumpunHewan",
+                                safeString(rumpunHewan.getIdRumpunHewan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan", "rumpun",
+                                safeString(rumpunHewan.getRumpun()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan", "deskripsi",
+                                safeString(rumpunHewan.getDeskripsi()));
                     }
                 }
 
-                if(hewan.getTujuanPemeliharaan() != null){
+                if (hewan.getTujuanPemeliharaan() != null) {
                     TujuanPemeliharaan tujuanPemeliharaan = hewan.getTujuanPemeliharaan();
-                    if(tujuanPemeliharaan.getTujuanPemeliharaan() != null){
-                        client.insertRecord(tableHewan,safeString(hewan.getIdHewan()),"tujuanPemeliharaan","idTujuanPemeliharaan",safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan()));
-                        client.insertRecord(tableHewan,safeString(hewan.getIdHewan()),"tujuanPemeliharaan","tujuanPemeliharaan",safeString(tujuanPemeliharaan.getTujuanPemeliharaan()));
-                        client.insertRecord(tableHewan,safeString(hewan.getIdHewan()),"tujuanPemeliharaan","deskripsi",safeString(tujuanPemeliharaan.getDeskripsi()));
+                    if (tujuanPemeliharaan.getTujuanPemeliharaan() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "tujuanPemeliharaan",
+                                "idTujuanPemeliharaan", safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "tujuanPemeliharaan",
+                                "tujuanPemeliharaan", safeString(tujuanPemeliharaan.getTujuanPemeliharaan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "tujuanPemeliharaan",
+                                "deskripsi", safeString(tujuanPemeliharaan.getDeskripsi()));
 
                     }
                 }
@@ -240,7 +258,8 @@ public class HewanRepository {
                         safeString(hewan.getIdentifikasiHewan()));
                 client.insertRecord(tableHewan, rowKey, "main", "tanggalLahir", safeString(hewan.getTanggalLahir()));
                 client.insertRecord(tableHewan, rowKey, "main", "tempatLahir", safeString(hewan.getTempatLahir()));
-                client.insertRecord(tableHewan,rowKey,"main","tanggalTerdaftar", safeString(hewan.getTanggalTerdaftar()));
+                client.insertRecord(tableHewan, rowKey, "main", "tanggalTerdaftar",
+                        safeString(hewan.getTanggalTerdaftar()));
 
                 client.insertRecord(tableHewan, rowKey, "detail", "created_by", "Polinema");
                 System.out.println("Data berhasil disimpan ke HBase: " + hewan.getIdHewan());
@@ -352,6 +371,42 @@ public class HewanRepository {
 
                 }
 
+                if (hewan.getKandang() != null) {
+                    Kandang kandang = new Kandang();
+                    if (kandang.getNamaKandang() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "kandang", "idKandang",
+                                kandang.getIdKandang() != null ? kandang.getIdKandang() : "-");
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "kandang", "namaKandang",
+                                kandang.getNamaKandang() != null ? kandang.getNamaKandang() : "-");
+
+                    }
+                }
+
+                if (hewan.getRumpunHewan() != null) {
+                    RumpunHewan rumpunHewan = hewan.getRumpunHewan();
+                    if (rumpunHewan.getRumpun() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan", "idRumpunHewan",
+                                safeString(rumpunHewan.getIdRumpunHewan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan", "rumpun",
+                                safeString(rumpunHewan.getRumpun()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "rumpunHewan", "deskripsi",
+                                safeString(rumpunHewan.getDeskripsi()));
+                    }
+                }
+
+                if (hewan.getTujuanPemeliharaan() != null) {
+                    TujuanPemeliharaan tujuanPemeliharaan = hewan.getTujuanPemeliharaan();
+                    if (tujuanPemeliharaan.getTujuanPemeliharaan() != null) {
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "tujuanPemeliharaan",
+                                "idTujuanPemeliharaan", safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "tujuanPemeliharaan",
+                                "tujuanPemeliharaan", safeString(tujuanPemeliharaan.getTujuanPemeliharaan()));
+                        client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "tujuanPemeliharaan",
+                                "deskripsi", safeString(tujuanPemeliharaan.getDeskripsi()));
+
+                    }
+                }
+
                 String rowKey = safeString(hewan.getIdHewan());
 
                 client.insertRecord(tableHewan, rowKey, "main", "idHewan",
@@ -446,8 +501,9 @@ public class HewanRepository {
         columnMapping.put("longitude", "longitude");
         columnMapping.put("file_path", "file_path");
 
-        Hewan hewan = client.getDataByColumn(tableName.toString(),columnMapping,"main","kodeEartagNasional",kodeEartagNasional,Hewan.class);
-        return  hewan.getKodeEartagNasional() != null ? hewan : null;
+        Hewan hewan = client.getDataByColumn(tableName.toString(), columnMapping, "main", "kodeEartagNasional",
+                kodeEartagNasional, Hewan.class);
+        return hewan.getKodeEartagNasional() != null ? hewan : null;
     }
 
     public List<Hewan> findHewanByPeternak(String peternakID, int size) throws IOException {
@@ -606,7 +662,8 @@ public class HewanRepository {
         columnMapping.put("longitude", "longitude");
         columnMapping.put("file_path", "file_path");
 
-        List<Hewan> hewan = client.getDataListByColumn(tableUsers.toString(), columnMapping, "tujuanPemeliharaan", "tujuan",
+        List<Hewan> hewan = client.getDataListByColumn(tableUsers.toString(), columnMapping, "tujuanPemeliharaan",
+                "tujuan",
                 tujuan, Hewan.class, size);
 
         return hewan;
@@ -658,9 +715,10 @@ public class HewanRepository {
         if (hewan.getTempatLahir() != null) {
             client.insertRecord(tableHewan, idHewan, "main", "tempatLahir", hewan.getTempatLahir());
         }
-//        if (hewan.getTujuanPemeliharaan() != null) {
-//            client.insertRecord(tableHewan, idHewan, "main", "tujuanPemeliharaan", hewan.getTujuanPemeliharaan());
-//        }
+        // if (hewan.getTujuanPemeliharaan() != null) {
+        // client.insertRecord(tableHewan, idHewan, "main", "tujuanPemeliharaan",
+        // hewan.getTujuanPemeliharaan());
+        // }
         if (hewan.getIdentifikasiHewan() != null) {
             client.insertRecord(tableHewan, idHewan, "main", "identifikasiHewan", hewan.getIdentifikasiHewan());
         }
