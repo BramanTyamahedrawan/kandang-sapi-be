@@ -150,6 +150,7 @@ public class Kandang {
         this.idJenisHewan = idJenisHewan;
     }
 
+
     public boolean isValid() {
         return this.idKandang != null &&
                 this.peternak != null &&

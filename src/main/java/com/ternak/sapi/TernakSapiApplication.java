@@ -17,7 +17,7 @@ public class TernakSapiApplication {
 	@PostConstruct
 	void init() {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-                PathConfig.createStoragePathIfNotExists();
+		PathConfig.createStoragePathIfNotExists();
 	}
 
 	public static void main(String[] args) {

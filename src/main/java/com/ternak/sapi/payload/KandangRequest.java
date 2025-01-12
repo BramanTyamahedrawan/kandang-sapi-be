@@ -154,6 +154,7 @@ public class KandangRequest {
         this.jenisHewan = jenisHewan;
     }
 
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idKandang":

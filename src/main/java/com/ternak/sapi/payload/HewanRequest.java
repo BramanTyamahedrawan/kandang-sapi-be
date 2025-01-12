@@ -15,8 +15,9 @@ public class HewanRequest {
     private String longitude;
 
     // jenis hewan
-    private String jenis;
     private String jenisHewanId;
+    private String jenis;
+    private String deskripsiJenisHewan;
 
     // peternak
     private String nikPeternak;
@@ -213,6 +214,14 @@ public class HewanRequest {
 
     public void setJenisHewanId(String jenisHewanId) {
         this.jenisHewanId = jenisHewanId;
+    }
+
+    public void setDeskripsiJenisHewan(String deskripsiJenisHewan) {
+        this.deskripsiJenisHewan = deskripsiJenisHewan;
+    }
+
+    public String getDeskripsiJenisHewan() {
+        return deskripsiJenisHewan;
     }
 
     public String getRumpunHewanId() {
@@ -459,6 +468,8 @@ public class HewanRequest {
         return idTujuanPemeliharaan;
     }
 
+
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idHewan":
@@ -568,6 +579,9 @@ public class HewanRequest {
                 break;
             case "deskripsiTujuanPemeliharaan":
                 this.deskripsiTujuanPemeliharaan = value;
+                break;
+            case "deskripsiJenisHewan":
+                this.deskripsiJenisHewan= value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

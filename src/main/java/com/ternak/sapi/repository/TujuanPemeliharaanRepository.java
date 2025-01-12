@@ -39,6 +39,7 @@ public class TujuanPemeliharaanRepository {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableTujuan = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("idTujuanPemeliharaan", "idTujuanPemeliharaan");
         columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
         columnMapping.put("deskrisi", "deskripsi");
         TujuanPemeliharaan tujuanPemeliharaan = client.getDataByColumn(tableTujuan.toString(), columnMapping, "main",

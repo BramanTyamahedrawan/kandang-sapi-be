@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -372,13 +373,15 @@ public class HewanRepository {
                 }
 
                 if (hewan.getKandang() != null) {
-                    Kandang kandang = new Kandang();
+                    Kandang kandang = hewan.getKandang();
                     if (kandang.getNamaKandang() != null) {
                         client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "kandang", "idKandang",
-                                kandang.getIdKandang() != null ? kandang.getIdKandang() : "-");
+                                kandang.getIdKandang() != null ? kandang.getIdKandang() : UUID.randomUUID().toString());
                         client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "kandang", "namaKandang",
                                 kandang.getNamaKandang() != null ? kandang.getNamaKandang() : "-");
 
+                    } else {
+                        System.out.println("Nama Kandang Kosong" + kandang.getNamaKandang());
                     }
                 }
 
@@ -420,8 +423,13 @@ public class HewanRepository {
                 client.insertRecord(tableHewan, rowKey, "main", "umur", safeString(hewan.getUmur()));
                 client.insertRecord(tableHewan, rowKey, "main", "tanggalTerdaftar",
                         safeString(hewan.getTanggalTerdaftar()));
+                client.insertRecord(tableHewan, rowKey, "main", "tempatLahir",
+                        safeString(hewan.getTempatLahir()));
+                client.insertRecord(tableHewan, rowKey, "main", "tanggalLahir",
+                        safeString(hewan.getTanggalLahir()));
 
-                System.out.println("Berhasil menyimpan Ternak: " + hewan.getIdHewan());
+                System.out.println("Data Kandang : " + hewan.getKandang());
+                System.out.println("Berhasil menyimpan Hewan: " + hewan.getIdHewan());
             } catch (Exception e) {
                 failedRows.add(hewan.getIdHewan());
                 System.err.println(

@@ -119,6 +119,7 @@ public class RumpunHewanRepository {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableRumpun = TableName.valueOf(tableName);
         Map<String,String> columnMapping = new HashMap<>();
+        columnMapping.put("idRumpunHewan", "idRumpunHewan");
         columnMapping.put("rumpun","rumpun");
         columnMapping.put("deskripsi","deskripsi");
 
