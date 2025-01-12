@@ -21,8 +21,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/peternak")
-public class
-PeternakController {
+public class PeternakController {
     private PeternakService peternakService = new PeternakService();
     private static final Logger logger = LoggerFactory.getLogger(PeternakController.class);
 
@@ -86,35 +85,21 @@ PeternakController {
         return HttpStatus.FORBIDDEN;
     }
 
-    // @PostMapping("/bulk")
-    // public ResponseEntity<?> createBulkPeternak(@RequestBody
-    // List<PeternakRequest> peternakRequests) {
-    // try {
-    // // Log jumlah data yang diterima
-    // logger.info("Jumlah data peternak yang diterima: {}",
-    // peternakRequests.size());
-
-    // // Log setiap data yang diterima
-    // peternakRequests.forEach(request -> logger.info("Data peternak: {}",
-    // request));
-
-    // // Simpan data ke service (jika diperlukan nanti)
-    // // peternakService.createBulkPeternak(peternakRequests);
-
-    // return ResponseEntity.ok(new ApiResponse(true, "Data berhasil diterima,
-    // tetapi belum disimpan."));
-    // } catch (Exception e) {
-    // logger.error("Terjadi kesalahan saat memproses data bulk: ", e);
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    // .body(new ApiResponse(false, "Failed to process bulk data: " +
-    // e.getMessage()));
-    // }
-    // }
-
     @PostMapping("/bulk")
     public ResponseEntity<?> createBulkPeternak(@RequestBody List<PeternakRequest> peternakRequests) {
         try {
             peternakService.createBulkPeternak(peternakRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "All Peternak Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/bulkNama")
+    public ResponseEntity<?> createImportPeternakByNama(@RequestBody List<PeternakRequest> peternakRequests) {
+        try {
+            peternakService.createImportPeternakByNama(peternakRequests);
             return ResponseEntity.ok(new ApiResponse(true, "All Peternak Created Successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -2,7 +2,6 @@ package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.model.JenisVaksin;
-import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.payload.JenisVaksinRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.JenisVaksinRepository;
@@ -12,14 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 // import org.slf4j.LoggerFactory;
 
 import com.ternak.sapi.util.AppConstants;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.validation.Valid;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.ArrayList;
 

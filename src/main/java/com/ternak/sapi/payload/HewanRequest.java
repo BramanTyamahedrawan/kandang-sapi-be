@@ -34,7 +34,7 @@ public class HewanRequest {
     private String lokasi;
     private String idIsikhnas;
     private String tanggalPendaftaran;
-    private String peternak_id;
+    private String idPeternak;
 
     // petugas
     private String nikPetugas;
@@ -48,8 +48,8 @@ public class HewanRequest {
     private String kandang_id;
     private String namaKandang;
 
-    //  Rumpun Hewan
-    private String rumpunHewan;
+    // Rumpun Hewan
+    private String rumpun;
     private String deskripsiRumpun;
     private String rumpunHewanId;
 
@@ -62,19 +62,19 @@ public class HewanRequest {
     }
 
     public HewanRequest(String idHewan, String kodeEartagNasional, String noKartuTernak, String petugas_id,
-            String peternak_id,
+            String idPeternak,
             String kandang_id, String rumpunHewanId, String jenisHewanId, String sex, String umur, String tanggalLahir,
             String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude, String tempatLahir,
             String idIsikhnas, String nikPetugas, String nikPeternak, String jenis, String namaPeternak, String dusun,
             String desa, String kecamatan, String kabupaten, String alamat, String provinsi, String email,
             String jenisKelamin, String noTelepon, String lokasi, String tanggalPendaftaran, String tujuanPemeliharaan,
             String jenisHewan, String namaPetugas, String emailPetugas, String noTeleponPetugas, String job,
-            String wilayah, String rumpunHewan, String namaKandang) {
+            String wilayah, String rumpun, String namaKandang) {
         this.idHewan = idHewan;
         this.kodeEartagNasional = kodeEartagNasional;
         this.noKartuTernak = noKartuTernak;
         this.petugas_id = petugas_id;
-        this.peternak_id = peternak_id;
+        this.idPeternak = idPeternak;
         this.kandang_id = kandang_id;
         this.jenisHewanId = jenisHewanId;
         this.rumpunHewanId = rumpunHewanId;
@@ -108,7 +108,7 @@ public class HewanRequest {
         this.noTeleponPetugas = noTeleponPetugas;
         this.job = job;
         this.wilayah = wilayah;
-        this.rumpunHewan = rumpunHewan;
+        this.rumpun = rumpun;
         this.namaKandang = namaKandang;
     }
 
@@ -144,12 +144,12 @@ public class HewanRequest {
         this.petugas_id = petugas_id;
     }
 
-    public String getPeternak_id() {
-        return peternak_id;
+    public String getIdPeternak() {
+        return idPeternak;
     }
 
-    public void setPeternak_id(String peternak_id) {
-        this.peternak_id = peternak_id;
+    public void setIdPeternak(String idPeternak) {
+        this.idPeternak = idPeternak;
     }
 
     public String getKandang_id() {
@@ -436,12 +436,12 @@ public class HewanRequest {
     }
 
     // Rumpun
-    public String getRumpunHewan() {
-        return rumpunHewan;
+    public String getRumpun() {
+        return rumpun;
     }
 
-    public void setRumpunHewan(String rumpunHewan) {
-        this.rumpunHewan = rumpunHewan;
+    public void setRumpun(String rumpun) {
+        this.rumpun = rumpun;
     }
 
     public void setDeskripsiRumpun(String deskripsiRumpun) {
@@ -468,8 +468,6 @@ public class HewanRequest {
         return idTujuanPemeliharaan;
     }
 
-
-
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idHewan":
@@ -484,8 +482,8 @@ public class HewanRequest {
             case "petugas_id":
                 this.petugas_id = value;
                 break;
-            case "peternak_id":
-                this.peternak_id = value;
+            case "idPeternak":
+                this.idPeternak = value;
                 break;
             case "kandang_id":
                 this.kandang_id = value;
@@ -562,8 +560,8 @@ public class HewanRequest {
             case "tanggalPendaftaran":
                 this.tanggalPendaftaran = value;
                 break;
-            case "rumpunHewan":
-                this.rumpunHewan = value;
+            case "rumpun":
+                this.rumpun = value;
                 break;
             case "tujuanPemeliharaan":
                 this.tujuanPemeliharaan = value;
@@ -581,7 +579,7 @@ public class HewanRequest {
                 this.deskripsiTujuanPemeliharaan = value;
                 break;
             case "deskripsiJenisHewan":
-                this.deskripsiJenisHewan= value;
+                this.deskripsiJenisHewan = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

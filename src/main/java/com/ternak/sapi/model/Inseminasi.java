@@ -6,26 +6,44 @@ public class Inseminasi {
     private Peternak peternak;
     private Hewan hewan;
     private Petugas petugas;
-    private String ib;
+    private String ib1;
+    private String ib2;
+    private String ib3;
+    private String ibLain;
     private String idPejantan;
     private String idPembuatan;
     private String bangsaPejantan;
     private String produsen;
+    private String lokasi;
+    private String desa;
+    private String kecamatan;
+    private String kabupaten;
+    private String provinsi;
 
     public Inseminasi() {
     }
 
-    public Inseminasi(String idInseminasi, String tanggalIB, Peternak peternak, Hewan hewan, Petugas petugas, String ib, String idPejantan, String idPembuatan, String bangsaPejantan, String produsen) {
+    public Inseminasi(String idInseminasi, String tanggalIB, Peternak peternak, Hewan hewan, Petugas petugas, String ib,
+            String idPejantan, String idPembuatan, String bangsaPejantan, String produsen, String lokasi, String desa,
+            String kecamatan, String kabupaten, String provinsi, String ib1, String ib2, String ib3, String ibLain) {
         this.idInseminasi = idInseminasi;
         this.tanggalIB = tanggalIB;
         this.peternak = peternak;
         this.hewan = hewan;
         this.petugas = petugas;
-        this.ib = ib;
+        this.ib1 = ib1;
+        this.ib2 = ib2;
+        this.ib3 = ib3;
+        this.ibLain = ibLain;
         this.idPejantan = idPejantan;
         this.idPembuatan = idPembuatan;
         this.bangsaPejantan = bangsaPejantan;
         this.produsen = produsen;
+        this.lokasi = lokasi;
+        this.desa = desa;
+        this.kecamatan = kecamatan;
+        this.kabupaten = kabupaten;
+        this.provinsi = provinsi;
     }
 
     public String getIdInseminasi() {
@@ -68,12 +86,36 @@ public class Inseminasi {
         this.petugas = petugas;
     }
 
-    public String getIb() {
-        return ib;
+    public String getIb1() {
+        return ib1;
     }
 
-    public void setIb(String ib) {
-        this.ib = ib;
+    public void setIb1(String ib1) {
+        this.ib1 = ib1;
+    }
+
+    public String getIb2() {
+        return ib2;
+    }
+
+    public void setIb2(String ib2) {
+        this.ib2 = ib2;
+    }
+
+    public String getIb3() {
+        return ib3;
+    }
+
+    public void setIb3(String ib3) {
+        this.ib3 = ib3;
+    }
+
+    public String getIbLain() {
+        return ibLain;
+    }
+
+    public void setIbLain(String ibLain) {
+        this.ibLain = ibLain;
     }
 
     public String getIdPejantan() {
@@ -108,8 +150,46 @@ public class Inseminasi {
         this.produsen = produsen;
     }
 
-    
-   
+    public String getLokasi() {
+        return lokasi;
+    }
+
+    public void setLokasi(String lokasi) {
+        this.lokasi = lokasi;
+    }
+
+    public String getDesa() {
+        return desa;
+    }
+
+    public void setDesa(String desa) {
+        this.desa = desa;
+    }
+
+    public String getKecamatan() {
+        return kecamatan;
+    }
+
+    public void setKecamatan(String kecamatan) {
+        this.kecamatan = kecamatan;
+    }
+
+    public String getKabupaten() {
+        return kabupaten;
+    }
+
+    public void setKabupaten(String kabupaten) {
+        this.kabupaten = kabupaten;
+    }
+
+    public String getProvinsi() {
+        return provinsi;
+    }
+
+    public void setProvinsi(String provinsi) {
+        this.provinsi = provinsi;
+    }
+
     public boolean isValid() {
         return this.idInseminasi != null;
     }
@@ -122,8 +202,17 @@ public class Inseminasi {
             case "tanggalIB":
                 this.tanggalIB = value;
                 break;
-            case "ib":
-                this.ib = value;
+            case "ib1":
+                this.ib1 = value;
+                break;
+            case "ib2":
+                this.ib2 = value;
+                break;
+            case "ib3":
+                this.ib3 = value;
+                break;
+            case "ibLain":
+                this.ibLain = value;
                 break;
             case "idPejantan":
                 this.idPejantan = value;
@@ -136,6 +225,21 @@ public class Inseminasi {
                 break;
             case "produsen":
                 this.produsen = value;
+                break;
+            case "lokasi":
+                this.lokasi = value;
+                break;
+            case "desa":
+                this.desa = value;
+                break;
+            case "kecamatan":
+                this.kecamatan = value;
+                break;
+            case "kabupaten":
+                this.kabupaten = value;
+                break;
+            case "provinsi":
+                this.provinsi = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

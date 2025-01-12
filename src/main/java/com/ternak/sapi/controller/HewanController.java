@@ -255,4 +255,16 @@ public class HewanController {
         }
     }
 
+    @PostMapping("/bulkNama")
+    public ResponseEntity<?> createBulkHewanImport(@RequestBody List<HewanRequest> hewanRequests) throws IOException {
+        try {
+            System.out.println("Jumlah data yang diterima: " + hewanRequests.size());
+            hewanService.createBulkHewanImport(hewanRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "Hewan Created Successfully"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
 }

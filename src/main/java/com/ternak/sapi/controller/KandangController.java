@@ -251,4 +251,15 @@ public class KandangController {
         }
     }
 
+    @PostMapping("/bulkNama")
+    public ResponseEntity<?> createImportKandangByNama(@RequestBody List<KandangRequest> kandangRequests) {
+        try {
+            kandangService.createImportKandangByNama(kandangRequests); // Passing List<KandangRequest>
+            return ResponseEntity.ok(new ApiResponse(true, "All Kandang Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
 }

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,8 @@ public class KandangService {
     private PeternakRepository peternakRepository = new PeternakRepository();
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
 
-    private static final Logger logger = LoggerFactory.getLogger(KandangService.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(KandangService.class);
 
     public PagedResponse<Kandang> getAllKandang(int page, int size, String peternakID) throws IOException {
         validatePageNumberAndSize(page, size);
@@ -119,7 +120,7 @@ public class KandangService {
     }
 
     public void deleteKandangById(String kandangId) throws IOException {
-        Kandang kandangResponse = kandangRepository.findById(kandangId);
+        // Kandang kandangResponse = kandangRepository.findById(kandangId);
         // if(kandangResponse.isValid()){
         kandangRepository.deleteById(kandangId);
         // }else{
@@ -201,6 +202,69 @@ public class KandangService {
         if (!kandangList.isEmpty()) {
             System.out.println("Menyimpan data kandang yang valid...");
             kandangRepository.saveAll(kandangList);
+            System.out.println("Data kandang berhasil disimpan. Total: " + kandangList.size());
+        } else {
+            System.out.println("Tidak ada data kandang baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai.");
+        System.out.println("Data tidak lengkap: " + dataTidakLengkap);
+        System.out.println("Data yang di-skip karena kesalahan: " + skippedIncomplete);
+    }
+
+    @Transactional
+    public void createImportKandangByNama(List<KandangRequest> kandangRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data kandang secara bulk...");
+
+        List<Kandang> kandangList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int dataTidakLengkap = 0;
+
+        for (KandangRequest request : kandangRequests) {
+            try {
+                if (request.getNamaKandang() == null) {
+                    System.out.println("Data kandang tidak lengkap: " + request);
+                    dataTidakLengkap++;
+                    continue;
+                }
+
+                // Validasi: Temukan Peternak berdasarkan NIK
+                Peternak peternakResponse = peternakRepository.findByNamaPeternak(request.getNamaPeternak());
+                if (peternakResponse == null) {
+                    System.out.println("Peternak dengan Nama: " + request.getNamaPeternak()
+                            + " tidak ditemukan");
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                // Buat objek Kandang
+                Kandang kandang = new Kandang();
+                kandang.setPeternak(peternakResponse);
+                kandang.setIdKandang(request.getIdKandang());
+                kandang.setAlamat(request.getAlamat() != null ? request.getAlamat() : "-");
+                kandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
+                        : "Kandang " + request.getIdKandang());
+                kandang.setLuas(request.getLuas() != null ? request.getLuas() : "-");
+                kandang.setJenisKandang(request.getJenisKandang() != null ? request.getJenisKandang() : "Permanen");
+                kandang.setNilaiBangunan(request.getNilaiBangunan() != null ? request.getNilaiBangunan() : "-");
+                kandang.setLatitude(request.getLatitude() != null ? request.getLatitude() : "-");
+                kandang.setLongitude(request.getLongitude() != null ? request.getLongitude() : "-");
+                kandang.setNikPeternak(request.getNikPeternak() != null ? request.getNikPeternak() : "-");
+                kandang.setKapasitas(request.getKapasitas() != null ? request.getKapasitas() : "-");
+
+                // Tambahkan ke list
+                kandangList.add(kandang);
+                System.out.println("Menambahkan data kandang ke dalam daftar: " + kandang);
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data: " + request);
+                e.printStackTrace();
+                skippedIncomplete++;
+            }
+        }
+
+        if (!kandangList.isEmpty()) {
+            System.out.println("Menyimpan data kandang yang valid...");
+            kandangRepository.saveID(kandangList);
             System.out.println("Data kandang berhasil disimpan. Total: " + kandangList.size());
         } else {
             System.out.println("Tidak ada data kandang baru yang valid untuk disimpan.");

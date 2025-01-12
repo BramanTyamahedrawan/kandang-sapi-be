@@ -1,8 +1,5 @@
 package com.ternak.sapi.model;
 
-import java.time.Instant;
-import java.util.List;
-
 public class Kelahiran {
     private String idKejadian;
     private String tanggalLaporan;
@@ -12,15 +9,24 @@ public class Kelahiran {
     private Kandang kandang;
     private Petugas petugas;
     private Inseminasi inseminasi;
+    private JenisHewan jenisHewan;
+    private RumpunHewan rumpunHewan;
+    private String lokasi;
+    private String kategori;
+    private String jumlah;
+    private String idHewanAnak;
     private String eartagAnak;
     private String jenisKelaminAnak;
     private String spesies;
+    private String urutanIB;
 
     public Kelahiran() {
     }
 
-    public Kelahiran(String idKejadian, String tanggalLaporan, String tanggalLahir, Peternak peternak, 
-            Hewan hewan, Kandang kandang, Petugas petugas, Inseminasi inseminasi, String eartagAnak, String jenisKelaminAnak, String spesies) {
+    public Kelahiran(String idKejadian, String tanggalLaporan, String tanggalLahir, Peternak peternak,
+            Hewan hewan, Kandang kandang, Petugas petugas, Inseminasi inseminasi, String eartagAnak,
+            String jenisKelaminAnak, String spesies, String urutanIB, JenisHewan jenisHewan, RumpunHewan rumpunHewan,
+            String lokasi, String kategori, String jumlah, String idHewanAnak) {
         this.idKejadian = idKejadian;
         this.tanggalLaporan = tanggalLaporan;
         this.tanggalLahir = tanggalLahir;
@@ -32,6 +38,13 @@ public class Kelahiran {
         this.eartagAnak = eartagAnak;
         this.jenisKelaminAnak = jenisKelaminAnak;
         this.spesies = spesies;
+        this.urutanIB = urutanIB;
+        this.jenisHewan = jenisHewan;
+        this.rumpunHewan = rumpunHewan;
+        this.lokasi = lokasi;
+        this.kategori = kategori;
+        this.jumlah = jumlah;
+        this.idHewanAnak = idHewanAnak;
     }
 
     public String getIdKejadian() {
@@ -122,6 +135,62 @@ public class Kelahiran {
         this.spesies = spesies;
     }
 
+    public String getUrutanIB() {
+        return urutanIB;
+    }
+
+    public void setUrutanIB(String urutanIB) {
+        this.urutanIB = urutanIB;
+    }
+
+    public JenisHewan getJenisHewan() {
+        return jenisHewan;
+    }
+
+    public void setJenisHewan(JenisHewan jenisHewan) {
+        this.jenisHewan = jenisHewan;
+    }
+
+    public RumpunHewan getRumpunHewan() {
+        return rumpunHewan;
+    }
+
+    public void setRumpunHewan(RumpunHewan rumpunHewan) {
+        this.rumpunHewan = rumpunHewan;
+    }
+
+    public String getLokasi() {
+        return lokasi;
+    }
+
+    public void setLokasi(String lokasi) {
+        this.lokasi = lokasi;
+    }
+
+    public String getKategori() {
+        return kategori;
+    }
+
+    public void setKategori(String kategori) {
+        this.kategori = kategori;
+    }
+
+    public String getJumlah() {
+        return jumlah;
+    }
+
+    public void setJumlah(String jumlah) {
+        this.jumlah = jumlah;
+    }
+
+    public String getIdHewanAnak() {
+        return idHewanAnak;
+    }
+
+    public void setIdHewanAnak(String idHewanAnak) {
+        this.idHewanAnak = idHewanAnak;
+    }
+
     public boolean isValid() {
         return this.idKejadian != null &&
                 this.peternak != null &&
@@ -149,6 +218,21 @@ public class Kelahiran {
                 break;
             case "spesies":
                 this.spesies = value;
+                break;
+            case "urutanIB":
+                this.urutanIB = value;
+                break;
+            case "lokasi":
+                this.lokasi = value;
+                break;
+            case "kategori":
+                this.kategori = value;
+                break;
+            case "jumlah":
+                this.jumlah = value;
+                break;
+            case "idHewanAnak":
+                this.idHewanAnak = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

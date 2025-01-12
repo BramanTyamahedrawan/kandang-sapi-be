@@ -3,6 +3,7 @@ package com.ternak.sapi.controller;
 import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.payload.ApiResponse;
 import com.ternak.sapi.payload.DefaultResponse;
+import com.ternak.sapi.payload.HewanRequest;
 import com.ternak.sapi.payload.KelahiranRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.service.KelahiranService;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/kelahiran")
@@ -22,12 +24,13 @@ public class KelahiranController {
     private KelahiranService kelahiranService = new KelahiranService();
 
     @GetMapping
-    public PagedResponse<Kelahiran> getKelahirans(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                    @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-                                                    @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
-                                                    @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
-                                                    @RequestParam(value = "hewanID", defaultValue = "*") String hewanID,
-                                                    @RequestParam(value = "inseminasiID", defaultValue = "*") String inseminasiID) throws IOException {
+    public PagedResponse<Kelahiran> getKelahirans(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
+            @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
+            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID,
+            @RequestParam(value = "inseminasiID", defaultValue = "*") String inseminasiID) throws IOException {
         return kelahiranService.getAllKelahiran(page, size, peternakID, petugasID, hewanID, inseminasiID);
     }
 
@@ -48,10 +51,9 @@ public class KelahiranController {
         return kelahiranService.getKelahiranById(kelahiranId);
     }
 
-
     @PutMapping("/{kelahiranId}")
     public ResponseEntity<?> updateKelahiran(@PathVariable String kelahiranId,
-                                              @Valid @RequestBody KelahiranRequest kelahiranRequest) throws IOException {
+            @Valid @RequestBody KelahiranRequest kelahiranRequest) throws IOException {
         Kelahiran kelahiran = kelahiranService.updateKelahiran(kelahiranId, kelahiranRequest);
 
         URI location = ServletUriComponentsBuilder
@@ -63,8 +65,21 @@ public class KelahiranController {
     }
 
     @DeleteMapping("/{kelahiranId}")
-    public HttpStatus deleteKelahiran(@PathVariable (value = "kelahiranId") String kelahiranId) throws IOException {
+    public HttpStatus deleteKelahiran(@PathVariable(value = "kelahiranId") String kelahiranId) throws IOException {
         kelahiranService.deleteKelahiranById(kelahiranId);
         return HttpStatus.FORBIDDEN;
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> createBulkKelahiran(@RequestBody List<KelahiranRequest> kelahiranRequests)
+            throws IOException {
+        try {
+            System.out.println("Jumlah data yang diterima: " + kelahiranRequests.size());
+            kelahiranService.createBulkKelahiran(kelahiranRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "Hewan Created Successfully"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
     }
 }
