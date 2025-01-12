@@ -106,4 +106,15 @@ public class PeternakController {
                     .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
         }
     }
+
+    @PostMapping("/import")
+    public ResponseEntity<?> createImportPeternak(@RequestBody List<PeternakRequest> peternakRequests) {
+        try {
+            peternakService.createImportPeternak(peternakRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "All Peternak Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
 }

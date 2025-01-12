@@ -86,7 +86,7 @@ public class PetugasRepository {
     public Petugas saveImport(Petugas petugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        String rowKey = petugas.getNikPetugas();
+        String rowKey = petugas.getNamaPetugas();
 
         TableName tablePetugas = TableName.valueOf(tableName);
         client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());

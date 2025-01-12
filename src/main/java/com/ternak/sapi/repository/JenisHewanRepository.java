@@ -3,9 +3,7 @@ package com.ternak.sapi.repository;
 
 import com.ternak.sapi.controller.JenisHewanController;
 import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.JenisHewan;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.*;
 import com.ternak.sapi.model.JenisHewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -129,33 +127,15 @@ public class JenisHewanRepository {
     }
 
     public JenisHewan findByJenis(String jenis) throws IOException {
-        if (jenis == null || jenis.isEmpty()) {
-            System.err.println("Parameter jenis tidak boleh null atau kosong.");
-            return null;
-        }
-
         HBaseCustomClient client = new HBaseCustomClient(conf);
-
         TableName tableJenisHewan = TableName.valueOf(tableName);
-        Map<String, String> columnMapping = new HashMap<>();
-
-        // Add the mappings to the HashMap
+        Map<String,String> columnMapping = new HashMap<>();
         columnMapping.put("idJenisHewan", "idJenisHewan");
         columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
-        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping, "main", "jenis",
-                jenis, JenisHewan.class);
-
-        System.out.println("Mencari data Jenis Hewan dengan jenis: " + jenis);
-
-        if (jenisHewan == null || jenisHewan.getJenis() == null) {
-            System.out.println("Jenis Hewan tidak ditemukan untuk jenis: " + jenis);
-            return null;
-        }
-
-        System.out.println("Jenis Hewan ditemukan by jenis: " + jenisHewan);
-        return jenisHewan;
+        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping,"main","jenis", jenis,JenisHewan.class);
+        return jenisHewan.getJenis() != null ? jenisHewan : null;
     }
 
     public JenisHewan update(String jenishewanId, JenisHewan jenishewan) throws IOException {

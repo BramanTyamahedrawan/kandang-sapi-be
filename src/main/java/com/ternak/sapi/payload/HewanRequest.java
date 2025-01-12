@@ -15,8 +15,9 @@ public class HewanRequest {
     private String longitude;
 
     // jenis hewan
-    private String jenis;
     private String jenisHewanId;
+    private String jenis;
+    private String deskripsiJenisHewan;
 
     // peternak
     private String nikPeternak;
@@ -49,10 +50,13 @@ public class HewanRequest {
 
     // Rumpun Hewan
     private String rumpun;
+    private String deskripsiRumpun;
     private String rumpunHewanId;
 
     // Tujuan Pemeliharaan
+    private String idTujuanPemeliharaan;
     private String tujuanPemeliharaan;
+    private String deskripsiTujuanPemeliharaan;
 
     public HewanRequest() {
     }
@@ -210,6 +214,14 @@ public class HewanRequest {
 
     public void setJenisHewanId(String jenisHewanId) {
         this.jenisHewanId = jenisHewanId;
+    }
+
+    public void setDeskripsiJenisHewan(String deskripsiJenisHewan) {
+        this.deskripsiJenisHewan = deskripsiJenisHewan;
+    }
+
+    public String getDeskripsiJenisHewan() {
+        return deskripsiJenisHewan;
     }
 
     public String getRumpunHewanId() {
@@ -432,6 +444,30 @@ public class HewanRequest {
         this.rumpun = rumpun;
     }
 
+    public void setDeskripsiRumpun(String deskripsiRumpun) {
+        this.deskripsiRumpun = deskripsiRumpun;
+    }
+
+    public String getDeskripsiRumpun() {
+        return deskripsiRumpun;
+    }
+
+    public void setDeskripsiTujuanPemeliharaan(String deskripsiTujuanPemeliharaan) {
+        this.deskripsiTujuanPemeliharaan = deskripsiTujuanPemeliharaan;
+    }
+
+    public String getDeskripsiTujuanPemeliharaan() {
+        return deskripsiTujuanPemeliharaan;
+    }
+
+    public void setIdTujuanPemeliharaan(String idTujuanPemeliharaan) {
+        this.idTujuanPemeliharaan = idTujuanPemeliharaan;
+    }
+
+    public String getIdTujuanPemeliharaan() {
+        return idTujuanPemeliharaan;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idHewan":
@@ -532,6 +568,18 @@ public class HewanRequest {
                 break;
             case "namaKandang":
                 this.namaKandang = value;
+                break;
+            case "deskripsiRumpun":
+                this.deskripsiRumpun = value;
+                break;
+            case "idTujuanPemeliharaan":
+                this.idTujuanPemeliharaan = value;
+                break;
+            case "deskripsiTujuanPemeliharaan":
+                this.deskripsiTujuanPemeliharaan = value;
+                break;
+            case "deskripsiJenisHewan":
+                this.deskripsiJenisHewan = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

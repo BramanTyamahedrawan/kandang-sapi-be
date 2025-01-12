@@ -21,6 +21,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.RumpunHewan;
+import com.ternak.sapi.model.TujuanPemeliharaan;
+import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.JenisHewanRepository;
+import com.ternak.sapi.repository.KandangRepository;
+import com.ternak.sapi.repository.PeternakRepository;
+import com.ternak.sapi.repository.PetugasRepository;
+import com.ternak.sapi.repository.RumpunHewanRepository;
+import com.ternak.sapi.repository.TujuanPemeliharaanRepository;
+
 @Service
 public class HewanService {
     private HewanRepository hewanRepository = new HewanRepository();
@@ -381,8 +396,66 @@ public class HewanService {
                 hewan.setUmur(request.getUmur());
                 hewan.setTanggalTerdaftar(request.getTanggalTerdaftar());
                 hewan.setIdentifikasiHewan(request.getIdentifikasiHewan());
+                hewan.setTanggalLahir(request.getTanggalLahir());
+                hewan.setTempatLahir(request.getTempatLahir());
 
-                System.out.println("Nik peternak diterima dari frontend: " + request.getNikPeternak());
+                JenisHewan jenisHewanResponse = null;
+                if (request.getJenis() == null || request.getJenis().trim().isEmpty()) {
+                    System.out.println("Jenis Hewan tidak ditemukan. Menambahkan jenis hewan baru...");
+                    JenisHewan defaultJenisHewan = new JenisHewan();
+                    defaultJenisHewan.setIdJenisHewan(UUID.randomUUID().toString());
+                    defaultJenisHewan.setJenis("Jenis hewan tidak ditemukan waktu import hewan");
+                    defaultJenisHewan.setDeskripsi("Jenis hewan tidak ditemukan waktu import hewan");
+
+                    // // Save Jenis Hewan Baru
+                    jenisHewanResponse = jenisHewanRepository.save(defaultJenisHewan);
+                    System.out.println("Jenis Hewan baru ditambahkan: " + defaultJenisHewan.getIdJenisHewan());
+                } else {
+                    jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
+                    if (jenisHewanResponse == null) {
+                        JenisHewan newJenisHewan = new JenisHewan();
+                        newJenisHewan.setIdJenisHewan(request.getJenisHewanId() != null ? request.getJenisHewanId()
+                                : UUID.randomUUID().toString());
+                        newJenisHewan.setJenis(request.getJenis() != null ? request.getJenis()
+                                : "Jenis hewan tidak ditemukan waktu import hewan");
+                        newJenisHewan.setDeskripsi(
+                                request.getDeskripsiJenisHewan() != null ? request.getDeskripsiJenisHewan() : "-");
+
+                        // // Save Jenis Hewan Baru
+                        jenisHewanResponse = jenisHewanRepository.save(newJenisHewan);
+                        System.out.println("Jenis Hewan baru ditambahkan: " + newJenisHewan.getIdJenisHewan());
+                    }
+                }
+
+                Petugas petugasResponse = null;
+                if (request.getNamaPetugas() == null || request.getNamaPetugas().trim().isEmpty()) {
+                    System.out.println("Nama Petugas kosong. Data ini tidak akan diproses.");
+                    continue;
+                } else {
+                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                    if (petugasResponse == null) {
+                        System.out.println("Nama Petugas tidak ditemukan di database. Membuat petugas baru...");
+
+                        Petugas newPetugas = new Petugas();
+                        newPetugas
+                                .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
+                                        : "nik belum dimasukkan");
+                        newPetugas.setNamaPetugas(request.getNamaPetugas() != null ? request.getNamaPetugas()
+                                : "nama petugas tidak ditemukan waktu import hewan");
+                        newPetugas.setEmail(
+                                request.getEmailPetugas() != null ? request.getEmailPetugas() : "-");
+                        newPetugas.setNoTelp(
+                                request.getNoTeleponPetugas() != null ? request.getNoTeleponPetugas() : "-");
+                        newPetugas.setJob(request.getJob() != null ? request.getJob() : "Pendataan");
+                        newPetugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
+
+                        petugasResponse = petugasRepository.saveImport(newPetugas);
+
+                        System.out.println("Petugas baru berhasil dibuat: " + newPetugas.getNamaPetugas());
+                    } else {
+                        System.out.println("Petugas ditemukan di database: " + petugasResponse.getNamaPetugas());
+                    }
+                }
 
                 Peternak peternakResponse = null;
 
@@ -405,6 +478,7 @@ public class HewanService {
                         defaultPeternak.setDusun("Dusun Tidak Valid");
                         defaultPeternak.setEmail("Email Tidak Valid");
                         defaultPeternak.setNoTelepon("08123456789");
+                        defaultPeternak.setPetugas(petugasResponse);
                         peternakResponse = peternakRepository.save(defaultPeternak);
 
                         System.out
@@ -458,7 +532,7 @@ public class HewanService {
                                         : "Latitude Tidak Diketahui");
                         newPeternak.setLongitude(
                                 request.getLongitude() != null ? request.getLongitude() : "Longitude Tidak Diketahui");
-
+                        newPeternak.setPetugas(petugasResponse);
                         peternakResponse = peternakRepository.saveByNIKPeternak(newPeternak);
 
                         System.out.println("Peternak baru ditambahkan: " + newPeternak.getNikPeternak());
@@ -467,89 +541,91 @@ public class HewanService {
                     }
                 }
 
-                // Fetch relasi data dari repository
-                System.out.println("Jenis diterima dari frontend: " + request.getJenis());
-
-                JenisHewan jenisHewanResponse = null;
-
-                if (request.getJenis() == null || request.getJenis().trim().isEmpty()) {
-                    System.out.println("Jenis Hewan kosong. Menggunakan jenis default: 'Jenis Hewan Tidak Valid'.");
-
-                    // Cari jenis default di database
-                    jenisHewanResponse = jenisHewanRepository.findByJenis("Jenis Hewan Tidak Valid");
-
-                    if (jenisHewanResponse == null) {
-                        // Jika jenis default tidak ada, tambahkan ke database
-                        System.out.println("Jenis default tidak ditemukan. Menambahkan jenis default ke database...");
-                        JenisHewan defaultJenisHewan = new JenisHewan();
-                        defaultJenisHewan.setIdJenisHewan(UUID.randomUUID().toString());
-                        defaultJenisHewan.setJenis("Jenis Hewan Tidak Valid");
-                        defaultJenisHewan.setDeskripsi("Deskripsi Jenis Hewan Tidak Valid");
-                        jenisHewanResponse = jenisHewanRepository.save(defaultJenisHewan); // Simpan jenis default
-
-                        System.out
-                                .println("Jenis default berhasil ditambahkan: " + defaultJenisHewan.getIdJenisHewan());
-                    } else {
-                        System.out.println(
-                                "Jenis default ditemukan di database: " + jenisHewanResponse.getIdJenisHewan());
-                    }
+                Kandang kandangResponse = null;
+                if (request.getNamaKandang() == null || request.getNamaKandang().trim().isEmpty()) {
+                    System.out.println("Nama Kandang kosong. Data ini tidak akan diproses.");
+                    continue;
                 } else {
-                    jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
-                    if (jenisHewanResponse == null) {
-                        // Jika jenis tidak ditemukan, tambahkan jenis baru
-                        System.out.println("Jenis Hewan tidak ditemukan. Menambahkan jenis hewan baru...");
-                        JenisHewan newJenisHewan = new JenisHewan();
-                        newJenisHewan.setIdJenisHewan(UUID.randomUUID().toString());
-                        newJenisHewan.setJenis(request.getJenis());
-                        newJenisHewan.setDeskripsi("Deskripsi " + request.getJenis());
-                        jenisHewanResponse = jenisHewanRepository.save(newJenisHewan);
+                    kandangResponse = kandangRepository.findByNamaKandang(request.getNamaKandang());
+                    if (kandangResponse == null) {
+                        // Jika nama kandang tidak ditemukan, tambahkan petugas baru berdasarkan nama
+                        // dari frontend
+                        System.out.println("Nama Kandang tidak ditemukan di database. Membuat kandang baru...");
 
-                        System.out.println("Jenis Hewan baru ditambahkan: " + newJenisHewan.getIdJenisHewan());
+                        Kandang newKandang = new Kandang();
+                        newKandang.setIdKandang(request.getKandang_id() != null ? request.getKandang_id()
+                                : UUID.randomUUID().toString());
+                        newKandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
+                                : "Nama Kandang tidak ditemukan");
+                        Peternak peternakKandang = peternakResponse;
+                        newKandang.setLongitude(request.getLongitude());
+                        newKandang.setLatitude(request.getLatitude());
+                        newKandang.setPeternak(peternakKandang);
+                        newKandang.setAlamat(request.getAlamat());
+
+                        kandangResponse = kandangRepository.saveImportByHewan(newKandang);
+                        System.out.println("Pemilik Kandang : " + peternakKandang.getNamaPeternak());
+                        System.out.println("Kandang baru berhasil dibuat: " + newKandang.getNamaKandang());
                     } else {
-                        System.out
-                                .println("Jenis Hewan ditemukan di database: " + jenisHewanResponse.getIdJenisHewan());
+                        System.out.println("Kandang ditemukan di database: " + kandangResponse.getNamaKandang());
                     }
                 }
 
-                System.out.println("Petugas diterima dari frontend: " + request.getNamaPetugas());
+                System.out.println("Petugas diterima dari frontend: " + request.getNamaKandang());
 
-                Petugas petugasResponse = null;
+                RumpunHewan rumpunResponse = null;
 
-                if (request.getNamaPetugas() == null || request.getNamaPetugas().trim().isEmpty()) {
-                    System.out.println("Nama Petugas kosong. Data ini tidak akan diproses.");
-                    continue;
-                } else {
-                    // Coba cari petugas berdasarkan nama dari frontend
-                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
-                    if (petugasResponse == null) {
-                        // Jika nama petugas tidak ditemukan, tambahkan petugas baru berdasarkan nama
-                        // dari frontend
-                        System.out.println("Nama Petugas tidak ditemukan di database. Membuat petugas baru...");
+                if (request.getRumpun() != null) {
+                    if (request.getJenis() != null && request.getJenis().toLowerCase().contains("sapi")) {
+                        RumpunHewan defaultRumpunHewan = new RumpunHewan();
+                        defaultRumpunHewan
+                                .setIdRumpunHewan(request.getRumpunHewanId() != null ? request.getRumpunHewanId()
+                                        : UUID.randomUUID().toString());
+                        defaultRumpunHewan.setRumpun(request.getJenis());
+                        defaultRumpunHewan.setDeskripsi("Rumpun hewan ternak " + request.getJenis());
 
-                        Petugas newPetugas = new Petugas();
-                        newPetugas
-                                .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
-                                        : "nik belum dimasukkan");
-                        newPetugas.setNamaPetugas(request.getNamaPetugas());
-                        newPetugas.setEmail(
-                                request.getEmailPetugas() != null ? request.getEmailPetugas() : "-");
-                        newPetugas.setNoTelp(
-                                request.getNoTeleponPetugas() != null ? request.getNoTeleponPetugas() : "-");
-                        newPetugas.setJob(request.getJob() != null ? request.getJob() : "Pendataan");
-                        newPetugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
+                        rumpunResponse = rumpunHewanRepository.save(defaultRumpunHewan);
 
-                        petugasResponse = petugasRepository.saveImport(newPetugas);
-
-                        System.out.println("Petugas baru berhasil dibuat: " + newPetugas.getNamaPetugas());
+                        System.out.println("Rumpun baru berhasil dibuat: " + defaultRumpunHewan.getRumpun());
                     } else {
-                        System.out.println("Petugas ditemukan di database: " + petugasResponse.getNamaPetugas());
+                        RumpunHewan defaultRumpunHewan = new RumpunHewan();
+                        defaultRumpunHewan
+                                .setIdRumpunHewan(request.getRumpunHewanId() != null ? request.getRumpunHewanId()
+                                        : UUID.randomUUID().toString());
+                        defaultRumpunHewan.setRumpun(request.getRumpun() != null ? request.getRumpun()
+                                : "Nama rumpun hewan tidak ditemukan waktu import hewan\"");
+                        defaultRumpunHewan
+                                .setDeskripsi(request.getDeskripsiRumpun() != null ? request.getDeskripsiRumpun()
+                                        : "Deskripsi Rumpun hewan tidak ditemukan waktu import hewan");
+
+                        rumpunResponse = rumpunHewanRepository.save(defaultRumpunHewan);
                     }
+                }
+
+                TujuanPemeliharaan tujuanResponse = null;
+                if (request.getTujuanPemeliharaan() != null) {
+
+                    TujuanPemeliharaan defaultTujuan = new TujuanPemeliharaan();
+                    defaultTujuan.setIdTujuanPemeliharaan(
+                            request.getIdTujuanPemeliharaan() != null ? request.getIdTujuanPemeliharaan()
+                                    : UUID.randomUUID().toString());
+                    defaultTujuan.setTujuanPemeliharaan(request.getTujuanPemeliharaan());
+                    defaultTujuan.setDeskripsi(request.getDeskripsiTujuanPemeliharaan() != null
+                            ? "Tujuan pemeliharaan ini adalah " + request.getTujuanPemeliharaan()
+                            : "Deskripsi tujuan pemeliharaan tidak ditemukan waktu import hewan");
+
+                    tujuanResponse = tujuanPemeliharaanRepository.saveImport(defaultTujuan);
+
+                    System.out.println("Tujuan baru berhasil dibuat: " + defaultTujuan.getTujuanPemeliharaan());
                 }
 
                 // Set relasi ke objek Hewan
                 hewan.setPeternak(peternakResponse);
                 hewan.setJenisHewan(jenisHewanResponse);
                 hewan.setPetugas(petugasResponse);
+                hewan.setKandang(kandangResponse);
+                hewan.setRumpunHewan(rumpunResponse);
+                hewan.setTujuanPemeliharaan(tujuanResponse);
 
                 // Tambahkan idHewan ke Set dan Hewan ke List
                 existingIds.add(request.getIdHewan());

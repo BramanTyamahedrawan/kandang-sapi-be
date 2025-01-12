@@ -141,6 +141,20 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
 
+        if (peternak.getPetugas() != null) {
+            Petugas petugas = peternak.getPetugas();
+            if (petugas != null && petugas.getNamaPetugas() != null) {
+                client.insertRecord(tablePeternak, rowKey, "petugas", "nikPetugas",
+                        safeString(petugas.getNikPetugas()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "namaPetugas",
+                        safeString(petugas.getNamaPetugas()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "email",
+                        safeString(petugas.getEmail()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "job", safeString(petugas.getJob()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
+            }
+        }
+
         return peternak;
     }
 
@@ -509,27 +523,8 @@ public class PeternakRepository {
 
         System.out.println("Data Peternak ditemukan: by nama" + peternak);
 
-        return peternak;
+        return peternak.getNamaPeternak() != null ? peternak : null;
     }
-
-    // Peternak peternak = client.getDataByColumn(tablePeternak.toString(),
-    // columnMapping, "main", "nikPeternak",
-    // nikPeternak, Peternak.class);
-
-    // Peternak peternak = null;
-    // try {
-    // peternak = client.getDataByColumn(
-    // tablePeternak.toString(),
-    // columnMapping,
-    // "main",
-    // "nikPeternak",
-    // nikPeternak,
-    // Peternak.class);
-    // System.out.println("Data Peternak ditemukan: " + peternak);
-    // } catch (Exception e) {
-    // System.err.println("Error saat mengambil data Peternak NIK: " + nikPeternak +
-    // ", Error: " + e.getMessage());
-    // }
 
     public List<String> findExistingNamaPetugas(List<String> namaPetugasList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
