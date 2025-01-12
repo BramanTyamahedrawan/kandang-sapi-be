@@ -476,58 +476,41 @@ public class HewanService {
                 System.out.println("Petugas diterima dari frontend: " + request.getNamaKandang());
 
                 RumpunHewan rumpunResponse = null;
-//
-                    if (request.getRumpunHewan() == null || request.getRumpunHewan().trim().isEmpty()) {
-                        System.out.println("Nama Rumpun tidak ditemukan di database. Membuat Rumpun baru...");
-                        RumpunHewan defaultRumpunHewan = new RumpunHewan();
-                        defaultRumpunHewan.setIdRumpunHewan(request.getRumpunHewanId() != null ? request.getRumpunHewanId()
-                                : UUID.randomUUID().toString());
-                        defaultRumpunHewan.setRumpun("Nama rumpun hewan tidak ditemukan waktu import hewan");
-                        defaultRumpunHewan.setDeskripsi("Deskripsi Rumpun hewan tidak ditemukan waktu import hewan");
 
-                        rumpunResponse = rumpunHewanRepository.save(defaultRumpunHewan);
-
-                        System.out.println("Rumpun baru berhasil dibuat: " + defaultRumpunHewan.getRumpun());
-                    } else {
-                        rumpunResponse = rumpunHewanRepository.findByRumpun(request.getRumpunHewan());
-                        if (rumpunResponse != null) {
-                            RumpunHewan newRumpunHewan = new RumpunHewan();
-                            newRumpunHewan.setIdRumpunHewan(request.getRumpunHewanId() != null ? request.getRumpunHewanId()
+                    if (request.getRumpunHewan() != null) {
+                        if(request.getJenis() != null && request.getJenis().toLowerCase().contains("sapi")) {
+                            RumpunHewan defaultRumpunHewan = new RumpunHewan();
+                            defaultRumpunHewan.setIdRumpunHewan(request.getRumpunHewanId() != null ? request.getRumpunHewanId()
                                     : UUID.randomUUID().toString());
-                            newRumpunHewan.setRumpun(request.getRumpunHewan() != null ? request.getRumpunHewan() : "Nama rumpun hewan tidak ditemukan waktu import hewan");
-                            newRumpunHewan.setDeskripsi(request.getDeskripsiRumpun() != null ? request.getDeskripsiRumpun() : "Deskripsi Rumpun hewan tidak ditemukan waktu import hewan");
+                            defaultRumpunHewan.setRumpun(request.getJenis());
+                            defaultRumpunHewan.setDeskripsi("Rumpun hewan ternak " + request.getJenis());
 
-                            rumpunHewanRepository.save(newRumpunHewan);
+                            rumpunResponse = rumpunHewanRepository.save(defaultRumpunHewan);
 
+                            System.out.println("Rumpun baru berhasil dibuat: " + defaultRumpunHewan.getRumpun());
+                        }else{
+                            RumpunHewan defaultRumpunHewan = new RumpunHewan();
+                            defaultRumpunHewan.setIdRumpunHewan(request.getRumpunHewanId() != null ? request.getRumpunHewanId()
+                                    : UUID.randomUUID().toString());
+                            defaultRumpunHewan.setRumpun(request.getRumpunHewan() != null ? request.getRumpunHewan() : "Nama rumpun hewan tidak ditemukan waktu import hewan\"");
+                            defaultRumpunHewan.setDeskripsi(request.getDeskripsiRumpun() != null ? request.getDeskripsiRumpun() : "Deskripsi Rumpun hewan tidak ditemukan waktu import hewan");
+
+                            rumpunResponse = rumpunHewanRepository.save(defaultRumpunHewan);
                         }
                     }
 
 
                 TujuanPemeliharaan tujuanResponse = null;
-                    if (request.getTujuanPemeliharaan() == null || request.getTujuanPemeliharaan().trim().isEmpty()) {
-                        System.out.println("Nama Tujuan tidak ditemukan di database. Membuat Rumpun baru...");
+                    if (request.getTujuanPemeliharaan() != null) {
 
                         TujuanPemeliharaan defaultTujuan = new TujuanPemeliharaan();
-                        defaultTujuan.setIdTujuanPemeliharaan(UUID.randomUUID().toString());
-                        defaultTujuan.setTujuanPemeliharaan( "Tujuan pemeliharaan tidak ditemukan waktu import hewan");
-                        defaultTujuan.setDeskripsi(" Deskripsi tujuan pemeliharaan tidak ditemukan waktu import hewan");
+                        defaultTujuan.setIdTujuanPemeliharaan(request.getIdTujuanPemeliharaan() != null ? request.getIdTujuanPemeliharaan() : UUID.randomUUID().toString());
+                        defaultTujuan.setTujuanPemeliharaan(request.getTujuanPemeliharaan());
+                        defaultTujuan.setDeskripsi(request.getDeskripsiTujuanPemeliharaan() != null ? "Tujuan pemeliharaan ini adalah " + request.getTujuanPemeliharaan() : "Deskripsi tujuan pemeliharaan tidak ditemukan waktu import hewan");
 
                         tujuanResponse = tujuanPemeliharaanRepository.saveImport(defaultTujuan);
 
                         System.out.println("Tujuan baru berhasil dibuat: " + defaultTujuan.getTujuanPemeliharaan());
-                    } else {
-                        tujuanResponse = tujuanPemeliharaanRepository.findByTujuan(request.getTujuanPemeliharaan());
-
-                        if (tujuanResponse != null) {
-                            TujuanPemeliharaan newTujuan = new TujuanPemeliharaan();
-                            newTujuan.setIdTujuanPemeliharaan(request.getIdTujuanPemeliharaan() != null ? request.getIdTujuanPemeliharaan() : UUID.randomUUID().toString());
-                            newTujuan.setTujuanPemeliharaan(request.getTujuanPemeliharaan() != null ? request.getTujuanPemeliharaan() : "Tujuan pemeliharaan tidak ditemukan waktu import hewan");
-                            newTujuan.setDeskripsi(request.getDeskripsiTujuanPemeliharaan() != null ? request.getDeskripsiTujuanPemeliharaan() : "Deskripsi tujuan pemeliharaan tidak ditemukan waktu import hewan");
-
-                            tujuanPemeliharaanRepository.saveImport(newTujuan);
-
-                            System.out.println("Tujuan baru berhasil dibuat: " + newTujuan.getTujuanPemeliharaan());
-                        }
                     }
 
                 // Set relasi ke objek Hewan

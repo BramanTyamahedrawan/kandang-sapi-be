@@ -35,15 +35,18 @@ public class RumpunHewanRepository {
 
         String rowKey = rumpunhewan.getIdRumpunHewan();
         TableName tableRumpunHewan = TableName.valueOf(tableName);
-        client.insertRecord(tableRumpunHewan, rowKey, "main", "idRumpunHewan", rowKey);
-        if (rumpunhewan.getRumpun() != null) {
-            client.insertRecord(tableRumpunHewan, rowKey, "main", "rumpun", rumpunhewan.getRumpun());
+
+        if(!existsByRumpun(rumpunhewan.getRumpun())) {
+            client.insertRecord(tableRumpunHewan, rowKey, "main", "idRumpunHewan", rowKey);
+            if (rumpunhewan.getRumpun() != null) {
+                client.insertRecord(tableRumpunHewan, rowKey, "main", "rumpun", rumpunhewan.getRumpun());
+            }
+            if (rumpunhewan.getDeskripsi() != null) {
+                client.insertRecord(tableRumpunHewan, rowKey, "main", "deskripsi", rumpunhewan.getDeskripsi());
+            }
+            client.insertRecord(tableRumpunHewan, rowKey, "detail", "created_by", "Polinema");
         }
-        if (rumpunhewan.getDeskripsi() != null) {
-            client.insertRecord(tableRumpunHewan, rowKey, "main", "deskripsi", rumpunhewan.getDeskripsi());
-        }
-        client.insertRecord(tableRumpunHewan, rowKey, "detail", "created_by", "Polinema");
-        return rumpunhewan;
+            return rumpunhewan;
     }
 
     public List<RumpunHewan> saveAll(List<RumpunHewan> rumpunhewanList) throws IOException {

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ternak.sapi.model.RumpunHewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -85,16 +86,28 @@ public class TujuanPemeliharaanRepository {
 
     public TujuanPemeliharaan saveImport(TujuanPemeliharaan tujuanPemeliharaan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
-
         String rowKey = tujuanPemeliharaan.getIdTujuanPemeliharaan();
-        TableName tableTujuanPemeliharaan = TableName.valueOf(tableName);
-        client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "idTujuanPemeliharaan",
-                safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan()));
-        client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "tujuanPemeliharaan",
-                safeString(tujuanPemeliharaan.getTujuanPemeliharaan()));
-        client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "deskripsi",
-                safeString(tujuanPemeliharaan.getDeskripsi()));
-        client.insertRecord(tableTujuanPemeliharaan, rowKey, "detail", "created_by", "Polinema");
+        if(!existsByTujuan(tujuanPemeliharaan.getTujuanPemeliharaan())) {
+            TableName tableTujuanPemeliharaan = TableName.valueOf(tableName);
+            client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "idTujuanPemeliharaan",
+                    safeString(tujuanPemeliharaan.getIdTujuanPemeliharaan()));
+            client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "tujuanPemeliharaan",
+                    safeString(tujuanPemeliharaan.getTujuanPemeliharaan()));
+            client.insertRecord(tableTujuanPemeliharaan, rowKey, "main", "deskripsi",
+                    safeString(tujuanPemeliharaan.getDeskripsi()));
+            client.insertRecord(tableTujuanPemeliharaan, rowKey, "detail", "created_by", "Polinema");
+        }
         return tujuanPemeliharaan;
+    }
+
+    public boolean existsByTujuan(String tujuan) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableTujuanPemeliharaan = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
+
+        TujuanPemeliharaan tujuanPemeliharaan = client.getDataByColumn(tableTujuanPemeliharaan.toString(), columnMapping, "main", "tujuanPemeliharaan",
+                tujuan, TujuanPemeliharaan.class);
+        return tujuanPemeliharaan.getTujuanPemeliharaan() != null; // True jika rumpun sudah ada
     }
 }
