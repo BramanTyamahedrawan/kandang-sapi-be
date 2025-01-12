@@ -3,6 +3,8 @@ package com.ternak.sapi.repository;
 
 import com.ternak.sapi.controller.RumpunHewanController;
 import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.model.RumpunHewan;
 import org.apache.hadoop.conf.Configuration;
@@ -82,6 +84,19 @@ public class RumpunHewanRepository {
         return rumpunhewanList;
     }
 
+    public RumpunHewan saveByRumpun(RumpunHewan rumpun) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        String rowKey = rumpun.getRumpun();
+
+        TableName tableRumpun = TableName.valueOf(tableName);
+        client.insertRecord(tableRumpun, rowKey, "main", "idRumpunHewan", rumpun.getIdRumpunHewan());
+        client.insertRecord(tableRumpun, rowKey, "main", "rumpun", rumpun.getRumpun());
+        client.insertRecord(tableRumpun, rowKey, "main", "deskripsi", rumpun.getDeskripsi());
+        client.insertRecord(tableRumpun, rowKey, "detail", "created_by", "Polinema");
+        return rumpun;
+    }
+
     private String safeString(String value) {
         return value != null ? value : "";
     }
@@ -115,15 +130,32 @@ public class RumpunHewanRepository {
         return rumpunhewan;
     }
 
-    public RumpunHewan findByRumpun (String rumpun) throws IOException{
+    public RumpunHewan findByRumpun(String rumpun) throws IOException {
+        if (rumpun == null || rumpun.isEmpty()) {
+            System.err.println("Parameter rumpun tidak boleh null atau kosong.");
+            return null;
+        }
+
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableRumpun = TableName.valueOf(tableName);
-        Map<String,String> columnMapping = new HashMap<>();
-        columnMapping.put("rumpun","rumpun");
-        columnMapping.put("deskripsi","deskripsi");
+        Map<String, String> columnMapping = new HashMap<>();
 
-        RumpunHewan rumpunHewan = client.getDataByColumn(tableRumpun.toString(), columnMapping,"main","rumpun", rumpun,RumpunHewan.class);
-        return rumpunHewan.getRumpun() != null ? rumpunHewan : null;
+        columnMapping.put("idRumpunHewan", "idRumpunHewan");
+        columnMapping.put("rumpun", "rumpun");
+        columnMapping.put("deskripsi", "deskripsi");
+
+        RumpunHewan rumpunHewan = client.getDataByColumn(tableRumpun.toString(), columnMapping, "main", "rumpun",
+                rumpun, RumpunHewan.class);
+        System.out.println("Mencari data Rumpun Hewan dengan rumpun: " + rumpun);
+
+        if (rumpunHewan == null || rumpunHewan.getRumpun() == null) {
+            System.out.println("Rumpun Hewan tidak ditemukan untuk rumpun: " + rumpun);
+            return null;
+        }
+
+        System.out.println("Rumpun Hewan ditemukan by rumpun: " + rumpunHewan);
+
+        return rumpunHewan;
     }
 
     public boolean deleteById(String rumpunhewanId) throws IOException {

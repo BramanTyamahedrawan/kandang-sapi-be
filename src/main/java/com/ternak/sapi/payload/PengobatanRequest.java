@@ -1,24 +1,34 @@
 package com.ternak.sapi.payload;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
-
 public class PengobatanRequest {
     private String idKasus;
     private String tanggalPengobatan;
     private String tanggalKasus;
-    private String petugas_id;
     private String namaInfrastruktur;
     private String lokasi;
     private String dosis;
     private String sindrom;
     private String diagnosaBanding;
-    
+    private String provinsiPengobatan;
+    private String kabupatenPengobatan;
+    private String kecamatanPengobatan;
+    private String desaPengobatan;
+    // petugas
+    private String petugas_id;
+    private String nikPetugas;
+    private String namaPetugas;
+    private String email;
+    private String noTelp;
+    private String wilayah;
+    private String job;
+
     public PengobatanRequest() {
     }
 
-    public PengobatanRequest(String idKasus, String tanggalPengobatan, String tanggalKasus, String petugas_id, String namaInfrastruktur, String lokasi, String dosis, String sindrom, String diagnosaBanding) {
+    public PengobatanRequest(String idKasus, String tanggalPengobatan, String tanggalKasus, String petugas_id,
+            String namaInfrastruktur, String lokasi, String dosis, String sindrom, String diagnosaBanding,
+            String provinsiPengobatan, String kabupatenPengobatan, String kecamatanPengobatan, String desaPengobatan,
+            String nikPetugas, String namaPetugas, String email, String noTelp, String wilayah, String job) {
         this.idKasus = idKasus;
         this.tanggalPengobatan = tanggalPengobatan;
         this.tanggalKasus = tanggalKasus;
@@ -28,6 +38,16 @@ public class PengobatanRequest {
         this.dosis = dosis;
         this.sindrom = sindrom;
         this.diagnosaBanding = diagnosaBanding;
+        this.provinsiPengobatan = provinsiPengobatan;
+        this.kabupatenPengobatan = kabupatenPengobatan;
+        this.kecamatanPengobatan = kecamatanPengobatan;
+        this.desaPengobatan = desaPengobatan;
+        this.nikPetugas = nikPetugas;
+        this.namaPetugas = namaPetugas;
+        this.email = email;
+        this.noTelp = noTelp;
+        this.wilayah = wilayah;
+        this.job = job;
     }
 
     public String getIdKasus() {
@@ -102,6 +122,87 @@ public class PengobatanRequest {
         this.diagnosaBanding = diagnosaBanding;
     }
 
+    public String getProvinsiPengobatan() {
+        return provinsiPengobatan;
+    }
+
+    public void setProvinsiPengobatan(String provinsiPengobatan) {
+        this.provinsiPengobatan = provinsiPengobatan;
+    }
+
+    public String getKabupatenPengobatan() {
+        return kabupatenPengobatan;
+    }
+
+    public void setKabupatenPengobatan(String kabupatenPengobatan) {
+        this.kabupatenPengobatan = kabupatenPengobatan;
+    }
+
+    public String getKecamatanPengobatan() {
+        return kecamatanPengobatan;
+    }
+
+    public void setKecamatanPengobatan(String kecamatanPengobatan) {
+        this.kecamatanPengobatan = kecamatanPengobatan;
+    }
+
+    public String getDesaPengobatan() {
+        return desaPengobatan;
+    }
+
+    public void setDesaPengobatan(String desaPengobatan) {
+        this.desaPengobatan = desaPengobatan;
+    }
+
+    // Petugas
+    public String getNikPetugas() {
+        return nikPetugas;
+    }
+
+    public void setNikPetugas(String nikPetugas) {
+        this.nikPetugas = nikPetugas;
+    }
+
+    public String getNamaPetugas() {
+        return namaPetugas;
+    }
+
+    public void setNamaPetugas(String namaPetugas) {
+        this.namaPetugas = namaPetugas;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNoTelp() {
+        return noTelp;
+    }
+
+    public void setNoTelp(String noTelp) {
+        this.noTelp = noTelp;
+    }
+
+    public String getWilayah() {
+        return wilayah;
+    }
+
+    public void setWilayah(String wilayah) {
+        this.wilayah = wilayah;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idKasus":
@@ -116,6 +217,8 @@ public class PengobatanRequest {
             case "petugas_id":
                 this.petugas_id = value;
                 break;
+            case "namaPetugas":
+                this.namaPetugas = value;
             case "namaInfrastruktur":
                 this.namaInfrastruktur = value;
                 break;
@@ -130,6 +233,18 @@ public class PengobatanRequest {
                 break;
             case "diagnosaBanding":
                 this.diagnosaBanding = value;
+                break;
+            case "provinsiPengobatan":
+                this.provinsiPengobatan = value;
+                break;
+            case "kabupatenPengobatan":
+                this.kabupatenPengobatan = value;
+                break;
+            case "kecamatanPengobatan":
+                this.kecamatanPengobatan = value;
+                break;
+            case "desaPengobatan":
+                this.desaPengobatan = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

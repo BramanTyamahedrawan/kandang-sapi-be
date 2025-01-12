@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+// import java.time.LocalDate;
+// import java.time.format.DateTimeFormatter;
+// import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -216,9 +216,9 @@ public class PeternakService {
                 peternak.setDesa(request.getDesa());
                 peternak.setKecamatan(request.getKecamatan());
                 peternak.setKabupaten(request.getKabupaten());
-                peternak.setTanggalPendaftaran(formatDate(request.getTanggalPendaftaran()));
+                peternak.setTanggalPendaftaran(request.getTanggalPendaftaran());
                 peternak.setPetugas(petugasResponse); // Masukkan objek lengkap Petugas
-                peternak.setTanggalLahir(formatDate(request.getTanggalLahir()));
+                peternak.setTanggalLahir(request.getTanggalLahir());
                 peternak.setJenisKelamin(request.getJenisKelamin());
                 peternak.setIdIsikhnas(request.getIdIsikhnas());
                 peternak.setLongitude(request.getLongitude());
@@ -244,17 +244,70 @@ public class PeternakService {
                 + skippedExisting);
     }
 
-    // Helper untuk memformat tanggal
-    private String formatDate(String date) {
-        if (date == null || date.isEmpty()) {
-            return "";
+    @Transactional
+    public void createImportPeternakByNama(List<PeternakRequest> peternakRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data peternak secara bulk...");
+
+        List<Peternak> peternakList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int skippedExisting = 0;
+
+        for (PeternakRequest request : peternakRequests) {
+            try {
+                // Validasi data tidak lengkap
+                if (request.getNamaPeternak() == null) {
+                    System.out.println("Data tidak lengkap atau nikPetugas null, melewati data: " + request);
+                    skippedIncomplete++;
+                    continue;
+                }
+                // Validasi nikPetugas
+                Petugas petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                if (petugasResponse == null) {
+                    System.out.println("Petugas dengan Nama " + request.getNamaPetugas() + " tidak ditemukan.");
+                    continue;
+                }
+
+                // Buat objek Peternak
+                Peternak peternak = new Peternak();
+                peternak.setIdPeternak(request.getIdPeternak());
+                peternak.setNikPeternak(request.getNikPeternak() != null ? request.getNikPeternak() : "-");
+                peternak.setEmail(request.getEmail() != null ? request.getEmail() : "-");
+                peternak.setNoTelepon(request.getNoTelepon() != null ? request.getNoTelepon() : "-");
+                peternak.setNamaPeternak(request.getNamaPeternak() != null ? request.getNamaPeternak() : "-");
+                peternak.setLokasi(request.getLokasi() != null ? request.getLokasi() : "-");
+                peternak.setAlamat(request.getAlamat() != null ? request.getAlamat() : "-");
+                peternak.setDusun(request.getDusun() != null ? request.getDusun() : "-");
+                peternak.setDesa(request.getDesa() != null ? request.getDesa() : "-");
+                peternak.setKecamatan(request.getKecamatan() != null ? request.getKecamatan() : "-");
+                peternak.setKabupaten(request.getKabupaten() != null ? request.getKabupaten() : "-");
+                peternak.setTanggalPendaftaran(
+                        request.getTanggalPendaftaran() != null ? request.getTanggalPendaftaran() : "-");
+                peternak.setTanggalLahir(request.getTanggalLahir() != null ? request.getTanggalLahir() : "-");
+                peternak.setJenisKelamin(request.getJenisKelamin() != null ? request.getJenisKelamin() : "-");
+                peternak.setIdIsikhnas(request.getIdIsikhnas() != null ? request.getIdIsikhnas() : "-");
+                peternak.setLongitude(request.getLongitude() != null ? request.getLongitude() : "-");
+                peternak.setLatitude(request.getLatitude() != null ? request.getLatitude() : "-");
+
+                peternak.setPetugas(petugasResponse);
+
+                peternakList.add(peternak);
+                System.out.println("Menambahkan data peternak ke dalam daftar: " + peternak.getNamaPeternak());
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data peternak: " + request.getNamaPeternak());
+                e.printStackTrace();
+            }
         }
-        try {
-            LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            return localDate.toString();
-        } catch (DateTimeParseException e) {
-            System.err.println("Format tanggal tidak valid: " + date);
-            return "";
+
+        if (!peternakList.isEmpty()) {
+            System.out.println("Menyimpan data peternak yang valid...");
+            peternakRepository.saveByNama(peternakList);
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + peternakList.size());
+        } else {
+            System.out.println("Tidak ada data peternak baru yang valid untuk disimpan.");
         }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
+                + skippedExisting);
     }
+
 }

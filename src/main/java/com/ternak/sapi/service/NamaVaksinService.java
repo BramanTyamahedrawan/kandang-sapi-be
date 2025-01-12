@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.JenisVaksin;
 import com.ternak.sapi.model.NamaVaksin;
 import com.ternak.sapi.payload.NamaVaksinRequest;

@@ -9,6 +9,7 @@ public class PeternakRequest {
     private String lokasi;
     private String petugas_id;
     private String nikPetugas;
+    private String namaPetugas;
     private String tanggalPendaftaran;
     private String noTelepon;
     private String email;
@@ -33,7 +34,7 @@ public class PeternakRequest {
             String nikPetugas,
             String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir,
             String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat,
-            String latitude, String longitude, String provinsi) {
+            String latitude, String longitude, String provinsi, String namaPetugas) {
         this.idPeternak = idPeternak;
         this.nikPeternak = nikPeternak;
         this.namaPeternak = namaPeternak;
@@ -54,6 +55,7 @@ public class PeternakRequest {
         this.latitude = latitude;
         this.longitude = longitude;
         this.provinsi = provinsi;
+        this.namaPetugas = namaPetugas;
     }
 
     // Relasi Petugas
@@ -111,6 +113,14 @@ public class PeternakRequest {
 
     public void setNikPetugas(String nikPetugas) {
         this.nikPetugas = nikPetugas;
+    }
+
+    public String getNamaPetugas() {
+        return namaPetugas;
+    }
+
+    public void setNamaPetugas(String namaPetugas) {
+        this.namaPetugas = namaPetugas;
     }
 
     public String getTanggalPendaftaran() {
@@ -241,6 +251,12 @@ public class PeternakRequest {
                 break;
             case "petugas_id":
                 this.petugas_id = value;
+                break;
+            case "nikPetugas":
+                this.nikPetugas = value;
+                break;
+            case "namaPetugas":
+                this.namaPetugas = value;
                 break;
             case "tanggalPendaftaran":
                 this.tanggalPendaftaran = value;

@@ -16,6 +16,7 @@ public class KandangRequest {
     private String latitude;
     private String longitude;
     private String nikPeternak;
+    private String namaPeternak;
     private JenisHewan jenisHewan;
     private Peternak peternak;
 
@@ -25,7 +26,8 @@ public class KandangRequest {
     public KandangRequest(String idKandang, String peternak_id, String luas, String idJenisHewan,
             String kapasitas,
             String jenisKandang, String nilaiBangunan, String alamat, String namaKandang, String jenisKandang1,
-            String latitude, String longitude, String nikPeternak, JenisHewan jenisHewan) {
+            String latitude, String longitude, String nikPeternak, JenisHewan jenisHewan, Peternak peternak,
+            String namaPeternak) {
         this.idKandang = idKandang;
         this.peternak_id = peternak_id;
         this.luas = luas;
@@ -39,6 +41,8 @@ public class KandangRequest {
         this.latitude = latitude;
         this.longitude = longitude;
         this.jenisHewan = jenisHewan;
+        this.peternak = peternak;
+        this.namaPeternak = namaPeternak;
     }
 
     // relasi peternak
@@ -72,6 +76,14 @@ public class KandangRequest {
 
     public void setPeternak_id(String peternak_id) {
         this.peternak_id = peternak_id;
+    }
+
+    public String getNamaPeternak() {
+        return namaPeternak;
+    }
+
+    public void setNamaPeternak(String namaPeternak) {
+        this.namaPeternak = namaPeternak;
     }
 
     public String getLuas() {

@@ -1,6 +1,8 @@
 package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Petugas;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -65,6 +67,22 @@ public class PetugasRepository {
         return petugas;
     }
 
+    public Petugas saveNama(Petugas petugas) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        String rowKey = petugas.getNamaPetugas();
+
+        TableName tablePetugas = TableName.valueOf(tableName);
+        client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
+        client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
+        client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
+        client.insertRecord(tablePetugas, rowKey, "main", "email", petugas.getEmail());
+        client.insertRecord(tablePetugas, rowKey, "main", "job", petugas.getJob());
+        client.insertRecord(tablePetugas, rowKey, "main", "wilayah", petugas.getWilayah());
+        client.insertRecord(tablePetugas, rowKey, "detail", "created_by", "Polinema");
+        return petugas;
+    }
+
     public Petugas saveImport(Petugas petugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -79,6 +97,48 @@ public class PetugasRepository {
         client.insertRecord(tablePetugas, rowKey, "main", "wilayah", petugas.getWilayah());
         client.insertRecord(tablePetugas, rowKey, "detail", "created_by", "Polinema");
         return petugas;
+    }
+
+    public List<Petugas> saveByNama(List<Petugas> petugasList) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePetugas = TableName.valueOf(tableName);
+
+        System.out.println("Memulai penyimpanan data ke HBase...");
+        List<String> failedRows = new ArrayList<>();
+
+        for (Petugas petugas : petugasList) {
+            try {
+                if (petugas.getNamaPetugas() == null) {
+                    System.out.println("Data tidak lengkap, melewati penyimpanan Nama: " + petugas.getNamaPetugas());
+                    continue;
+                }
+
+                String rowKey = petugas.getNamaPetugas();
+
+                // Insert records into HBase
+                client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
+                client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
+                client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
+                client.insertRecord(tablePetugas, rowKey, "main", "email", petugas.getEmail());
+                client.insertRecord(tablePetugas, rowKey, "main", "job", petugas.getJob());
+                client.insertRecord(tablePetugas, rowKey, "main", "wilayah", petugas.getWilayah());
+                client.insertRecord(tablePetugas, rowKey, "detail", "created_by", "Polinema");
+
+                System.out.println("Berhasil menyimpan Nama: " + petugas.getNamaPetugas());
+            } catch (Exception e) {
+                failedRows.add(petugas.getNamaPetugas());
+                System.err.println("Gagal menyimpan Nama: " + petugas.getNamaPetugas() + ", Error: " + e.getMessage());
+            }
+        }
+
+        if (!failedRows.isEmpty()) {
+            System.err.println("Proses selesai dengan beberapa kegagalan. Total gagal: " + failedRows.size());
+            System.err.println("Nama Petugas yang gagal disimpan: " + String.join(", ", failedRows));
+        } else {
+            System.out.println("Semua data berhasil disimpan ke HBase.");
+        }
+
+        return petugasList;
     }
 
     public List<Petugas> saveAll(List<Petugas> petugasList) throws IOException {
@@ -204,9 +264,11 @@ public class PetugasRepository {
     }
 
     public Petugas findByNamaPetugas(String namaPetugas) throws IOException {
+
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
+
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
@@ -214,8 +276,10 @@ public class PetugasRepository {
         columnMapping.put("job", "job");
 
         Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "namaPetugas",
-                namaPetugas, Petugas.class);
-        return petugas.getNamaPetugas() != null ? petugas : null; // Jika ada data dengan namaPetugas yang sama
+                namaPetugas,
+                Petugas.class);
+
+        return petugas.getNamaPetugas() != null ? petugas : null;
     }
 
     public boolean existsByEmail(String email) throws IOException {

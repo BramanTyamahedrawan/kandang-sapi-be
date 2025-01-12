@@ -89,33 +89,21 @@ public class PetugasController {
         return HttpStatus.FORBIDDEN;
     }
 
-    // @PostMapping("/bulk")
-    // public ResponseEntity<?> createBulkPeternak(@RequestBody List<PetugasRequest>
-    // petugasRequests) {
-    // try {
-    // // Log jumlah data yang diterima
-    // logger.info("Jumlah data petugas yang diterima: {}", petugasRequests.size());
-
-    // // Log setiap data yang diterima
-    // petugasRequests.forEach(request -> logger.info("Data petugas: {}", request));
-
-    // // Simpan data ke service (jika diperlukan nanti)
-    // // petugasService.createBulkPeternak(petugasRequests);
-
-    // return ResponseEntity.ok(new ApiResponse(true, "Data berhasil diterima,
-    // tetapi belum disimpan."));
-    // } catch (Exception e) {
-    // logger.error("Terjadi kesalahan saat memproses data bulk: ", e);
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    // .body(new ApiResponse(false, "Failed to process bulk data: " +
-    // e.getMessage()));
-    // }
-    // }
-
     @PostMapping("/bulk")
     public ResponseEntity<?> createBulkPetugas(@RequestBody List<PetugasRequest> petugasRequests) {
         try {
             petugasService.createBulkPetugas(petugasRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "All Petugas Created Successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/bulkNama")
+    public ResponseEntity<?> createImportPetugasByNama(@RequestBody List<PetugasRequest> petugasRequests) {
+        try {
+            petugasService.createImportPetugasByNama(petugasRequests);
             return ResponseEntity.ok(new ApiResponse(true, "All Petugas Created Successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

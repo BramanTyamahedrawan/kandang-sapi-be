@@ -1,14 +1,11 @@
 package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.model.Berita;
 import com.ternak.sapi.model.TujuanPemeliharaan;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.payload.TujuanPemeliharaanRequest;
 import com.ternak.sapi.repository.TujuanPemeliharaanRepository;
 import com.ternak.sapi.util.AppConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 // import org.slf4j.Logger;
@@ -22,8 +19,8 @@ import java.util.List;
 public class TujuanPemeliharaanService {
     private TujuanPemeliharaanRepository tujuanpemeliharaanRepository = new TujuanPemeliharaanRepository();
 
-    private static final Logger logger = LoggerFactory.getLogger(BeritaService.class);
-
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(BeritaService.class);
 
     public PagedResponse<TujuanPemeliharaan> getAllTujuanPemeliharaan(int page, int size) throws IOException {
         validatePageNumberAndSize(page, size);
@@ -31,8 +28,8 @@ public class TujuanPemeliharaanService {
         // Retrieve Polls
         List<TujuanPemeliharaan> tujuanPemeliharaanResponse = tujuanpemeliharaanRepository.findAll(size);
 
-
-        return new PagedResponse<>(tujuanPemeliharaanResponse, tujuanPemeliharaanResponse.size(), "Successfully get data", 200);
+        return new PagedResponse<>(tujuanPemeliharaanResponse, tujuanPemeliharaanResponse.size(),
+                "Successfully get data", 200);
     }
 
     @Transactional
@@ -71,11 +68,11 @@ public class TujuanPemeliharaanService {
     }
 
     private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
+        if (page < 0) {
             throw new BadRequestException("Page number cannot be less than zero.");
         }
 
-        if(size > AppConstants.MAX_PAGE_SIZE) {
+        if (size > AppConstants.MAX_PAGE_SIZE) {
             throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
         }
     }

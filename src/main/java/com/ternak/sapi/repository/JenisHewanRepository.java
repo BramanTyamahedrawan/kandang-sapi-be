@@ -87,6 +87,23 @@ public class JenisHewanRepository {
         return jenishewanList;
     }
 
+    public JenisHewan saveByJenis(JenisHewan jenis) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        String rowKey = jenis.getJenis();
+        TableName tableJenisHewan = TableName.valueOf(tableName);
+
+        client.insertRecord(tableJenisHewan, rowKey, "main", "idJenisHewan", rowKey);
+        if (jenis.getJenis() != null) {
+            client.insertRecord(tableJenisHewan, rowKey, "main", "jenis", jenis.getJenis());
+        }
+        if (jenis.getDeskripsi() != null) {
+            client.insertRecord(tableJenisHewan, rowKey, "main", "deskripsi", jenis.getDeskripsi());
+        }
+        client.insertRecord(tableJenisHewan, rowKey, "detail", "created_by", "Polinema");
+        return jenis;
+    }
+
     // Utility untuk memastikan nilai string tidak null
     private String safeString(String value) {
         return value != null ? value : "";

@@ -9,7 +9,6 @@ import com.ternak.sapi.model.NamaVaksin;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.NamaVaksinRequest;
 import com.ternak.sapi.payload.VaksinRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.JenisVaksinRepository;
@@ -21,8 +20,8 @@ import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +36,8 @@ public class VaksinService {
     private JenisVaksinRepository jenisVaksinRepository = new JenisVaksinRepository();
     private HewanRepository hewanRepository = new HewanRepository();
 
-    private static final Logger logger = LoggerFactory.getLogger(VaksinService.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(VaksinService.class);
 
     public PagedResponse<Vaksin> getAllVaksin(int page, int size, String peternakId, String petugasId, String hewanId)
             throws IOException {
@@ -60,13 +60,13 @@ public class VaksinService {
 
         // Validasi hewan ID, pastikan hewan tersebut belum divaksin sebelumnya dengan
         // kombinasi namaVaksin dan vaksinKe
-//        if (vaksinRepository.existsByHewanIdAndNamaVaksinAndVaksinKe(
-//                vaksinRequest.getHewan_id().toString(),
-//                vaksinRequest.getNamaVaksin(),
-//                vaksinRequest.getVaksinKe())) {
-//            throw new IllegalArgumentException(
-//                    "Hewan ini sudah divaksin dengan vaksin yang sama pada urutan yang sama!");
-//        }
+        // if (vaksinRepository.existsByHewanIdAndNamaVaksinAndVaksinKe(
+        // vaksinRequest.getHewan_id().toString(),
+        // vaksinRequest.getNamaVaksin(),
+        // vaksinRequest.getVaksinKe())) {
+        // throw new IllegalArgumentException(
+        // "Hewan ini sudah divaksin dengan vaksin yang sama pada urutan yang sama!");
+        // }
 
         Vaksin vaksin = new Vaksin();
         Peternak peternakResponse = peternakRepository.findById(vaksinRequest.getPeternak_id().toString());
@@ -75,8 +75,8 @@ public class VaksinService {
         if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
                 && hewanResponse.getIdHewan() != null) {
             vaksin.setIdVaksin(vaksinRequest.getIdVaksin());
-//            vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
-//            vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
+            // vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
+            // vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
             vaksin.setBatchVaksin(vaksinRequest.getBatchVaksin());
             vaksin.setVaksinKe(vaksinRequest.getVaksinKe());
@@ -105,8 +105,8 @@ public class VaksinService {
         Hewan hewanResponse = hewanRepository.findById(vaksinRequest.getHewan_id().toString());
         if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
                 && hewanResponse.getIdHewan() != null) {
-//            vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
-//            vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
+            // vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
+            // vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
             vaksin.setPeternak(peternakResponse);
             vaksin.setPetugas(petugasResponse);

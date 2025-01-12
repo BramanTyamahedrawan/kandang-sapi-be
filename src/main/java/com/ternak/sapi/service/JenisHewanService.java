@@ -2,24 +2,14 @@ package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
-import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.JenisHewanRequest;
-import com.ternak.sapi.payload.KandangRequest;
 import com.ternak.sapi.payload.PagedResponse;
-import com.ternak.sapi.repository.PeternakRepository;
-import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.JenisHewanRepository;
-import com.ternak.sapi.repository.KandangRepository;
-import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,7 +85,7 @@ public class JenisHewanService {
 
         List<JenisHewan> jenishewanList = new ArrayList<>();
         int skippedIncomplete = 0;
-        int skippedExisting = 0;
+        // int skippedExisting = 0;
 
         for (JenisHewanRequest request : jenishewanRequests) {
             try {

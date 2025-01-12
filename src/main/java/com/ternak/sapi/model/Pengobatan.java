@@ -1,6 +1,5 @@
 package com.ternak.sapi.model;
 
-
 public class Pengobatan {
     private String idKasus;
     private String tanggalPengobatan;
@@ -11,12 +10,17 @@ public class Pengobatan {
     private String dosis;
     private String sindrom;
     private String diagnosaBanding;
+    private String provinsiPengobatan;
+    private String kabupatenPengobatan;
+    private String kecamatanPengobatan;
+    private String desaPengobatan;
 
     public Pengobatan() {
     }
 
     public Pengobatan(String idKasus, String tanggalPengobatan, String tanggalKasus, Petugas petugas,
-            String namaInfrastruktur, String lokasi, String dosis, String sindrom, String diagnosaBanding) {
+            String namaInfrastruktur, String lokasi, String dosis, String sindrom, String diagnosaBanding,
+            String provinsiPengobatan, String kabupatenPengobatan, String kecamatanPengobatan, String desaPengobatan) {
         this.idKasus = idKasus;
         this.tanggalPengobatan = tanggalPengobatan;
         this.tanggalKasus = tanggalKasus;
@@ -26,6 +30,10 @@ public class Pengobatan {
         this.dosis = dosis;
         this.sindrom = sindrom;
         this.diagnosaBanding = diagnosaBanding;
+        this.provinsiPengobatan = provinsiPengobatan;
+        this.kabupatenPengobatan = kabupatenPengobatan;
+        this.kecamatanPengobatan = kecamatanPengobatan;
+        this.desaPengobatan = desaPengobatan;
     }
 
     public String getIdKasus() {
@@ -100,11 +108,43 @@ public class Pengobatan {
         this.diagnosaBanding = diagnosaBanding;
     }
 
+    public String getProvinsiPengobatan() {
+        return provinsiPengobatan;
+    }
+
+    public void setProvinsiPengobatan(String provinsiPengobatan) {
+        this.provinsiPengobatan = provinsiPengobatan;
+    }
+
+    public String getKabupatenPengobatan() {
+        return kabupatenPengobatan;
+    }
+
+    public void setKabupatenPengobatan(String kabupatenPengobatan) {
+        this.kabupatenPengobatan = kabupatenPengobatan;
+    }
+
+    public String getKecamatanPengobatan() {
+        return kecamatanPengobatan;
+    }
+
+    public void setKecamatanPengobatan(String kecamatanPengobatan) {
+        this.kecamatanPengobatan = kecamatanPengobatan;
+    }
+
+    public String getDesaPengobatan() {
+        return desaPengobatan;
+    }
+
+    public void setDesaPengobatan(String desaPengobatan) {
+        this.desaPengobatan = desaPengobatan;
+    }
+
     public boolean isValid() {
         return this.idKasus != null &&
                 this.petugas != null;
     }
-    
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idKasus":
@@ -130,6 +170,18 @@ public class Pengobatan {
                 break;
             case "diagnosaBanding":
                 this.diagnosaBanding = value;
+                break;
+            case "provinsiPengobatan":
+                this.provinsiPengobatan = value;
+                break;
+            case "kabupatenPengobatan":
+                this.kabupatenPengobatan = value;
+                break;
+            case "kecamatanPengobatan":
+                this.kecamatanPengobatan = value;
+                break;
+            case "desaPengobatan":
+                this.desaPengobatan = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

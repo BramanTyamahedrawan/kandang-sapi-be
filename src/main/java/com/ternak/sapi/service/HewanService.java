@@ -8,7 +8,7 @@ import com.ternak.sapi.payload.HewanRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.*;
 import com.ternak.sapi.util.AppConstants;
-import org.checkerframework.checker.units.qual.K;
+// import org.checkerframework.checker.units.qual.K;
 import org.springframework.stereotype.Service;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
@@ -62,7 +62,7 @@ public class HewanService {
         }
 
         Hewan hewan = new Hewan();
-        Peternak peternakResponse = peternakRepository.findById(hewanRequest.getPeternak_id().toString());
+        Peternak peternakResponse = peternakRepository.findById(hewanRequest.getIdPeternak().toString());
         Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugas_id().toString());
         Kandang kandangResponse = kandangRepository.findById(hewanRequest.getKandang_id().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
@@ -80,7 +80,7 @@ public class HewanService {
             hewan.setLongitude(hewanRequest.getLongitude());
             hewan.setTanggalLahir(hewanRequest.getTanggalLahir());
             hewan.setTempatLahir(hewanRequest.getTempatLahir());
-//            hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
+            // hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
             hewan.setFile_path(savePath);
             hewan.setIdentifikasiHewan(hewanRequest.getIdentifikasiHewan());
 
@@ -104,7 +104,7 @@ public class HewanService {
 
     public Hewan updateHewan(String idHewan, HewanRequest hewanRequest, String savePath) throws IOException {
         Hewan hewan = new Hewan();
-        Peternak peternakResponse = peternakRepository.findById(hewanRequest.getPeternak_id().toString());
+        Peternak peternakResponse = peternakRepository.findById(hewanRequest.getIdPeternak().toString());
         Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugas_id().toString());
         Kandang kandangResponse = kandangRepository.findById(hewanRequest.getKandang_id().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
@@ -122,7 +122,7 @@ public class HewanService {
             hewan.setLongitude(hewanRequest.getLongitude());
             hewan.setTanggalLahir(hewanRequest.getTanggalLahir());
             hewan.setTempatLahir(hewanRequest.getTempatLahir());
-//            hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
+            // hewan.setTujuanPemeliharaan(hewanRequest.getTujuanPemeliharaan());
             hewan.setFile_path(savePath);
             hewan.setIdentifikasiHewan(hewanRequest.getIdentifikasiHewan());
 
@@ -165,9 +165,6 @@ public class HewanService {
         int skippedIncomplete = 0;
         int skippedExisting = 0;
 
-
-
-
         for (HewanRequest request : hewanRequests) {
             try {
                 // Cek apakah idHewan sudah ada di Set
@@ -195,7 +192,7 @@ public class HewanService {
                     petugasResponse.setNamaPetugas("Petugas Tidak Diketahui");
                 }
 
-                System.out.println("Jenis diterima dari frontend: " + request.getJenis());
+                System.out.println("Jenis Hewan diterima dari frontend: " + request.getJenis());
 
                 JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
                 if (jenisHewanResponse == null) {
@@ -205,21 +202,23 @@ public class HewanService {
                 }
 
                 Kandang kandangResponse = kandangRepository.findByNamaKandang(request.getNamaKandang());
-                if(kandangResponse == null){
+                if (kandangResponse == null) {
                     System.out.println("Nama Kandang Tidak ditemukan");
                     kandangResponse = new Kandang();
                     kandangResponse.setNamaKandang("Nama Kandang Tidak Diketahui");
                 }
 
-                RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpunHewan());
-                if(rumpunHewanResponse == null){
-                    System.out.println("Rumpun Hewan Tidak ditemukan");
+                System.out.println("Rumpun Hewan diterima dari frontend: " + request.getRumpun());
+                RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpun());
+                if (rumpunHewanResponse == null) {
+                    System.out.println("Rumpun Hewan Tidak Ditemukan");
                     rumpunHewanResponse = new RumpunHewan();
                     rumpunHewanResponse.setRumpun("Rumpun Hewan Tidak Diketahui");
                 }
 
-                TujuanPemeliharaan tujuanPemeliharaan = tujuanPemeliharaanRepository.findByTujuan(request.getTujuanPemeliharaan());
-                if(tujuanPemeliharaan == null){
+                TujuanPemeliharaan tujuanPemeliharaan = tujuanPemeliharaanRepository
+                        .findByTujuan(request.getTujuanPemeliharaan());
+                if (tujuanPemeliharaan == null) {
                     System.out.println("Tujuan Pemeliharaan Tidak Ditemukan");
                     tujuanPemeliharaan = new TujuanPemeliharaan();
                     tujuanPemeliharaan.setTujuanPemeliharaan("Tujuan Pemeliharaan Tidak Diketahui");
@@ -256,6 +255,96 @@ public class HewanService {
         if (!hewanList.isEmpty()) {
             System.out.println("Menyimpan data hewan yang valid...");
             hewanRepository.saveAll(hewanList);
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + hewanList.size());
+        } else {
+            System.out.println("Tidak ada data hewan baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
+                + skippedExisting);
+    }
+
+    @Transactional
+    public void createBulkHewanImport(List<HewanRequest> hewanRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data Ternak Hewan secara bulk...");
+
+        List<Hewan> hewanList = new ArrayList<>();
+        Set<String> existingIds = new HashSet<>(); // Set untuk melacak idHewan yang sudah diproses
+        int skippedIncomplete = 0;
+        int skippedExisting = 0;
+
+        for (HewanRequest request : hewanRequests) {
+            try {
+                // Cek apakah idHewan sudah ada di Set
+                if (existingIds.contains(request.getIdHewan())) {
+                    System.err.println("Duplicate idHewan ditemukan, data di-skip: " + request.getIdHewan());
+                    skippedExisting++;
+                    continue; // Lewati iterasi jika idHewan duplikat
+                }
+
+                Petugas petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                if (petugasResponse == null) {
+                    System.out.println("Petugas dengan Nama: " + request.getNamaPetugas()
+                            + " tidak ditemukan");
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                Peternak peternakResponse = peternakRepository.findByNamaPeternak(request.getNamaPeternak());
+                if (peternakResponse == null) {
+                    System.out.println("Peternak dengan Nama: " + request.getNamaPeternak()
+                            + " tidak ditemukan");
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                System.out.println("Jenis Hewan diterima dari frontend: " + request.getJenis());
+
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
+                // if (jenisHewanResponse == null) {
+                // System.out.println("Jenis Hewan tidak ditemukan: " + request.getJenis());
+                // skippedIncomplete++;
+                // continue;
+                // }
+
+                System.out.println("Rumpun Hewan diterima dari frontend: " + request.getRumpun());
+                RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpun());
+                // if (rumpunHewanResponse == null) {
+                // System.out.println("Rumpun Hewan Tidak Ditemukan");
+                // skippedIncomplete++;
+                // continue;
+                // }
+
+                // Buat objek Hewan
+                Hewan hewan = new Hewan();
+                hewan.setPetugas(petugasResponse);
+                hewan.setPeternak(peternakResponse);
+                hewan.setJenisHewan(jenisHewanResponse);
+                hewan.setRumpunHewan(rumpunHewanResponse);
+                hewan.setIdHewan(request.getIdHewan());
+                hewan.setKodeEartagNasional(request.getKodeEartagNasional());
+                hewan.setNoKartuTernak(request.getNoKartuTernak());
+                hewan.setSex(request.getSex());
+                hewan.setUmur(request.getUmur());
+                hewan.setIdentifikasiHewan(request.getIdentifikasiHewan());
+                hewan.setTanggalLahir(request.getTanggalLahir());
+                hewan.setTempatLahir(request.getTempatLahir());
+                hewan.setTanggalTerdaftar(request.getTanggalTerdaftar());
+
+                hewanList.add(hewan);
+
+                System.out.println("Menambahkan data hewan ke dalam daftar: " + hewan.getIdHewan());
+
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data hewan: " + request.getIdHewan());
+                e.printStackTrace();
+                skippedIncomplete++;
+            }
+        }
+
+        if (!hewanList.isEmpty()) {
+            System.out.println("Menyimpan data hewan yang valid...");
+            hewanRepository.saveBulkImport(hewanList);
             System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + hewanList.size());
         } else {
             System.out.println("Tidak ada data hewan baru yang valid untuk disimpan.");

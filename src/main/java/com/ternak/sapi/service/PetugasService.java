@@ -1,23 +1,19 @@
 package com.ternak.sapi.service;
 
-import com.ternak.sapi.repository.UserRepository;
+// import com.ternak.sapi.repository.UserRepository;
 import com.ternak.sapi.repository.PetugasRepository;
-import com.ternak.sapi.model.User;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.PetugasRequest;
 import com.ternak.sapi.payload.PagedResponse;
-import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.util.AppConstants;
-import create_structure.HBaseCustomClient;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.TableName;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -32,9 +28,10 @@ public class PetugasService {
     Configuration conf = HBaseConfiguration.create();
     String tableName = "petugasdev";
     private PetugasRepository petugasRepository = new PetugasRepository();
-    private UserRepository userRepository = new UserRepository();
+    // private UserRepository userRepository = new UserRepository();
 
-    private static final Logger logger = LoggerFactory.getLogger(PetugasService.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(PetugasService.class);
 
     public PagedResponse<Petugas> getAllPetugas(int page, int size, String userID) throws IOException {
         validatePageNumberAndSize(page, size);
@@ -176,6 +173,48 @@ public class PetugasService {
         if (!petugasList.isEmpty()) {
             System.out.println("Menyimpan data petugas yang valid...");
             petugasRepository.saveAll(petugasList);
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + petugasList.size());
+        } else {
+            System.out.println("Tidak ada data petugas baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
+                + skippedExisting);
+    }
+
+    @Transactional
+    public void createImportPetugasByNama(List<PetugasRequest> petugasRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data petugas secara bulk...");
+        // Check which NIK, Email, and NoTelp already exist
+        List<Petugas> petugasList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int skippedExisting = 0;
+
+        // Process each PetugasRequest
+        for (PetugasRequest request : petugasRequests) {
+            // Skip if any required field is null
+            if (request.getNamaPetugas() == null) {
+                System.out.println("Data tidak lengkap, melewati data: " + request);
+                skippedIncomplete++;
+                continue;
+            }
+            // Create the Petugas object and add to the list
+            Petugas petugas = new Petugas();
+            petugas.setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas() : "-");
+            petugas.setNamaPetugas(request.getNamaPetugas() != null ? request.getNamaPetugas() : "-");
+            petugas.setNoTelp(request.getNoTelp() != null ? request.getNoTelp() : "-");
+            petugas.setEmail(request.getEmail() != null ? request.getEmail() : "-");
+            petugas.setJob(request.getJob() != null ? request.getJob() : "-");
+            petugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
+            petugasList.add(petugas);
+
+            System.out.println("Menambahkan data petugas ke dalam daftar: " + petugas.getNamaPetugas());
+        }
+
+        // Save only valid Petugas data
+        if (!petugasList.isEmpty()) {
+            System.out.println("Menyimpan data petugas yang valid...");
+            petugasRepository.saveByNama(petugasList);
             System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + petugasList.size());
         } else {
             System.out.println("Tidak ada data petugas baru yang valid untuk disimpan.");
