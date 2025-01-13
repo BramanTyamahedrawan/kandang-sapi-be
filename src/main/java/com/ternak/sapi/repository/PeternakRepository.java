@@ -179,11 +179,20 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "tanggalLahir", peternak.getTanggalLahir());
         client.insertRecord(tablePeternak, rowKey, "main", "idIsikhnas", peternak.getIdIsikhnas());
 
-        client.insertRecord(tablePeternak, rowKey, "main", "dusun", peternak.getIdIsikhnas());
-        client.insertRecord(tablePeternak, rowKey, "main", "desa", peternak.getDesa());
-        client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", peternak.getKecamatan());
-        client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", peternak.getKabupaten());
-        client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
+        if (peternak.getPetugas() != null) {
+            Petugas petugas = peternak.getPetugas();
+            if (petugas != null && petugas.getNamaPetugas() != null) {
+                client.insertRecord(tablePeternak, rowKey, "petugas", "nikPetugas",
+                        safeString(petugas.getNikPetugas()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "namaPetugas",
+                        safeString(petugas.getNamaPetugas()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "email",
+                        safeString(petugas.getEmail()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "job", safeString(petugas.getJob()));
+                client.insertRecord(tablePeternak, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
+            }
+        }
+
 
         return peternak;
     }

@@ -542,11 +542,11 @@ public class HewanService {
                 }
 
                 Kandang kandangResponse = null;
-                if (request.getNamaKandang() == null || request.getNamaKandang().trim().isEmpty()) {
+                if (request.getNamaPeternak() == null || request.getNamaPeternak().trim().isEmpty()) {
                     System.out.println("Nama Kandang kosong. Data ini tidak akan diproses.");
                     continue;
                 } else {
-                    kandangResponse = kandangRepository.findByNamaKandang(request.getNamaKandang());
+                    kandangResponse = kandangRepository.findByNamaKandang("Kandang "+ peternakResponse.getNamaPeternak());
                     if (kandangResponse == null) {
                         // Jika nama kandang tidak ditemukan, tambahkan petugas baru berdasarkan nama
                         // dari frontend
@@ -555,23 +555,21 @@ public class HewanService {
                         Kandang newKandang = new Kandang();
                         newKandang.setIdKandang(request.getKandang_id() != null ? request.getKandang_id()
                                 : UUID.randomUUID().toString());
-                        newKandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
+                        newKandang.setNamaKandang(peternakResponse.getNamaPeternak() != null ? "Kandang " + peternakResponse.getNamaPeternak()
                                 : "Nama Kandang tidak ditemukan");
-                        Peternak peternakKandang = peternakResponse;
                         newKandang.setLongitude(request.getLongitude());
                         newKandang.setLatitude(request.getLatitude());
-                        newKandang.setPeternak(peternakKandang);
+                        newKandang.setPeternak(peternakResponse);
                         newKandang.setAlamat(request.getAlamat());
 
                         kandangResponse = kandangRepository.saveImportByHewan(newKandang);
-                        System.out.println("Pemilik Kandang : " + peternakKandang.getNamaPeternak());
+                        System.out.println("Pemilik Kandang : " + peternakResponse.getNamaPeternak());
                         System.out.println("Kandang baru berhasil dibuat: " + newKandang.getNamaKandang());
                     } else {
                         System.out.println("Kandang ditemukan di database: " + kandangResponse.getNamaKandang());
                     }
                 }
 
-                System.out.println("Petugas diterima dari frontend: " + request.getNamaKandang());
 
                 RumpunHewan rumpunResponse = null;
 
