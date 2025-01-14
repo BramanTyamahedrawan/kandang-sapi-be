@@ -1,8 +1,11 @@
 package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
+import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.TujuanPemeliharaan;
 import com.ternak.sapi.payload.PagedResponse;
+import com.ternak.sapi.payload.PetugasRequest;
 import com.ternak.sapi.payload.TujuanPemeliharaanRequest;
 import com.ternak.sapi.repository.TujuanPemeliharaanRepository;
 import com.ternak.sapi.util.AppConstants;
@@ -30,6 +33,34 @@ public class TujuanPemeliharaanService {
 
         return new PagedResponse<>(tujuanPemeliharaanResponse, tujuanPemeliharaanResponse.size(),
                 "Successfully get data", 200);
+    }
+
+
+    public TujuanPemeliharaan createTujuan(TujuanPemeliharaanRequest tujuanRequest) throws IOException {
+        TujuanPemeliharaan tujuan = new TujuanPemeliharaan();
+        tujuan.setIdTujuanPemeliharaan(tujuanRequest.getIdTujuanPemeliharaan());
+        tujuan.setTujuanPemeliharaan(tujuanRequest.getTujuanPemeliharaan());
+        tujuan.setDeskripsi(tujuanRequest.getDeskripsi());
+        return tujuanpemeliharaanRepository.save(tujuan);
+    }
+
+    public TujuanPemeliharaan update(String idTujuanPemeliharaan, TujuanPemeliharaanRequest tujuanRequest) throws  IOException{
+        TujuanPemeliharaan tujuan = new TujuanPemeliharaan();
+        tujuan.setIdTujuanPemeliharaan(tujuanRequest.getIdTujuanPemeliharaan());
+        tujuan.setTujuanPemeliharaan(tujuanRequest.getTujuanPemeliharaan());
+        tujuan.setDeskripsi(tujuanRequest.getDeskripsi());
+        return tujuanpemeliharaanRepository.update(idTujuanPemeliharaan, tujuan);
+    }
+
+    public void deleteTujuanByTujuan(String tujuanPemeliharaan) throws IOException {
+        TujuanPemeliharaan tujuanResponse = tujuanpemeliharaanRepository.findByTujuan(tujuanPemeliharaan);
+        if (tujuanResponse.isValid()) {
+            tujuanpemeliharaanRepository.deleteByTujuan(tujuanPemeliharaan);
+            System.out.println("tujuan pemeliharaan " + tujuanPemeliharaan);
+        } else {
+            throw new ResourceNotFoundException("TujuanPemeliharaan", "tujuanPemeliharaan", tujuanPemeliharaan);
+        }
+        System.out.println("tujuan pemeliharaan " + tujuanPemeliharaan);
     }
 
     @Transactional
