@@ -38,6 +38,10 @@ public class TujuanPemeliharaan {
         this.deskripsi = deskripsi;
     }
 
+    public boolean isValid() {
+        return this.idTujuanPemeliharaan != null  && this.tujuanPemeliharaan != null && this.deskripsi != null;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idTujuanPemeliharaan":
