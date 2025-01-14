@@ -103,6 +103,7 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
 
+        client.insertRecord(tablePeternak, rowKey, "petugas", "petugasId", peternak.getPetugas().getPetugasId());
         client.insertRecord(tablePeternak, rowKey, "petugas", "nikPetugas", peternak.getPetugas().getNikPetugas());
         client.insertRecord(tablePeternak, rowKey, "petugas", "namaPetugas", peternak.getPetugas().getNamaPetugas());
         client.insertRecord(tablePeternak, rowKey, "petugas", "noTelp", peternak.getPetugas().getNoTelp());
@@ -144,6 +145,8 @@ public class PeternakRepository {
         if (peternak.getPetugas() != null) {
             Petugas petugas = peternak.getPetugas();
             if (petugas != null && petugas.getNamaPetugas() != null) {
+                client.insertRecord(tablePeternak, rowKey, "petugas", "petugasId",
+                        safeString(petugas.getPetugasId()));
                 client.insertRecord(tablePeternak, rowKey, "petugas", "nikPetugas",
                         safeString(petugas.getNikPetugas()));
                 client.insertRecord(tablePeternak, rowKey, "petugas", "namaPetugas",
@@ -179,9 +182,19 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "tanggalLahir", peternak.getTanggalLahir());
         client.insertRecord(tablePeternak, rowKey, "main", "idIsikhnas", peternak.getIdIsikhnas());
 
+        client.insertRecord(tablePeternak, rowKey, "main", "dusun", peternak.getIdIsikhnas());
+        client.insertRecord(tablePeternak, rowKey, "main", "desa", peternak.getDesa());
+        client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", peternak.getKecamatan());
+        client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", peternak.getKabupaten());
+        client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
+        client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
+        client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
+
         if (peternak.getPetugas() != null) {
             Petugas petugas = peternak.getPetugas();
             if (petugas != null && petugas.getNamaPetugas() != null) {
+                client.insertRecord(tablePeternak, rowKey, "petugas", "petugasId",
+                        safeString(petugas.getPetugasId()));
                 client.insertRecord(tablePeternak, rowKey, "petugas", "nikPetugas",
                         safeString(petugas.getNikPetugas()));
                 client.insertRecord(tablePeternak, rowKey, "petugas", "namaPetugas",
@@ -227,6 +240,8 @@ public class PeternakRepository {
 
                 if (peternak.getPetugas() != null) {
                     Petugas petugas = peternak.getPetugas();
+                    client.insertRecord(tablePeternak, rowKey, "petugas", "petugasId",
+                            safeString(petugas.getPetugasId()));
                     client.insertRecord(tablePeternak, rowKey, "petugas", "nikPetugas",
                             safeString(petugas.getNikPetugas()));
                     client.insertRecord(tablePeternak, rowKey, "petugas", "namaPetugas",
@@ -299,6 +314,8 @@ public class PeternakRepository {
 
                 if (peternak.getPetugas() != null) {
                     Petugas petugas = peternak.getPetugas();
+                    client.insertRecord(tablePeternak, rowKey, "petugas", "petugasId",
+                            safeString(petugas.getPetugasId()));
                     client.insertRecord(tablePeternak, rowKey, "petugas", "nikPetugas",
                             safeString(petugas.getNikPetugas()));
                     client.insertRecord(tablePeternak, rowKey, "petugas", "namaPetugas",
@@ -415,6 +432,39 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, peternakId, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, peternakId, "main", "longitude", peternak.getLongitude());
 
+        client.insertRecord(tablePeternak, peternakId, "petugas", "petugasId", peternak.getPetugas().getPetugasId());
+        client.insertRecord(tablePeternak, peternakId, "petugas", "nikPetugas", peternak.getPetugas().getNikPetugas());
+        client.insertRecord(tablePeternak, peternakId, "petugas", "namaPetugas",
+                peternak.getPetugas().getNamaPetugas());
+        client.insertRecord(tablePeternak, peternakId, "petugas", "noTelp", peternak.getPetugas().getNoTelp());
+        client.insertRecord(tablePeternak, peternakId, "petugas", "email", peternak.getPetugas().getEmail());
+        client.insertRecord(tablePeternak, peternakId, "detail", "created_by", "Polinema");
+        return peternak;
+    }
+
+    public Peternak updatePetugas(String peternakId, Peternak peternak) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePeternak = TableName.valueOf(tableName);
+        client.insertRecord(tablePeternak, peternakId, "main", "nikPeternak", peternak.getNikPeternak());
+        client.insertRecord(tablePeternak, peternakId, "main", "namaPeternak", peternak.getNamaPeternak());
+        client.insertRecord(tablePeternak, peternakId, "main", "lokasi", peternak.getLokasi());
+        client.insertRecord(tablePeternak, peternakId, "main", "tanggalPendaftaran", peternak.getTanggalPendaftaran());
+
+        client.insertRecord(tablePeternak, peternakId, "main", "noTelepon", peternak.getNoTelepon());
+        client.insertRecord(tablePeternak, peternakId, "main", "email", peternak.getEmail());
+        client.insertRecord(tablePeternak, peternakId, "main", "jenisKelamin", peternak.getJenisKelamin());
+        client.insertRecord(tablePeternak, peternakId, "main", "tanggalLahir", peternak.getTanggalLahir());
+        client.insertRecord(tablePeternak, peternakId, "main", "idIsikhnas", peternak.getIdIsikhnas());
+
+        client.insertRecord(tablePeternak, peternakId, "main", "dusun", peternak.getIdIsikhnas());
+        client.insertRecord(tablePeternak, peternakId, "main", "desa", peternak.getDesa());
+        client.insertRecord(tablePeternak, peternakId, "main", "kecamatan", peternak.getKecamatan());
+        client.insertRecord(tablePeternak, peternakId, "main", "kabupaten", peternak.getKabupaten());
+        client.insertRecord(tablePeternak, peternakId, "main", "alamat", peternak.getAlamat());
+        client.insertRecord(tablePeternak, peternakId, "main", "latitude", peternak.getLatitude());
+        client.insertRecord(tablePeternak, peternakId, "main", "longitude", peternak.getLongitude());
+
+        client.insertRecord(tablePeternak, peternakId, "petugas", "petugasId", peternak.getPetugas().getPetugasId());
         client.insertRecord(tablePeternak, peternakId, "petugas", "nikPetugas", peternak.getPetugas().getNikPetugas());
         client.insertRecord(tablePeternak, peternakId, "petugas", "namaPetugas",
                 peternak.getPetugas().getNamaPetugas());
@@ -499,6 +549,20 @@ public class PeternakRepository {
         System.out.println("Data Peternak ditemukan: by nik" + peternak);
 
         return peternak.getNikPeternak() != null ? peternak : null;
+    }
+
+    public Peternak findByNikPetugas(String nikPetugas) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePeternak = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+
+        Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "petugas", "nikPetugas",
+                nikPetugas, Peternak.class);
+
+        System.out.println("Data Petugas ditemukan: by nik" + peternak);
+
+        return peternak.getPetugas().getNikPetugas() != null ? peternak : null;
     }
 
     public Peternak findByNamaPeternak(String namaPeternak) throws IOException {

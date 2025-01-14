@@ -37,16 +37,16 @@ public class TujuanPemeliharaanRepository {
         return client.showListTable(tableUsers.toString(), columnMapping, TujuanPemeliharaan.class, size);
     }
 
-    public TujuanPemeliharaan findByTujuan(String tujuan) throws IOException {
+    public TujuanPemeliharaan findByTujuan(String tujuanPemeliharaan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableTujuan = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("idTujuanPemeliharaan", "idTujuanPemeliharaan");
         columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
-        columnMapping.put("deskrisi", "deskripsi");
-        TujuanPemeliharaan tujuanPemeliharaan = client.getDataByColumn(tableTujuan.toString(), columnMapping, "main",
-                "tujuanPemeliharaan", tujuan, TujuanPemeliharaan.class);
-        return tujuanPemeliharaan.getTujuanPemeliharaan() != null ? tujuanPemeliharaan : null;
+        columnMapping.put("deskripsi", "deskripsi");
+        TujuanPemeliharaan tujuanPemeliharaanResponse = client.getDataByColumn(tableTujuan.toString(), columnMapping, "main",
+                "tujuanPemeliharaan", tujuanPemeliharaan, TujuanPemeliharaan.class);
+        return tujuanPemeliharaanResponse.getTujuanPemeliharaan() != null ? tujuanPemeliharaanResponse : null ;
     }
 
     public List<TujuanPemeliharaan> saveAll(List<TujuanPemeliharaan> tujuanPemeliharaanList) throws IOException {
@@ -126,9 +126,9 @@ public class TujuanPemeliharaanRepository {
         return tujuanPemeliharaan;
     }
 
-    public boolean deleteByTujuan(String tujuanPemeliharaan) throws IOException {
+    public boolean deleteById(String tujuanPemeliharaanId) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
-        client.deleteRecord(tableName, tujuanPemeliharaan);
+        client.deleteRecord(tableName, tujuanPemeliharaanId);
         return true;
     }
 
@@ -140,7 +140,7 @@ public class TujuanPemeliharaanRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idTujuanPemeliharaan", "idTujuanPemeliharaan");
-        columnMapping.put("tujuanPemeliharaah", "tujuanPemeliharaan");
+        columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
         columnMapping.put("deskripsi", "deskripsi");
 
         TujuanPemeliharaan tujuanPemeliharaan = client.getDataByColumn(tableTujuan.toString(), columnMapping, "main",

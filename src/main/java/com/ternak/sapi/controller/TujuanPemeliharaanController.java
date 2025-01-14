@@ -78,11 +78,11 @@ public class TujuanPemeliharaanController {
         }
     }
 
-    @DeleteMapping("/{tujuanPemeliharaan}")
-    public HttpStatus deleteTujuan(@PathVariable(value = "tujuanPemeliharaan") String tujuanPemeliharan) throws IOException {
-        tujuanPemeliharaanService.deleteTujuanByTujuan(tujuanPemeliharan);
-        System.out.println("data tujuan " + tujuanPemeliharan);
-        return HttpStatus.FORBIDDEN;
+    @DeleteMapping("/{tujuanPemeliharaanId}")
+    public HttpStatus deleteTujuan(@PathVariable(value = "tujuanPemeliharaanId") String tujuanPemeliharanId) throws IOException {
+        tujuanPemeliharaanService.deleteTujuanById(tujuanPemeliharanId);
+//        System.out.println("data tujuan " + tujuanPemeliharan);
+        return HttpStatus.NO_CONTENT;
     }
 
     @PostMapping("/bulk")

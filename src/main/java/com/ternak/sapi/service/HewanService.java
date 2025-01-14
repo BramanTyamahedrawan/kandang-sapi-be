@@ -438,6 +438,9 @@ public class HewanService {
 
                         Petugas newPetugas = new Petugas();
                         newPetugas
+                                .setPetugasId(request.getPetugas_id() != null ? request.getPetugas_id()
+                                        : UUID.randomUUID().toString());
+                        newPetugas
                                 .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
                                         : "nik belum dimasukkan");
                         newPetugas.setNamaPetugas(request.getNamaPetugas() != null ? request.getNamaPetugas()

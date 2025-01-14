@@ -1,6 +1,8 @@
 package com.ternak.sapi.service;
 
 // import com.ternak.sapi.repository.UserRepository;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.exception.BadRequestException;
@@ -17,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +27,7 @@ public class PetugasService {
     Configuration conf = HBaseConfiguration.create();
     String tableName = "petugasdev";
     private PetugasRepository petugasRepository = new PetugasRepository();
+    private PeternakRepository peternakRepository = new PeternakRepository();
     // private UserRepository userRepository = new UserRepository();
 
     // private static final Logger logger =
@@ -47,29 +47,45 @@ public class PetugasService {
 
     public Petugas createPetugas(PetugasRequest petugasRequest) throws IOException {
 
-        if (petugasRepository.existsByNikPetugas(petugasRequest.getNikPetugas())) {
-            throw new IllegalArgumentException("NIK Petugas sudah terdaftar!");
+        Petugas dataPetugas = null;
+
+        // Memeriksa apakah NIK, Email, atau NoTelp tidak sama dengan "-"
+        if (!petugasRequest.getNikPetugas().equals("-") &&
+                !petugasRequest.getEmail().equals("-") &&
+                !petugasRequest.getNoTelp().equals("-")) {
+
+            // Validasi jika NIK Petugas sudah terdaftar
+            if (petugasRepository.existsByNikPetugas(petugasRequest.getNikPetugas())) {
+                throw new IllegalArgumentException("NIK Petugas sudah terdaftar!");
+            }
+
+            // Validasi jika Email Petugas sudah ada
+            if (petugasRepository.existsByEmail(petugasRequest.getEmail())) {
+                throw new IllegalArgumentException("Email sudah digunakan!");
+            }
+
+            // Validasi jika Nomor Telepon sudah ada
+            if (petugasRepository.existsByNoTelp(petugasRequest.getNoTelp())) {
+                throw new IllegalArgumentException("Nomor Telepon sudah terdaftar!");
+            }
         }
 
-        // Validasi jika Email Petugas sudah ada
-        if (petugasRepository.existsByEmail(petugasRequest.getEmail())) {
-            throw new IllegalArgumentException("Email sudah digunakan!");
-        }
-
-        // Validasi jika Nomor Telepon sudah ada
-        if (petugasRepository.existsByNoTelp(petugasRequest.getNoTelp())) {
-            throw new IllegalArgumentException("Nomor Telepon sudah terdaftar!");
-        }
-
+        // Membuat objek Petugas dan mengisi datanya
         Petugas petugas = new Petugas();
+        petugas.setPetugasId(petugasRequest.getPetugasId() != null ? petugasRequest.getPetugasId() : UUID.randomUUID().toString());
         petugas.setNikPetugas(petugasRequest.getNikPetugas());
         petugas.setNamaPetugas(petugasRequest.getNamaPetugas());
         petugas.setNoTelp(petugasRequest.getNoTelp());
         petugas.setEmail(petugasRequest.getEmail());
         petugas.setJob(petugasRequest.getJob());
         petugas.setWilayah(petugasRequest.getWilayah());
-        return petugasRepository.save(petugas);
+
+        // Menyimpan data Petugas ke database
+        dataPetugas = petugasRepository.save(petugas);
+
+        return dataPetugas;
     }
+
 
     public DefaultResponse<Petugas> getPetugasById(String petugasId) throws IOException {
         // Retrieve Petugas
@@ -80,7 +96,7 @@ public class PetugasService {
 
     public Petugas updatePetugas(String petugasId, PetugasRequest petugasRequest) throws IOException {
         Petugas petugas = new Petugas();
-
+        petugas.setNikPetugas(petugasRequest.getNikPetugas());
         petugas.setNamaPetugas(petugasRequest.getNamaPetugas());
         petugas.setNoTelp(petugasRequest.getNoTelp());
         petugas.setEmail(petugasRequest.getEmail());
@@ -89,13 +105,15 @@ public class PetugasService {
         return petugasRepository.update(petugasId, petugas);
     }
 
-    public void deletePetugasById(String petugasId) throws IOException {
-        Petugas petugasResponse = petugasRepository.findById(petugasId);
+    public void deletePetugasById(String idPetugas) throws IOException {
+        Petugas petugasResponse = petugasRepository.findById(idPetugas);
         if (petugasResponse.isValid()) {
-            petugasRepository.deleteById(petugasId);
+            System.out.println("Data " + petugasResponse.getPetugasId() + petugasResponse.getNamaPetugas() + petugasResponse.getNikPetugas() + petugasResponse.getEmail() + petugasResponse.getWilayah() + petugasResponse.getJob() + petugasResponse.getNoTelp());
+            petugasRepository.deleteById(petugasResponse.getPetugasId());
         } else {
-            throw new ResourceNotFoundException("Petugas", "id", petugasId);
-        }
+       System.out.println("Data Tidak valid" + petugasResponse.getPetugasId() + petugasResponse.getNamaPetugas() + petugasResponse.getNikPetugas() + petugasResponse.getEmail() + petugasResponse.getWilayah() + petugasResponse.getJob() + petugasResponse.getNoTelp());
+
+   }
     }
 
     private void validatePageNumberAndSize(int page, int size) {
@@ -157,6 +175,7 @@ public class PetugasService {
 
             // Create the Petugas object and add to the list
             Petugas petugas = new Petugas();
+            petugas.setPetugasId(request.getPetugasId() != null ? request.getPetugasId() : UUID.randomUUID().toString());
             petugas.setNikPetugas(request.getNikPetugas());
             petugas.setNamaPetugas(request.getNamaPetugas());
             petugas.setNoTelp(request.getNoTelp());
@@ -200,6 +219,7 @@ public class PetugasService {
             }
             // Create the Petugas object and add to the list
             Petugas petugas = new Petugas();
+            petugas.setPetugasId(request.getPetugasId() != null ? request.getPetugasId() : UUID.randomUUID().toString());
             petugas.setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas() : "-");
             petugas.setNamaPetugas(request.getNamaPetugas() != null ? request.getNamaPetugas() : "-");
             petugas.setNoTelp(request.getNoTelp() != null ? request.getNoTelp() : "-");

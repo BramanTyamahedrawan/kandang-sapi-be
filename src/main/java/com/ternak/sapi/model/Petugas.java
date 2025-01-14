@@ -1,6 +1,7 @@
 package com.ternak.sapi.model;
 
 public class Petugas {
+    private String petugasId;
     private String nikPetugas;
     private String namaPetugas;
     private String noTelp;
@@ -11,13 +12,22 @@ public class Petugas {
     public Petugas() {
     }
 
-    public Petugas(String nikPetugas, String namaPetugas, String noTelp, String email, String job, String wilayah) {
+    public Petugas(String petugasId,String nikPetugas, String namaPetugas, String noTelp, String email, String job, String wilayah) {
+        this.petugasId = petugasId;
         this.nikPetugas = nikPetugas;
         this.namaPetugas = namaPetugas;
         this.noTelp = noTelp;
         this.email = email;
         this.job = job;
         this.wilayah = wilayah;
+    }
+
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
+    }
+
+    public String getPetugasId() {
+        return petugasId;
     }
 
     public String getNikPetugas() {
@@ -68,12 +78,17 @@ public class Petugas {
         this.wilayah = wilayah;
     }
 
+
+
     public boolean isValid() {
-        return this.nikPetugas != null  && this.namaPetugas != null && this.noTelp != null && this.email != null && this.job != null;
+        return this.petugasId !=null && this.nikPetugas != null  && this.namaPetugas != null && this.noTelp != null && this.email != null && this.job != null;
     }
 
     public void set(String fieldName, String value) {
         switch (fieldName) {
+            case "petugasId":
+                this.petugasId = value;
+                break;
             case "nikPetugas":
                 this.nikPetugas = value;
                 break;

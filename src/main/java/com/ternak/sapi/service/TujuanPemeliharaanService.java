@@ -52,15 +52,14 @@ public class TujuanPemeliharaanService {
         return tujuanpemeliharaanRepository.update(idTujuanPemeliharaan, tujuan);
     }
 
-    public void deleteTujuanByTujuan(String tujuanPemeliharaan) throws IOException {
-        TujuanPemeliharaan tujuanResponse = tujuanpemeliharaanRepository.findByTujuan(tujuanPemeliharaan);
-        if (tujuanResponse.isValid()) {
-            tujuanpemeliharaanRepository.deleteByTujuan(tujuanPemeliharaan);
-            System.out.println("tujuan pemeliharaan " + tujuanPemeliharaan);
-        } else {
-            throw new ResourceNotFoundException("TujuanPemeliharaan", "tujuanPemeliharaan", tujuanPemeliharaan);
+    public void deleteTujuanById(String tujuanPemeliharaanId) throws IOException {
+        TujuanPemeliharaan tujuanResponse = tujuanpemeliharaanRepository.findById(tujuanPemeliharaanId);
+        if(tujuanResponse.isValid()){
+              tujuanpemeliharaanRepository.deleteById(tujuanPemeliharaanId);
+        }else{
+            System.out.println("data tidak valid "+tujuanResponse.getIdTujuanPemeliharaan() + tujuanResponse.getTujuanPemeliharaan() + tujuanResponse.getDeskripsi());
         }
-        System.out.println("tujuan pemeliharaan " + tujuanPemeliharaan);
+
     }
 
     @Transactional

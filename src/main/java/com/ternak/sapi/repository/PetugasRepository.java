@@ -9,10 +9,7 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PetugasRepository {
     Configuration conf = HBaseConfiguration.create();
@@ -25,10 +22,12 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
+        columnMapping.put("petugasId","petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
         columnMapping.put("email", "email");
+        columnMapping.put("wilayah","wilayah");
         columnMapping.put("job", "job");
 
         return client.showListTable(tablePetugas.toString(), columnMapping, Petugas.class, size);
@@ -41,6 +40,7 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
+        columnMapping.put("petugasId","petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
@@ -54,9 +54,10 @@ public class PetugasRepository {
     public Petugas save(Petugas petugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        String rowKey = petugas.getNikPetugas();
+        String rowKey = petugas.getPetugasId();
 
         TableName tablePetugas = TableName.valueOf(tableName);
+        client.insertRecord(tablePetugas,rowKey,"main","petugasId", petugas.getPetugasId());
         client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
         client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
         client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
@@ -70,9 +71,10 @@ public class PetugasRepository {
     public Petugas saveNama(Petugas petugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        String rowKey = petugas.getNamaPetugas();
+        String rowKey = petugas.getPetugasId() != null ? petugas.getPetugasId() : UUID.randomUUID().toString();
 
         TableName tablePetugas = TableName.valueOf(tableName);
+        client.insertRecord(tablePetugas, rowKey, "main", "petugasId", rowKey);
         client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
         client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
         client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
@@ -86,16 +88,19 @@ public class PetugasRepository {
     public Petugas saveImport(Petugas petugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        String rowKey = petugas.getNamaPetugas();
+        String rowKey = petugas.getPetugasId() != null ? petugas.getPetugasId() : UUID.randomUUID().toString();
 
         TableName tablePetugas = TableName.valueOf(tableName);
-        client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
-        client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
-        client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
-        client.insertRecord(tablePetugas, rowKey, "main", "email", petugas.getEmail());
-        client.insertRecord(tablePetugas, rowKey, "main", "job", petugas.getJob());
-        client.insertRecord(tablePetugas, rowKey, "main", "wilayah", petugas.getWilayah());
-        client.insertRecord(tablePetugas, rowKey, "detail", "created_by", "Polinema");
+        if(!existsByNamaPetugas(petugas.getNamaPetugas())) {
+            client.insertRecord(tablePetugas, rowKey, "main", "petugasId", rowKey);
+            client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
+            client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
+            client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
+            client.insertRecord(tablePetugas, rowKey, "main", "email", petugas.getEmail());
+            client.insertRecord(tablePetugas, rowKey, "main", "job", petugas.getJob());
+            client.insertRecord(tablePetugas, rowKey, "main", "wilayah", petugas.getWilayah());
+            client.insertRecord(tablePetugas, rowKey, "detail", "created_by", "Polinema");
+        }
         return petugas;
     }
 
@@ -113,9 +118,10 @@ public class PetugasRepository {
                     continue;
                 }
 
-                String rowKey = petugas.getNamaPetugas();
+                String rowKey = petugas.getPetugasId() != null ? petugas.getPetugasId() : UUID.randomUUID().toString();
 
                 // Insert records into HBase
+                client.insertRecord(tablePetugas, rowKey, "main", "petugasId", rowKey);
                 client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
                 client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
                 client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
@@ -156,9 +162,10 @@ public class PetugasRepository {
                     continue;
                 }
 
-                String rowKey = petugas.getNikPetugas();
+                String rowKey = petugas.getPetugasId() != null ? petugas.getPetugasId() : UUID.randomUUID().toString();
 
                 // Insert records into HBase
+                client.insertRecord(tablePetugas, rowKey, "main", "petugasId", rowKey);
                 client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
                 client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
                 client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
@@ -191,6 +198,7 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
@@ -198,12 +206,18 @@ public class PetugasRepository {
         columnMapping.put("job", "job");
         columnMapping.put("wilayah", "wilayah");
 
-        return client.showDataTable(tablePetugas.toString(), columnMapping, petugasId, Petugas.class);
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "petugasId",
+               petugasId, Petugas.class);
+        return petugas.getPetugasId() != null ? petugas : null; // Jika ada data dengan nikPetugas yang sama
     }
 
     public Petugas update(String petugasId, Petugas petugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf(tableName);
+        System.out.println("Data " + petugasId + petugas.getNamaPetugas() + petugas.getNikPetugas() +petugas.getEmail() + petugas.getWilayah() + petugas.getJob() + petugas.getNoTelp());
+
+//        client.insertRecord(tablePetugas, petugasId, "main", "petugasId",petugasId);
+        client.insertRecord(tablePetugas, petugasId, "main", "nikPetugas", petugas.getNikPetugas());
         client.insertRecord(tablePetugas, petugasId, "main", "namaPetugas", petugas.getNamaPetugas());
         client.insertRecord(tablePetugas, petugasId, "main", "noTelp", petugas.getNoTelp());
         client.insertRecord(tablePetugas, petugasId, "main", "email", petugas.getEmail());
@@ -231,9 +245,9 @@ public class PetugasRepository {
         }
     }
 
-    public boolean deleteById(String petugasId) throws IOException {
+    public boolean deleteById(String idPetugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
-        client.deleteRecord(tableName, petugasId);
+        client.deleteRecord(tableName, idPetugas);
         return true;
     }
 
@@ -252,10 +266,12 @@ public class PetugasRepository {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("petugasId","petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
         columnMapping.put("email", "email");
+        columnMapping.put("wilayah","wilayah");
         columnMapping.put("job", "job");
 
         Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "nikPetugas",
@@ -269,6 +285,7 @@ public class PetugasRepository {
         TableName tablePetugas = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
 
+        columnMapping.put("petugasId","petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
@@ -291,6 +308,17 @@ public class PetugasRepository {
         Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "email", email,
                 Petugas.class);
         return petugas.getEmail() != null; // Jika ada data dengan email yang sama
+    }
+
+    public boolean existsByNamaPetugas(String namaPetugas) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePetugas = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("namaPetugas", "namaPetugas");
+
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "namaPetugas", namaPetugas,
+                Petugas.class);
+        return petugas.getNamaPetugas() != null; // Jika ada data dengan email yang sama
     }
 
     public boolean existsByNoTelp(String noTelp) throws IOException {

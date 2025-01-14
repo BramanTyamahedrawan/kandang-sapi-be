@@ -202,6 +202,8 @@ public class HewanRepository {
 
                                 if (hewan.getPetugas() != null) {
                                         Petugas petugas = hewan.getPetugas();
+                                        client.insertRecord(tableHewan, rowKey, "petugas", "petugasId",
+                                                safeString(petugas.getPetugasId()));
                                         client.insertRecord(tableHewan, rowKey, "petugas", "nikPetugas",
                                                         safeString(petugas.getNikPetugas()));
                                         client.insertRecord(tableHewan, rowKey, "petugas", "namaPetugas",
@@ -396,6 +398,8 @@ public class HewanRepository {
                                 if (hewan.getPetugas() != null) {
                                         Petugas petugas = hewan.getPetugas();
                                         if (petugas.getNamaPetugas() != null) {
+                                                client.insertRecord(tableHewan, safeString(hewan.getIdHewan()), "petugas", "petugasId",
+                                                        safeString(petugas.getPetugasId()));
                                                 client.insertRecord(tableHewan, safeString(hewan.getIdHewan()),
                                                                 "petugas", "nikPetugas",
                                                                 safeString(petugas.getNikPetugas()));
@@ -519,6 +523,8 @@ public class HewanRepository {
 
                                 if (hewan.getPetugas() != null) {
                                         Petugas petugas = hewan.getPetugas();
+                                        client.insertRecord(tableHewan, rowKey, "petugas", "petugasId",
+                                                safeString(petugas.getPetugasId()));
                                         client.insertRecord(tableHewan, rowKey, "petugas", "nikPetugas",
                                                         safeString(petugas.getNikPetugas()));
                                         client.insertRecord(tableHewan, rowKey, "petugas", "namaPetugas",
@@ -717,6 +723,8 @@ public class HewanRepository {
 
                 if (hewan.getPetugas() != null) {
                         Petugas petugas = hewan.getPetugas();
+                        client.insertRecord(tableHewan, rowKey, "petugas", "petugasId",
+                                safeString(petugas.getPetugasId()));
                         client.insertRecord(tableHewan, rowKey, "petugas", "nikPetugas",
                                         safeString(petugas.getNikPetugas()));
                         client.insertRecord(tableHewan, rowKey, "petugas", "namaPetugas",

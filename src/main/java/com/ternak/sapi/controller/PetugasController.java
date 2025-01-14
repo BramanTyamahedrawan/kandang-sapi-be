@@ -76,16 +76,16 @@ public class PetugasController {
         } else {
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{petugasId}")
-                    .buildAndExpand(petugas.getNikPetugas()).toUri();
+                    .buildAndExpand(petugas.getPetugasId()).toUri();
 
             return ResponseEntity.created(location)
                     .body(new ApiResponse(true, "Petugas Updated Successfully"));
         }
     }
 
-    @DeleteMapping("/{petugasId}")
-    public HttpStatus deletePetugas(@PathVariable(value = "petugasId") String petugasId) throws IOException {
-        petugasService.deletePetugasById(petugasId);
+    @DeleteMapping("/{idPetugas}")
+    public HttpStatus deletePetugas(@PathVariable(value = "idPetugas") String idPetugas) throws IOException {
+        petugasService.deletePetugasById(idPetugas);
         return HttpStatus.FORBIDDEN;
     }
 

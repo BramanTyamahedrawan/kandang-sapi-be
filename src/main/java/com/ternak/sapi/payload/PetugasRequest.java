@@ -1,6 +1,7 @@
 package com.ternak.sapi.payload;
 
 public class PetugasRequest {
+    private String petugasId;
     private String nikPetugas;
     private String namaPetugas;
     private String noTelp;
@@ -11,7 +12,8 @@ public class PetugasRequest {
     public PetugasRequest() {
     }
 
-    public PetugasRequest(String nikPetugas, String namaPetugas, String noTelp, String email) {
+    public PetugasRequest(String petugasId,String nikPetugas, String namaPetugas, String noTelp, String email) {
+        this.petugasId = petugasId;
         this.nikPetugas = nikPetugas;
         this.namaPetugas = namaPetugas;
         this.noTelp = noTelp;
@@ -19,7 +21,8 @@ public class PetugasRequest {
         this.job = "";
     }
 
-    public PetugasRequest(String nikPetugas, String namaPetugas, String noTelp, String email, String job, String wilayah) {
+    public PetugasRequest(String petugasId,String nikPetugas, String namaPetugas, String noTelp, String email, String job, String wilayah) {
+        this.petugasId = petugasId;
         this.nikPetugas = nikPetugas;
         this.namaPetugas = namaPetugas;
         this.noTelp = noTelp;
@@ -27,7 +30,15 @@ public class PetugasRequest {
         this.job = job;
         this.wilayah = wilayah;
     }
-    
+
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
+    }
+
+    public String getPetugasId() {
+        return petugasId;
+    }
+
     public String getNikPetugas() {
         return nikPetugas;
     }
