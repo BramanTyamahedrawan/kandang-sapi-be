@@ -3,15 +3,15 @@ package com.ternak.sapi.payload;
 public class JenisVaksinRequest {
 
     private String idJenisVaksin;
-    private String namaVaksin;
+    private String jenis;
     private String deskripsi;
 
     public JenisVaksinRequest() {
     }
 
-    public JenisVaksinRequest(String idJenisVaksin, String namaVaksin, String deskripsi) {
+    public JenisVaksinRequest(String idJenisVaksin, String jenis, String deskripsi) {
         this.idJenisVaksin = idJenisVaksin;
-        this.namaVaksin = namaVaksin;
+        this.jenis = jenis;
         this.deskripsi = deskripsi;
     }
 
@@ -23,12 +23,12 @@ public class JenisVaksinRequest {
         this.idJenisVaksin = idJenisVaksin;
     }
 
-    public String getNamaVaksin() {
-        return namaVaksin;
+    public String getJenis() {
+        return jenis;
     }
 
-    public void setNamaVaksin(String namaVaksin) {
-        this.namaVaksin = namaVaksin;
+    public void setJenis(String jenis) {
+        this.jenis = jenis;
     }
 
     public String getDeskripsi() {
@@ -44,8 +44,8 @@ public class JenisVaksinRequest {
             case "idJenisVaksin":
                 this.idJenisVaksin = value;
                 break;
-            case "namaVaksin":
-                this.namaVaksin = value;
+            case "jenis":
+                this.jenis = value;
                 break;
             case "deskripsi":
                 this.deskripsi = value;

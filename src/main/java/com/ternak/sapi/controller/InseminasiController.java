@@ -3,7 +3,6 @@ package com.ternak.sapi.controller;
 import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.payload.ApiResponse;
 import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.HewanRequest;
 import com.ternak.sapi.payload.InseminasiRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.service.InseminasiService;
@@ -29,8 +28,12 @@ public class InseminasiController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
             @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
             @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
+            @RequestParam(value = "kandangID", defaultValue = "*") String kandangID,
+            @RequestParam(value = "jenisHewanID", defaultValue = "*") String jenisHewanID,
+            @RequestParam(value = "rumpunHewanID", defaultValue = "*") String rumpunHewanID,
             @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
-        return inseminasiService.getAllInseminasi(page, size, peternakID, petugasID, hewanID);
+        return inseminasiService.getAllInseminasi(page, size, peternakID, petugasID, kandangID, jenisHewanID,
+                rumpunHewanID, hewanID);
     }
 
     @PostMapping

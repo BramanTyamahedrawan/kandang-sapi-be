@@ -6,6 +6,7 @@ import com.ternak.sapi.model.Pkb;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.payload.DefaultResponse;
@@ -14,6 +15,7 @@ import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.PkbRepository;
 import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.JenisHewanRepository;
+import com.ternak.sapi.repository.KandangRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.util.AppConstants;
@@ -38,12 +40,13 @@ public class PkbService {
     private HewanRepository hewanRepository = new HewanRepository();
     private RumpunHewanRepository rumpunHewanRepository = new RumpunHewanRepository();
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
+    private KandangRepository kandangRepository = new KandangRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(PkbService.class);
 
     public PagedResponse<Pkb> getAllPkb(int page, int size, String peternakId, String petugasId, String jenisHewanID,
-            String rumpunHewanID, String hewanId)
+            String rumpunHewanID, String kandangID, String hewanId)
             throws IOException {
         validatePageNumberAndSize(page, size);
         List<Pkb> pkbResponse;
@@ -233,6 +236,44 @@ public class PkbService {
                     }
                 }
 
+                System.out.println("id kandang diterima dari frontend: " + request.getIdKandang());
+
+                Kandang kandangResponse = null;
+
+                if (request.getIdKandang() == null || request.getIdKandang().trim().isEmpty()) {
+                    System.out.println("ID Kandang kosong.");
+                    skippedExisting++;
+                    continue;
+
+                } else {
+                    System.out.println("Mencoba menemukan kandang dengan nama: " + request.getNamaKandang());
+                    kandangResponse = kandangRepository.findByIdKandang(request.getIdKandang());
+
+                    if (kandangResponse == null) {
+                        // Jika kandang tidak ditemukan, tambahkan kandang baru
+                        System.out.println("Kandang tidak ditemukan. Menambahkan kandang baru...");
+                        Kandang newKandang = new Kandang();
+
+                        newKandang.setIdKandang(request.getIdKandang() != null ? request.getIdKandang() : "-");
+                        newKandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang() : "-");
+                        newKandang.setJenisKandang(request.getJenisKandang() != null ? request.getJenisKandang() : "-");
+                        newKandang.setKapasitas(request.getKapasitas() != null ? request.getKapasitas() : "-");
+                        newKandang.setLuas(request.getLuas() != null ? request.getLuas() : "-");
+                        newKandang.setNilaiBangunan(
+                                request.getNilaiBangunan() != null ? request.getNilaiBangunan() : "-");
+                        newKandang.setAlamat(request.getAlamatKandang() != null ? request.getAlamatKandang() : "-");
+                        newKandang.setLatitude(
+                                request.getLatitudeKandang() != null ? request.getLongitudeKandang() : "-");
+
+                        kandangResponse = kandangRepository.saveKandangById(newKandang);
+
+                        System.out.println("Kandang baru ditambahkan: " + newKandang.getNamaKandang());
+                    } else {
+                        System.out.println("Kandang ditemukan di database: " + kandangResponse.getNamaKandang());
+                    }
+
+                }
+
                 System.out.println("ID Hewan diterima dari frontend: " + request.getIdHewan());
 
                 Hewan hewanResponse = null;
@@ -336,6 +377,7 @@ public class PkbService {
 
                 pkb.setPetugas(petugasResponse);
                 pkb.setPeternak(peternakResponse);
+                pkb.setKandang(kandangResponse);
                 pkb.setRumpunHewan(rumpunHewanResponse);
                 pkb.setJenisHewan(jenisHewanResponse);
                 pkb.setHewan(hewanResponse);

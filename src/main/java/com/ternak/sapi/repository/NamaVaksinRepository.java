@@ -30,7 +30,7 @@ public class NamaVaksinRepository {
         // Add the mappings to the HashMap
         columnMapping.put("idNamaVaksin", "idNamaVaksin");
         columnMapping.put("jenisVaksin", "jenisVaksin");
-        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("nama", "nama");
         columnMapping.put("deskripsi", "deskripsi");
 
         return client.showListTable(tableUsers.toString(), columnMapping, NamaVaksin.class, size);
@@ -45,7 +45,7 @@ public class NamaVaksinRepository {
         // Add the mappings to the HashMap
         columnMapping.put("idNamaVaksin", "idNamaVaksin");
         columnMapping.put("jenisVaksin", "jenisVaksin");
-        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("nama", "nama");
         columnMapping.put("deskripsi", "deskripsi");
 
         return client.getDataListByColumn(tableUsers.toString(), columnMapping, "user", "id", userID, NamaVaksin.class,
@@ -61,22 +61,26 @@ public class NamaVaksinRepository {
 
         for (NamaVaksin namaVaksin : namaVaksinList) {
             try {
-                String rowKey = safeString(namaVaksin.getIdNamaVaksin());
 
                 if (namaVaksin.getJenisVaksin() != null) {
                     JenisVaksin jenisVaksin = namaVaksin.getJenisVaksin();
-                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin", "idJenisVaksin",
+                    client.insertRecord(tableNamaVaksin, safeString(namaVaksin.getIdNamaVaksin()), "jenisVaksin",
+                            "idJenisVaksin",
                             safeString(jenisVaksin.getIdJenisVaksin()));
-                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin", "jenisVaksin",
-                            safeString(jenisVaksin.getJenisVaksin()));
-                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin", "deskripsi",
+                    client.insertRecord(tableNamaVaksin, safeString(namaVaksin.getIdNamaVaksin()), "jenisVaksin",
+                            "jenis",
+                            safeString(jenisVaksin.getJenis()));
+                    client.insertRecord(tableNamaVaksin, safeString(namaVaksin.getIdNamaVaksin()), "jenisVaksin",
+                            "deskripsi",
                             safeString(jenisVaksin.getDeskripsi()));
                 }
 
+                String rowKey = safeString(namaVaksin.getIdNamaVaksin());
+
                 client.insertRecord(tableNamaVaksin, rowKey, "main", "idNamaVaksin",
                         safeString(namaVaksin.getIdNamaVaksin()));
-                client.insertRecord(tableNamaVaksin, rowKey, "main", "namaVaksin",
-                        safeString(namaVaksin.getNamaVaksin()));
+                client.insertRecord(tableNamaVaksin, rowKey, "main", "nama",
+                        safeString(namaVaksin.getNama()));
                 client.insertRecord(tableNamaVaksin, rowKey, "main", "deskripsi",
                         safeString(namaVaksin.getDeskripsi()));
 
@@ -87,7 +91,7 @@ public class NamaVaksinRepository {
             } catch (Exception e) {
                 failedRows.add(namaVaksin.getIdNamaVaksin());
                 System.err.println(
-                        "Failed to insert record for NIK: " + namaVaksin.getIdNamaVaksin() + ", Error: "
+                        "Failed to insert record for nama vaksin: " + namaVaksin.getIdNamaVaksin() + ", Error: "
                                 + e.getMessage());
             }
         }
@@ -108,7 +112,7 @@ public class NamaVaksinRepository {
         // Add the mappings to the HashMap
         columnMapping.put("idNamaVaksin", "idNamaVaksin");
         columnMapping.put("jenisVaksin", "jenisVaksin");
-        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("nama", "nama");
         columnMapping.put("deskripsi", "deskripsi");
 
         return client.showDataTable(tableNamaVaksin.toString(), columnMapping, idNamaVaksin, NamaVaksin.class);
@@ -123,11 +127,13 @@ public class NamaVaksinRepository {
         // Add the mappings to the HashMap
         columnMapping.put("idNamaVaksin", "idNamaVaksin");
         columnMapping.put("jenisVaksin", "jenisVaksin");
-        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("nama", "nama");
         columnMapping.put("deskripsi", "deskripsi");
 
-        NamaVaksin nama = client.getDataByColumn(tableName.toString(),columnMapping,"main","namaVaksin",namaVaksin,NamaVaksin.class);
-        return  nama.getNamaVaksin() != null ? nama : null;
+        NamaVaksin nama = client.getDataByColumn(tableNamaVaksin.toString(), columnMapping, "main", "nama",
+                namaVaksin,
+                NamaVaksin.class);
+        return nama.getNama() != null ? nama : null;
     }
 
     public NamaVaksin findNamaVaksinByJenisVaksin(String namaVaksinId) throws IOException {
@@ -139,10 +145,10 @@ public class NamaVaksinRepository {
         // Add the mappings to the HashMap
         columnMapping.put("idNamaVaksin", "idNamaVaksin");
         columnMapping.put("jenisVaksin", "jenisVaksin");
-        columnMapping.put("namaVaksin", "namaVaksin");
+        columnMapping.put("nama", "nama");
         columnMapping.put("deskripsi", "deskripsi");
 
-        NamaVaksin namaVaksin = client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "namaVaksin",
+        NamaVaksin namaVaksin = client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "nama",
                 namaVaksinId, NamaVaksin.class);
 
         return namaVaksin;

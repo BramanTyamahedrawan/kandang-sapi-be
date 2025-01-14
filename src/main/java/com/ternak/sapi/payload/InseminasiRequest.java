@@ -57,6 +57,27 @@ public class InseminasiRequest {
     private String job;
     private String wilayah;
 
+    // Kandang
+    private String idKandang;
+    private String kapasitas;
+    private String jenisKandang;
+    private String nilaiBangunan;
+    private String alamatKandang;
+    private String namaKandang;
+    private String latitudeKandang;
+    private String longitudeKandang;
+    private String luas;
+
+    // Jenis Hewan
+    private String idJenisHewan;
+    private String jenis;
+    private String deskripsiJenis;
+
+    // Rumpun Hewan
+    private String idRumpunHewan;
+    private String rumpun;
+    private String deskripsiRumpun;
+
     public InseminasiRequest() {
     }
 
@@ -69,7 +90,10 @@ public class InseminasiRequest {
             String tempatLahir, String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude,
             String nikPetugas, String namaPetugas, String emailPetugas, String noTelp, String job, String wilayah,
             String lokasiPeternak, String provinsiPeternak, String kabupatenPeternak, String kecamatanPeternak,
-            String desaPeternak, String dusunPeternak, String nikPeternak, String tanggalLahirPeternak) {
+            String desaPeternak, String dusunPeternak, String nikPeternak, String tanggalLahirPeternak,
+            String idKandang, String kapasitas, String jenisKandang, String nilaiBangunan, String alamatKandang,
+            String namaKandang, String latitudeKandang, String longitudeKandang, String luas, String idJenisHewan,
+            String jenis, String deskripsiJenis, String idRumpunHewan, String rumpun, String deskripsiRumpun) {
         this.idInseminasi = idInseminasi;
         this.tanggalIB = tanggalIB;
         this.idPeternak = idPeternak;
@@ -119,6 +143,24 @@ public class InseminasiRequest {
         this.dusunPeternak = dusunPeternak;
         this.nikPeternak = nikPeternak;
         this.tanggalLahirPeternak = tanggalLahirPeternak;
+        // kandang
+        this.idKandang = idKandang;
+        this.kapasitas = kapasitas;
+        this.jenisKandang = jenisKandang;
+        this.nilaiBangunan = nilaiBangunan;
+        this.alamatKandang = alamatKandang;
+        this.namaKandang = namaKandang;
+        this.latitudeKandang = latitudeKandang;
+        this.longitudeKandang = longitudeKandang;
+        this.luas = luas;
+        // jenis hewan
+        this.idJenisHewan = idJenisHewan;
+        this.jenis = jenis;
+        this.deskripsiJenis = deskripsiJenis;
+        // rumpun hewan
+        this.idRumpunHewan = idRumpunHewan;
+        this.rumpun = rumpun;
+        this.deskripsiRumpun = deskripsiRumpun;
     }
 
     public String getIdInseminasi() {
@@ -516,6 +558,131 @@ public class InseminasiRequest {
 
     public void setWilayah(String wilayah) {
         this.wilayah = wilayah;
+    }
+
+    // Kandang
+    public String getIdKandang() {
+        return idKandang;
+    }
+
+    public void setIdKandang(String idKandang) {
+        this.idKandang = idKandang;
+    }
+
+    public String getKapasitas() {
+        return kapasitas;
+    }
+
+    public void setKapasitas(String kapasitas) {
+        this.kapasitas = kapasitas;
+    }
+
+    public String getJenisKandang() {
+        return jenisKandang;
+    }
+
+    public void setJenisKandang(String jenisKandang) {
+        this.jenisKandang = jenisKandang;
+    }
+
+    public String getNilaiBangunan() {
+        return nilaiBangunan;
+    }
+
+    public void setNilaiBangunan(String nilaiBangunan) {
+        this.nilaiBangunan = nilaiBangunan;
+    }
+
+    public String getAlamatKandang() {
+        return alamatKandang;
+    }
+
+    public void setAlamatKandang(String alamatKandang) {
+        this.alamatKandang = alamatKandang;
+    }
+
+    public String getNamaKandang() {
+        return namaKandang;
+    }
+
+    public void setNamaKandang(String namaKandang) {
+        this.namaKandang = namaKandang;
+    }
+
+    public String getLatitudeKandang() {
+        return latitudeKandang;
+    }
+
+    public void setLatitudeKandang(String latitudeKandang) {
+        this.latitudeKandang = latitudeKandang;
+    }
+
+    public String getLongitudeKandang() {
+        return longitudeKandang;
+    }
+
+    public void setLongitudeKandang(String longitudeKandang) {
+        this.longitudeKandang = longitudeKandang;
+    }
+
+    public String getLuas() {
+        return luas;
+    }
+
+    public void setLuas(String luas) {
+        this.luas = luas;
+    }
+
+    // Jenis Hewan
+
+    public String getIdJenisHewan() {
+        return idJenisHewan;
+    }
+
+    public void setIdJenisHewan(String idJenisHewan) {
+        this.idJenisHewan = idJenisHewan;
+    }
+
+    public String getJenis() {
+        return jenis;
+    }
+
+    public void setJenis(String jenis) {
+        this.jenis = jenis;
+    }
+
+    public String getDeskripsiJenis() {
+        return deskripsiJenis;
+    }
+
+    public void setDeskripsiJenis(String deskripsiJenis) {
+        this.deskripsiJenis = deskripsiJenis;
+    }
+
+    // Rumpun Hewan
+
+    public String getIdRumpunHewan() {
+        return idRumpunHewan;
+    }
+
+    public void setIdRumpunHewan(String idRumpunHewan) {
+        this.idRumpunHewan = idRumpunHewan;
+    }
+
+    public String getRumpun() {
+        return rumpun;
+    }
+
+    public void setRumpun(String rumpun) {
+        this.rumpun = rumpun;
+    }
+
+    public String getDeskripsiRumpun() {
+        return deskripsiRumpun;
+    }
+
+    public void setDeskripsiRumpun(String deskripsiRumpun) {
+        this.deskripsiRumpun = deskripsiRumpun;
     }
 
     public void set(String fieldName, String value) {

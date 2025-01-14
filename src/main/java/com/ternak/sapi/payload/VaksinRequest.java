@@ -5,8 +5,12 @@ public class VaksinRequest {
     private String peternak_id;
     private String hewan_id;
     private String petugas_id;
-    private String namaVaksin;
-    private String jenisVaksin;
+    private String idNamaVaksin;
+    private String idJenisVaksin;
+    private String nama;
+    private String jenis;
+    private String deskripsiJenis;
+    private String deskripsiNama;
     private String tglVaksin;
     private String batchVaksin;
     private String vaksinKe;
@@ -22,15 +26,16 @@ public class VaksinRequest {
     }
 
     public VaksinRequest(String idVaksin, String peternak_id, String hewan_id, String petugas_id,
-            String namaVaksin, String jenisVaksin, String tglVaksin,
+            String nama, String jenis, String tglVaksin,
             String tglPendataan, String nikPetugas, String namaPetugas, String nikPeternak, String namaPeternak,
-            String noTelp, String kodeEartagNasional) {
+            String noTelp, String kodeEartagNasional, String idNamaVaksin, String idJenisVaksin, String deskripsiJenis,
+            String deskripsiNama) {
         this.idVaksin = idVaksin;
         this.peternak_id = peternak_id;
         this.hewan_id = hewan_id;
         this.petugas_id = petugas_id;
-        this.namaVaksin = namaVaksin;
-        this.jenisVaksin = jenisVaksin;
+        this.nama = nama;
+        this.jenis = jenis;
         this.tglVaksin = tglVaksin;
         this.batchVaksin = "";
         this.vaksinKe = "";
@@ -41,6 +46,10 @@ public class VaksinRequest {
         this.namaPeternak = namaPeternak;
         this.noTelp = noTelp;
         this.kodeEartagNasional = kodeEartagNasional;
+        this.idNamaVaksin = idNamaVaksin;
+        this.idJenisVaksin = idJenisVaksin;
+        this.deskripsiJenis = deskripsiJenis;
+        this.deskripsiNama = deskripsiNama;
     }
 
     public String getIdVaksin() {
@@ -75,20 +84,52 @@ public class VaksinRequest {
         this.petugas_id = petugas_id;
     }
 
-    public String getNamaVaksin() {
-        return namaVaksin;
+    public String getIdNamaVaksin() {
+        return idNamaVaksin;
     }
 
-    public void setNamaVaksin(String namaVaksin) {
-        this.namaVaksin = namaVaksin;
+    public void setIdNamaVaksin(String idNamaVaksin) {
+        this.idNamaVaksin = idNamaVaksin;
     }
 
-    public String getJenisVaksin() {
-        return jenisVaksin;
+    public String getIdJenisVaksin() {
+        return idJenisVaksin;
     }
 
-    public void setJenisVaksin(String jenisVaksin) {
-        this.jenisVaksin = jenisVaksin;
+    public void setIdJenisVaksin(String idJenisVaksin) {
+        this.idJenisVaksin = idJenisVaksin;
+    }
+
+    public String getDeskripsiJenis() {
+        return deskripsiJenis;
+    }
+
+    public void setDeskripsiJenis(String deskripsiJenis) {
+        this.deskripsiJenis = deskripsiJenis;
+    }
+
+    public String getDeskripsiNama() {
+        return deskripsiNama;
+    }
+
+    public void setDeskripsiNama(String deskripsiNama) {
+        this.deskripsiNama = deskripsiNama;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+
+    public String getJenis() {
+        return jenis;
+    }
+
+    public void setJenis(String jenis) {
+        this.jenis = jenis;
     }
 
     public String getTglVaksin() {
@@ -185,11 +226,17 @@ public class VaksinRequest {
             case "petugas_id":
                 this.petugas_id = value;
                 break;
-            case "jenisVaksin":
-                this.jenisVaksin = value;
+            case "idNamaVaksin":
+                this.idNamaVaksin = value;
                 break;
-            case "namaVaksin":
-                this.namaVaksin = value;
+            case "idJenisVaksin":
+                this.idJenisVaksin = value;
+                break;
+            case "jenis":
+                this.jenis = value;
+                break;
+            case "nama":
+                this.nama = value;
                 break;
             case "tglVaksin":
                 this.tglVaksin = value;

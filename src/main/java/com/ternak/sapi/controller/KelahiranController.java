@@ -3,7 +3,6 @@ package com.ternak.sapi.controller;
 import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.payload.ApiResponse;
 import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.HewanRequest;
 import com.ternak.sapi.payload.KelahiranRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.service.KelahiranService;
@@ -30,8 +29,13 @@ public class KelahiranController {
             @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
             @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
             @RequestParam(value = "hewanID", defaultValue = "*") String hewanID,
+            @RequestParam(value = "kandangID", defaultValue = "*") String kandangID,
+            @RequestParam(value = "jenisHewanID", defaultValue = "*") String jenisHewanID,
+            @RequestParam(value = "rumpunHewanID", defaultValue = "*") String rumpunHewanID,
             @RequestParam(value = "inseminasiID", defaultValue = "*") String inseminasiID) throws IOException {
-        return kelahiranService.getAllKelahiran(page, size, peternakID, petugasID, hewanID, inseminasiID);
+        return kelahiranService.getAllKelahiran(page, size, peternakID, petugasID, hewanID, kandangID, jenisHewanID,
+                rumpunHewanID,
+                inseminasiID);
     }
 
     @PostMapping
