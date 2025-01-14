@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ternak.sapi.util.AppConstants;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class JenisVaksinService {
     private JenisVaksinRepository jenisVaksinRepository = new JenisVaksinRepository();
@@ -21,7 +23,8 @@ public class JenisVaksinService {
     // private static final Logger logger =
     // LoggerFactory.getLogger(JenisVaksinService.class);
 
-    public PagedResponse<JenisVaksin> getAllJenisVaksin(int page, int size, String userID) throws IOException {
+    public PagedResponse<JenisVaksin> getAllJenisVaksin(int page, int size, String userID, String jenisHewanID,
+            String peternakID) throws IOException {
         validatePageNumberAndSize(page, size);
         List<JenisVaksin> jenisVaksinResponse = new ArrayList<>();
 
@@ -48,18 +51,25 @@ public class JenisVaksinService {
         System.out.println("Memulai proses penyimpanan data jenis hewan secara bulk...");
 
         List<JenisVaksin> jenisVaksinList = new ArrayList<>();
+        Set<String> existingIds = new HashSet<>();
         int skippedIncomplete = 0;
 
         for (JenisVaksinRequest request : jenisVaksinRequests) {
             try {
+                if (existingIds.contains(request.getIdJenisVaksin())) {
+                    System.out.println("Data jenis vaksin sudah ada di dalam database.");
+                    skippedIncomplete++;
+                    continue;
+                }
+
                 JenisVaksin jenisVaksin = new JenisVaksin();
                 jenisVaksin.setIdJenisVaksin(request.getIdJenisVaksin());
-                jenisVaksin.setJenisVaksin(request.getNamaVaksin());
+                jenisVaksin.setJenis(request.getJenis());
                 jenisVaksin.setDeskripsi(request.getDeskripsi());
 
                 jenisVaksinList.add(jenisVaksin);
                 System.out.println("Menambahkan data Jenis Vaksin ke dalam daftar: "
-                        + jenisVaksin.getJenisVaksin());
+                        + jenisVaksin.getJenis());
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data: " + request);
                 e.printStackTrace();

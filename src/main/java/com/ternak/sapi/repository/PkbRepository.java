@@ -3,6 +3,7 @@ package com.ternak.sapi.repository;
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Pkb;
 import com.ternak.sapi.model.RumpunHewan;
@@ -33,6 +34,7 @@ public class PkbRepository {
         columnMapping.put("petugas", "petugas");
         columnMapping.put("rumpunHewan", "rumpunHewan");
         columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("kandang", "kandang");
         columnMapping.put("jumlah", "jumlah");
         columnMapping.put("spesies", "spesies");
         columnMapping.put("lokasi", "lokasi");
@@ -187,6 +189,28 @@ public class PkbRepository {
                     }
                 }
 
+                if (pkb.getKandang() != null) {
+                    Kandang kandang = pkb.getKandang();
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "idKandang",
+                            safeString(kandang.getIdKandang()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "namaKandang",
+                            safeString(kandang.getNamaKandang()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "alamat",
+                            safeString(kandang.getAlamat()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "luas",
+                            safeString(kandang.getLuas()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "jenisKandang",
+                            safeString(kandang.getJenisKandang()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "kapasitas",
+                            safeString(kandang.getKapasitas()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "nilaiBangunan",
+                            safeString(kandang.getNilaiBangunan()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "latitude",
+                            safeString(kandang.getLatitude()));
+                    client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang", "longitude",
+                            safeString(kandang.getLongitude()));
+                }
+
                 if (pkb.getJenisHewan() != null) {
                     JenisHewan jenisHewan = pkb.getJenisHewan();
                     client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "jenisHewan",
@@ -283,6 +307,7 @@ public class PkbRepository {
         columnMapping.put("petugas", "petugas");
         columnMapping.put("rumpunHewan", "rumpunHewan");
         columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("kandang", "kandang");
         columnMapping.put("jumlah", "jumlah");
         columnMapping.put("spesies", "spesies");
         columnMapping.put("lokasi", "lokasi");
@@ -303,6 +328,7 @@ public class PkbRepository {
         columnMapping.put("petugas", "petugas");
         columnMapping.put("rumpunHewan", "rumpunHewan");
         columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("kandang", "kandang");
         columnMapping.put("jumlah", "jumlah");
         columnMapping.put("spesies", "spesies");
         columnMapping.put("lokasi", "lokasi");
@@ -326,6 +352,7 @@ public class PkbRepository {
         columnMapping.put("petugas", "petugas");
         columnMapping.put("rumpunHewan", "rumpunHewan");
         columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("kandang", "kandang");
         columnMapping.put("jumlah", "jumlah");
         columnMapping.put("spesies", "spesies");
         columnMapping.put("lokasi", "lokasi");
@@ -348,6 +375,7 @@ public class PkbRepository {
         columnMapping.put("petugas", "petugas");
         columnMapping.put("rumpunHewan", "rumpunHewan");
         columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("kandang", "kandang");
         columnMapping.put("jumlah", "jumlah");
         columnMapping.put("spesies", "spesies");
         columnMapping.put("lokasi", "lokasi");
@@ -370,6 +398,7 @@ public class PkbRepository {
         columnMapping.put("petugas", "petugas");
         columnMapping.put("rumpunHewan", "rumpunHewan");
         columnMapping.put("jenisHewan", "jenisHewan");
+        columnMapping.put("kandang", "kandang");
         columnMapping.put("jumlah", "jumlah");
         columnMapping.put("spesies", "spesies");
         columnMapping.put("lokasi", "lokasi");

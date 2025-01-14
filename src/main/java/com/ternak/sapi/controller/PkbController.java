@@ -31,8 +31,9 @@ public class PkbController {
             @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
             @RequestParam(value = "jenisHewanID", defaultValue = "*") String jenisHewanID,
             @RequestParam(value = "rumpunHewanID", defaultValue = "*") String rumpunHewanID,
+            @RequestParam(value = "kandangID", defaultValue = "*") String kandangID,
             @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
-        return pkbService.getAllPkb(page, size, peternakID, petugasID, jenisHewanID, rumpunHewanID, hewanID);
+        return pkbService.getAllPkb(page, size, peternakID, petugasID, jenisHewanID, rumpunHewanID, kandangID, hewanID);
     }
 
     @PostMapping

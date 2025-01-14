@@ -35,6 +35,17 @@ public class PkbRequest {
     private String dusunPeternak;
     private String tanggalLahirPeternak;
 
+    // Kandang
+    private String idKandang;
+    private String kapasitas;
+    private String jenisKandang;
+    private String nilaiBangunan;
+    private String alamatKandang;
+    private String namaKandang;
+    private String latitudeKandang;
+    private String longitudeKandang;
+    private String luas;
+
     // Hewan
     private String idHewan;
     private String kodeEartagNasional;
@@ -70,7 +81,9 @@ public class PkbRequest {
             String dusunPeternak, String tanggalLahirPeternak, String kodeEartagNasional,
             String noKartuTernak, String sex, String umur, String tanggalLahir, String tempatLahir,
             String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude, String idJenisHewan,
-            String jenis, String deskripsiJenis, String idRumpunHewan, String rumpun, String deskripsiRumpun) {
+            String jenis, String deskripsiJenis, String idRumpunHewan, String rumpun, String deskripsiRumpun,
+            String idKandang, String kapasitas, String jenisKandang, String nilaiBangunan, String alamatKandang,
+            String namaKandang, String latitudeKandang, String longitudeKandang, String luas) {
         this.idKejadian = idKejadian;
         this.tanggalPkb = tanggalPkb;
         this.idPeternak = idPeternak;
@@ -103,7 +116,15 @@ public class PkbRequest {
         this.dusunPeternak = dusunPeternak;
         this.tanggalLahirPeternak = tanggalLahirPeternak;
         // Kandang
-
+        this.idKandang = idKandang;
+        this.kapasitas = kapasitas;
+        this.jenisKandang = jenisKandang;
+        this.nilaiBangunan = nilaiBangunan;
+        this.alamatKandang = alamatKandang;
+        this.namaKandang = namaKandang;
+        this.latitudeKandang = latitudeKandang;
+        this.longitudeKandang = longitudeKandang;
+        this.luas = luas;
         // hewan
         this.idHewan = idHewan;
         this.kodeEartagNasional = kodeEartagNasional;
@@ -359,6 +380,79 @@ public class PkbRequest {
 
     public void setTanggalLahirPeternak(String tanggalLahirPeternak) {
         this.tanggalLahirPeternak = tanggalLahirPeternak;
+    }
+
+    // Kandang
+    public String getIdKandang() {
+        return idKandang;
+    }
+
+    public void setIdKandang(String idKandang) {
+        this.idKandang = idKandang;
+    }
+
+    public String getKapasitas() {
+        return kapasitas;
+    }
+
+    public void setKapasitas(String kapasitas) {
+        this.kapasitas = kapasitas;
+    }
+
+    public String getJenisKandang() {
+        return jenisKandang;
+    }
+
+    public void setJenisKandang(String jenisKandang) {
+        this.jenisKandang = jenisKandang;
+    }
+
+    public String getNilaiBangunan() {
+        return nilaiBangunan;
+    }
+
+    public void setNilaiBangunan(String nilaiBangunan) {
+        this.nilaiBangunan = nilaiBangunan;
+    }
+
+    public String getAlamatKandang() {
+        return alamatKandang;
+    }
+
+    public void setAlamatKandang(String alamatKandang) {
+        this.alamatKandang = alamatKandang;
+    }
+
+    public String getNamaKandang() {
+        return namaKandang;
+    }
+
+    public void setNamaKandang(String namaKandang) {
+        this.namaKandang = namaKandang;
+    }
+
+    public String getLatitudeKandang() {
+        return latitudeKandang;
+    }
+
+    public void setLatitudeKandang(String latitudeKandang) {
+        this.latitudeKandang = latitudeKandang;
+    }
+
+    public String getLongitudeKandang() {
+        return longitudeKandang;
+    }
+
+    public void setLongitudeKandang(String longitudeKandang) {
+        this.longitudeKandang = longitudeKandang;
+    }
+
+    public String getLuas() {
+        return luas;
+    }
+
+    public void setLuas(String luas) {
+        this.luas = luas;
     }
 
     // Hewan

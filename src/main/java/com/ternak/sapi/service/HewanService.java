@@ -79,7 +79,7 @@ public class HewanService {
         Hewan hewan = new Hewan();
         Peternak peternakResponse = peternakRepository.findById(hewanRequest.getIdPeternak().toString());
         Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugas_id().toString());
-        Kandang kandangResponse = kandangRepository.findById(hewanRequest.getKandang_id().toString());
+        Kandang kandangResponse = kandangRepository.findById(hewanRequest.getIdKandang().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
 
@@ -121,7 +121,7 @@ public class HewanService {
         Hewan hewan = new Hewan();
         Peternak peternakResponse = peternakRepository.findById(hewanRequest.getIdPeternak().toString());
         Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugas_id().toString());
-        Kandang kandangResponse = kandangRepository.findById(hewanRequest.getKandang_id().toString());
+        Kandang kandangResponse = kandangRepository.findById(hewanRequest.getIdKandang().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
 
@@ -313,27 +313,22 @@ public class HewanService {
                     continue;
                 }
 
+                System.out.println("id Kandang diterima dari frontend: " + request.getIdKandang());
+
+                Kandang kandangResponse = kandangRepository.findByIdKandang(request.getIdKandang());
+
                 System.out.println("Jenis Hewan diterima dari frontend: " + request.getJenis());
 
                 JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
-                // if (jenisHewanResponse == null) {
-                // System.out.println("Jenis Hewan tidak ditemukan: " + request.getJenis());
-                // skippedIncomplete++;
-                // continue;
-                // }
 
                 System.out.println("Rumpun Hewan diterima dari frontend: " + request.getRumpun());
                 RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpun());
-                // if (rumpunHewanResponse == null) {
-                // System.out.println("Rumpun Hewan Tidak Ditemukan");
-                // skippedIncomplete++;
-                // continue;
-                // }
 
                 // Buat objek Hewan
                 Hewan hewan = new Hewan();
                 hewan.setPetugas(petugasResponse);
                 hewan.setPeternak(peternakResponse);
+                hewan.setKandang(kandangResponse);
                 hewan.setJenisHewan(jenisHewanResponse);
                 hewan.setRumpunHewan(rumpunHewanResponse);
                 hewan.setIdHewan(request.getIdHewan());
@@ -549,16 +544,18 @@ public class HewanService {
                     System.out.println("Nama Kandang kosong. Data ini tidak akan diproses.");
                     continue;
                 } else {
-                    kandangResponse = kandangRepository.findByNamaKandang("Kandang "+ peternakResponse.getNamaPeternak());
+                    kandangResponse = kandangRepository
+                            .findByNamaKandang("Kandang " + peternakResponse.getNamaPeternak());
                     if (kandangResponse == null) {
                         // Jika nama kandang tidak ditemukan, tambahkan petugas baru berdasarkan nama
                         // dari frontend
                         System.out.println("Nama Kandang tidak ditemukan di database. Membuat kandang baru...");
 
                         Kandang newKandang = new Kandang();
-                        newKandang.setIdKandang(request.getKandang_id() != null ? request.getKandang_id()
+                        newKandang.setIdKandang(request.getIdKandang() != null ? request.getIdKandang()
                                 : UUID.randomUUID().toString());
-                        newKandang.setNamaKandang(peternakResponse.getNamaPeternak() != null ? "Kandang " + peternakResponse.getNamaPeternak()
+                        newKandang.setNamaKandang(peternakResponse.getNamaPeternak() != null
+                                ? "Kandang " + peternakResponse.getNamaPeternak()
                                 : "Nama Kandang tidak ditemukan");
                         newKandang.setLongitude(request.getLongitude());
                         newKandang.setLatitude(request.getLatitude());
@@ -572,7 +569,6 @@ public class HewanService {
                         System.out.println("Kandang ditemukan di database: " + kandangResponse.getNamaKandang());
                     }
                 }
-
 
                 RumpunHewan rumpunResponse = null;
 

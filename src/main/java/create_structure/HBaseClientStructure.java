@@ -55,7 +55,8 @@ public class HBaseClientStructure {
 
                 // Create Tabel Inseminasi
                 TableName tableInseminasi = TableName.valueOf("inseminasidev");
-                String[] inseminasidev = { "main", "peternak", "hewan", "petugas", "detail" };
+                String[] inseminasidev = { "main", "peternak", "hewan", "petugas", "kandang", "jenisHewan",
+                                "rumpunHewan", "detail" };
                 client.deleteTable(tableInseminasi);
                 client.createTable(tableInseminasi, inseminasidev);
 
@@ -67,7 +68,8 @@ public class HBaseClientStructure {
 
                 // Create Tabel Kelahiran
                 TableName tableKelahiran = TableName.valueOf("kelahirandev");
-                String[] kelahirandev = { "main", "peternak", "hewan", "kandang", "petugas", "inseminasi", "detail" };
+                String[] kelahirandev = { "main", "peternak", "hewan", "jenisHewan", "rumpunHewan", "kandang",
+                                "petugas", "inseminasi", "detail" };
                 client.deleteTable(tableKelahiran);
                 client.createTable(tableKelahiran, kelahirandev);
 
@@ -91,7 +93,8 @@ public class HBaseClientStructure {
 
                 // Create Tabel Pkb
                 TableName tablePkb = TableName.valueOf("pkbdev");
-                String[] pkbdev = { "main", "peternak", "hewan", "petugas", "rumpunHewan", "jenisHewan", "detail" };
+                String[] pkbdev = { "main", "peternak", "hewan", "kandang", "petugas", "rumpunHewan", "jenisHewan",
+                                "detail" };
                 client.deleteTable(tablePkb);
                 client.createTable(tablePkb, pkbdev);
 
@@ -103,13 +106,13 @@ public class HBaseClientStructure {
 
                 // Create Tabel Jenis Vaksin
                 TableName tableJenisVaksin = TableName.valueOf("jenisvaksindev");
-                String[] jenisvaksindev = { "main", "namaVaksin", "vaksin", "detail" };
+                String[] jenisvaksindev = { "main", "detail" };
                 client.deleteTable(tableJenisVaksin);
                 client.createTable(tableJenisVaksin, jenisvaksindev);
 
                 // Create Tabel Nama Vaksin
                 TableName tableNamaVaksin = TableName.valueOf("namavaksindev");
-                String[] namavaksindev = { "main", "jenisVaksin", "vaksin", "detail" };
+                String[] namavaksindev = { "main", "jenisVaksin", "detail" };
                 client.deleteTable(tableNamaVaksin);
                 client.createTable(tableNamaVaksin, namavaksindev);
 

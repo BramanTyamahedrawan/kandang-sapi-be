@@ -2,7 +2,7 @@ package com.ternak.sapi.model;
 
 public class NamaVaksin {
     private String idNamaVaksin;
-    private String namaVaksin;
+    private String nama;
     private String deskripsi;
 
     private JenisVaksin jenisVaksin;
@@ -10,9 +10,9 @@ public class NamaVaksin {
     public NamaVaksin() {
     }
 
-    public NamaVaksin(String idNamaVaksin, String namaVaksin, String deskripsi, JenisVaksin jenisVaksin) {
+    public NamaVaksin(String idNamaVaksin, String nama, String deskripsi, JenisVaksin jenisVaksin) {
         this.idNamaVaksin = idNamaVaksin;
-        this.namaVaksin = namaVaksin;
+        this.nama = nama;
         this.deskripsi = deskripsi;
         this.jenisVaksin = jenisVaksin;
     }
@@ -25,12 +25,12 @@ public class NamaVaksin {
         this.idNamaVaksin = idNamaVaksin;
     }
 
-    public String getNamaVaksin() {
-        return namaVaksin;
+    public String getNama() {
+        return nama;
     }
 
-    public void setNamaVaksin(String namaVaksin) {
-        this.namaVaksin = namaVaksin;
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
     public String getDeskripsi() {
@@ -54,8 +54,8 @@ public class NamaVaksin {
             case "idNamaVaksin":
                 this.idNamaVaksin = value;
                 break;
-            case "namaVaksin":
-                this.namaVaksin = value;
+            case "nama":
+                this.nama = value;
                 break;
             case "deskripsi":
                 this.deskripsi = value;

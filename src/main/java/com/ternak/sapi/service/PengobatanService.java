@@ -2,18 +2,15 @@ package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
-import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.Pengobatan;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.InseminasiRequest;
 import com.ternak.sapi.payload.PengobatanRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.PengobatanRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.util.AppConstants;
 
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet.LI;
 import org.springframework.stereotype.Service;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;

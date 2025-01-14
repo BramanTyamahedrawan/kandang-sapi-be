@@ -29,7 +29,7 @@ public class JenisVaksinRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idJenisVaksin", "idJenisVaksin");
-        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
         return client.showListTable(tableUsers.toString(), columnMapping, JenisVaksin.class, size);
@@ -43,7 +43,7 @@ public class JenisVaksinRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idJenisVaksin", "idJenisVaksin");
-        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
         return client.getDataListByColumn(tableUsers.toString(), columnMapping, "user", "id", userID, JenisVaksin.class,
@@ -63,8 +63,8 @@ public class JenisVaksinRepository {
 
                 client.insertRecord(tableJenisVaksin, rowKey, "main", "idJenisVaksin",
                         safeString(jenisVaksin.getIdJenisVaksin()));
-                client.insertRecord(tableJenisVaksin, rowKey, "main", "jenisVaksin",
-                        safeString(jenisVaksin.getJenisVaksin()));
+                client.insertRecord(tableJenisVaksin, rowKey, "main", "jenis",
+                        safeString(jenisVaksin.getJenis()));
                 client.insertRecord(tableJenisVaksin, rowKey, "main", "deskripsi",
                         safeString(jenisVaksin.getDeskripsi()));
                 client.insertRecord(tableJenisVaksin, rowKey, "detail", "created_by", "Polinema");
@@ -94,15 +94,13 @@ public class JenisVaksinRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idJenisVaksin", "idJenisVaksin");
-        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
         return client.showDataTable(tableJenisVaksin.toString(), columnMapping, idJenisVaksin, JenisVaksin.class);
     }
 
-
     public JenisVaksin findByJenisVaksin(String jenis) throws IOException {
-
 
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -112,11 +110,13 @@ public class JenisVaksinRepository {
         // Add the mappings to the HashMap
         columnMapping.put("idJenisVaksin", "idJenisVaksin");
 
-        columnMapping.put("jenisVaksin", "jenisVaksin");
+        columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
-        JenisVaksin jenisVaksin = client.getDataByColumn(tableName.toString(),columnMapping,"main", "jenisVaksin",jenis, JenisVaksin.class);
-        return jenisVaksin.getJenisVaksin() != null ? jenisVaksin : null;
+        JenisVaksin jenisVaksin = client.getDataByColumn(tableJenisVaksin.toString(), columnMapping, "main", "jenis",
+                jenis,
+                JenisVaksin.class);
+        return jenisVaksin;
 
     }
 

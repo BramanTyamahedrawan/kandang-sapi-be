@@ -150,11 +150,12 @@ public class VaksinService {
 
         for (VaksinRequest request : vaksinRequests) {
             try {
-                if (vaksinRepository.existsByIdVaksin(request.getIdVaksin())) {
-                    System.out.println("Data vaksin dengan ID " + request.getIdVaksin() + " sudah terdaftar.");
-                    skippedExisting++;
-                    continue;
-                }
+                // if (vaksinRepository.existsByIdVaksin(request.getIdVaksin())) {
+                // System.out.println("Data vaksin dengan ID " + request.getIdVaksin() + " sudah
+                // terdaftar.");
+                // skippedExisting++;
+                // continue;
+                // }
 
                 Petugas petugasResponse = petugasRepository.findByNik(request.getNikPetugas());
                 if (petugasResponse == null) {
@@ -178,26 +179,21 @@ public class VaksinService {
                     continue;
                 }
 
-                JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findByJenisVaksin(request.getJenisVaksin());
+                JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findByJenisVaksin(request.getJenis());
                 if (jenisVaksinResponse == null) {
-                    System.out.println("Data jenis vaksin dengan jenis " + request.getJenisVaksin()
-                            + " tidak ditemukan. Membuat Default jenis vaksin");
-
-                    JenisVaksin jenisVaksin = new JenisVaksin();
-                    jenisVaksin.setIdJenisVaksin(request.getJenisVaksin());
-                    jenisVaksin.setJenisVaksin("nama vaksin tidak valid");
-                    jenisVaksin.setDeskripsi("deskripsi tidak valid");
+                    System.out.println("Data jenis vaksin dengan jenis " + request.getJenis()
+                            + " tidak ditemukan");
                 }
 
-                NamaVaksin namaVaksinResponse = namaVaksinRepository.findByNamaVaksin(request.getNamaVaksin());
+                NamaVaksin namaVaksinResponse = namaVaksinRepository.findByNamaVaksin(request.getNama());
                 if (namaVaksinResponse == null) {
-                    System.out.println("Data nama vaksin dengan nama " + request.getNamaVaksin()
-                            + " tidak ditemukan. Membuat Default nama vaksin");
+                    System.out.println("Data nama vaksin dengan nama " + request.getNama()
+                            + " tidak ditemukan");
 
-                    NamaVaksin namaVaksin = new NamaVaksin();
-                    namaVaksin.setIdNamaVaksin(request.getNamaVaksin());
-                    namaVaksin.setNamaVaksin("nama vaksin tidak valid");
-                    namaVaksin.setDeskripsi("deskripsi tidak valid");
+                    // NamaVaksin namaVaksin = new NamaVaksin();
+                    // namaVaksin.setIdNamaVaksin(request.getNamaVaksin());
+                    // namaVaksin.setNamaVaksin("nama vaksin tidak valid");
+                    // namaVaksin.setDeskripsi("deskripsi tidak valid");
                 }
 
                 Peternak peternakResponse = peternakRepository.findByNikPeternak(request.getNikPeternak());

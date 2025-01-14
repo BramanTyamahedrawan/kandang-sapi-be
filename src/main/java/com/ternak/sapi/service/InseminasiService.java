@@ -3,16 +3,22 @@ package com.ternak.sapi.service;
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Inseminasi;
+import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.InseminasiRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.InseminasiRepository;
+import com.ternak.sapi.repository.JenisHewanRepository;
+import com.ternak.sapi.repository.KandangRepository;
 import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
+import com.ternak.sapi.repository.RumpunHewanRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
 // import org.slf4j.Logger;
@@ -40,11 +46,15 @@ public class InseminasiService {
     private PeternakRepository peternakRepository = new PeternakRepository();
     private PetugasRepository petugasRepository = new PetugasRepository();
     private HewanRepository hewanRepository = new HewanRepository();
+    private KandangRepository kandangRepository = new KandangRepository();
+    private RumpunHewanRepository rumpunHewanRepository = new RumpunHewanRepository();
+    private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(InseminasiService.class);
 
     public PagedResponse<Inseminasi> getAllInseminasi(int page, int size, String peternakId, String petugasId,
+            String kandangId, String jenisHewanId, String rumpunHewanId,
             String hewanId) throws IOException {
         validatePageNumberAndSize(page, size);
         List<Inseminasi> inseminasiResponse;
@@ -162,6 +172,41 @@ public class InseminasiService {
                 inseminasi.setBangsaPejantan(request.getBangsaPejantan());
                 inseminasi.setProdusen(request.getProdusen());
 
+                System.out.println("Nama petugas diterima dari frontend: " + request.getNamaPetugas());
+
+                Petugas petugasResponse = null;
+                if (request.getNamaPetugas() == null || request.getNamaPetugas().trim().isEmpty()) {
+                    System.out.println("Nama Petugas kosong. Lewati proses pencarian petugas...");
+                    skippedIncomplete++;
+                    continue;
+
+                } else {
+                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                    if (petugasResponse == null) {
+                        // Jika nama petugas tidak ditemukan, tambahkan petugas baru berdasarkan nama
+                        // dari frontend
+                        System.out.println("Nama Petugas tidak ditemukan di database. Membuat petugas baru...");
+
+                        Petugas newPetugas = new Petugas();
+                        newPetugas
+                                .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
+                                        : "NIK Kosong");
+                        newPetugas.setNamaPetugas(request.getNamaPetugas());
+                        newPetugas.setEmail(
+                                request.getEmailPetugas() != null ? request.getEmailPetugas() : "-");
+                        newPetugas.setNoTelp(
+                                request.getNoTelp() != null ? request.getNoTelp() : "-");
+                        newPetugas.setJob(request.getJob() != null ? request.getJob() : "Pendataan");
+                        newPetugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
+
+                        petugasResponse = petugasRepository.saveImport(newPetugas);
+
+                        System.out.println("Petugas baru berhasil dibuat: " + newPetugas.getNamaPetugas());
+                    } else {
+                        System.out.println("Petugas ditemukan di database: " + petugasResponse.getNamaPetugas());
+                    }
+                }
+
                 System.out.println("nama peternak diterima dari frontend: " + request.getNamaPeternak());
 
                 Peternak peternakResponse = null;
@@ -267,41 +312,6 @@ public class InseminasiService {
                     }
                 }
 
-                System.out.println("Nama petugas diterima dari frontend: " + request.getNamaPetugas());
-
-                Petugas petugasResponse = null;
-                if (request.getNamaPetugas() == null || request.getNamaPetugas().trim().isEmpty()) {
-                    System.out.println("Nama Petugas kosong. Lewati proses pencarian petugas...");
-                    skippedIncomplete++;
-                    continue;
-
-                } else {
-                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
-                    if (petugasResponse == null) {
-                        // Jika nama petugas tidak ditemukan, tambahkan petugas baru berdasarkan nama
-                        // dari frontend
-                        System.out.println("Nama Petugas tidak ditemukan di database. Membuat petugas baru...");
-
-                        Petugas newPetugas = new Petugas();
-                        newPetugas
-                                .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
-                                        : "NIK Kosong");
-                        newPetugas.setNamaPetugas(request.getNamaPetugas());
-                        newPetugas.setEmail(
-                                request.getEmailPetugas() != null ? request.getEmailPetugas() : "-");
-                        newPetugas.setNoTelp(
-                                request.getNoTelp() != null ? request.getNoTelp() : "-");
-                        newPetugas.setJob(request.getJob() != null ? request.getJob() : "Pendataan");
-                        newPetugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
-
-                        petugasResponse = petugasRepository.saveImport(newPetugas);
-
-                        System.out.println("Petugas baru berhasil dibuat: " + newPetugas.getNamaPetugas());
-                    } else {
-                        System.out.println("Petugas ditemukan di database: " + petugasResponse.getNamaPetugas());
-                    }
-                }
-
                 inseminasi.setPeternak(peternakResponse);
                 inseminasi.setHewan(hewanResponse);
                 inseminasi.setPetugas(petugasResponse);
@@ -361,8 +371,16 @@ public class InseminasiService {
 
                 }
 
-                System.out.println("ID Hewan diterima dari frontend (inseminasi): " + request.getIdHewan());
+                System.out.println("id Kandang diterima dari frontend (inseminasi): " + request.getIdKandang());
+                Kandang kandangResponse = kandangRepository.findByIdKandang(request.getIdKandang());
 
+                System.out.println("Jenis Hewan diterima dari frontend (inseminasi): " + request.getJenis());
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
+
+                System.out.println("Rumpun Hewan diterima dari frontend (inseminasi): " + request.getRumpun());
+                RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpun());
+
+                System.out.println("ID Hewan diterima dari frontend (inseminasi): " + request.getIdHewan());
                 Hewan hewanResponse = hewanRepository.findById(request.getIdHewan());
                 if (request.getIdHewan() == null || request.getIdHewan().trim().isEmpty()) {
                     System.out.println("ID Hewan kosong.");
@@ -387,9 +405,12 @@ public class InseminasiService {
                 inseminasi.setBangsaPejantan(request.getBangsaPejantan());
                 inseminasi.setProdusen(request.getProdusen());
 
-                inseminasi.setPeternak(peternakResponse);
-                inseminasi.setHewan(hewanResponse);
                 inseminasi.setPetugas(petugasResponse);
+                inseminasi.setPeternak(peternakResponse);
+                inseminasi.setKandang(kandangResponse);
+                inseminasi.setJenisHewan(jenisHewanResponse);
+                inseminasi.setRumpunHewan(rumpunHewanResponse);
+                inseminasi.setHewan(hewanResponse);
 
                 existingIds.add(request.getIdInseminasi());
                 inseminasiList.add(inseminasi);

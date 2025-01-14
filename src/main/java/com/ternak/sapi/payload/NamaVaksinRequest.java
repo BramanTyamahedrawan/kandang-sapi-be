@@ -2,18 +2,20 @@ package com.ternak.sapi.payload;
 
 public class NamaVaksinRequest {
     private String idNamaVaksin;
-    private String namaVaksin;
+    private String nama;
     private String deskripsi;
     private String idJenisVaksin;
+    private String jenis;
 
     public NamaVaksinRequest() {
     }
 
-    public NamaVaksinRequest(String idNamaVaksin, String namaVaksin, String deskripsi, String idJenisVaksin) {
+    public NamaVaksinRequest(String idNamaVaksin, String nama, String deskripsi, String idJenisVaksin, String jenis) {
         this.idNamaVaksin = idNamaVaksin;
-        this.namaVaksin = namaVaksin;
+        this.nama = nama;
         this.deskripsi = deskripsi;
         this.idJenisVaksin = idJenisVaksin;
+        this.jenis = jenis;
     }
 
     public String getIdNamaVaksin() {
@@ -24,12 +26,12 @@ public class NamaVaksinRequest {
         this.idNamaVaksin = idNamaVaksin;
     }
 
-    public String getNamaVaksin() {
-        return namaVaksin;
+    public String getNama() {
+        return nama;
     }
 
-    public void setNamaVaksin(String namaVaksin) {
-        this.namaVaksin = namaVaksin;
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
     public String getDeskripsi() {
@@ -46,5 +48,13 @@ public class NamaVaksinRequest {
 
     public void setIdJenisVaksin(String idJenisVaksin) {
         this.idJenisVaksin = idJenisVaksin;
+    }
+
+    public String getJenis() {
+        return jenis;
+    }
+
+    public void setJenis(String jenis) {
+        this.jenis = jenis;
     }
 }

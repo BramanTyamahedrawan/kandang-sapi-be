@@ -4,7 +4,6 @@ public class KelahiranRequest {
     private String idKejadian;
     private String tanggalLaporan;
     private String tanggalLahir;
-    private String kandang_id;
     private String petugas_id;
     private String eartagAnak;
     private String jenisKelaminAnak;
@@ -40,6 +39,17 @@ public class KelahiranRequest {
     private String desaPeternak;
     private String dusunPeternak;
     private String tanggalLahirPeternak;
+
+    // Kandang
+    private String idKandang;
+    private String kapasitas;
+    private String jenisKandang;
+    private String nilaiBangunan;
+    private String alamatKandang;
+    private String namaKandang;
+    private String latitudeKandang;
+    private String longitudeKandang;
+    private String luas;
 
     // Hewan
     private String idHewan;
@@ -81,7 +91,7 @@ public class KelahiranRequest {
     }
 
     public KelahiranRequest(String idKejadian, String tanggalLaporan, String tanggalLahir, String idPeternak,
-            String idHewan, String kandang_id, String petugas_id, String inseminasi_id, String eartagAnak,
+            String idHewan, String idKandang, String petugas_id, String inseminasi_id, String eartagAnak,
             String jenisKelaminAnak,
             String spesies, String urutanIB, String lokasi, String kategori, String jumlah, String idHewanAnak,
             String nikPetugas, String namaPetugas, String noTelpPetugas, String emailPetugas,
@@ -94,13 +104,13 @@ public class KelahiranRequest {
             String idJenisHewan, String jenis, String deskripsiJenis, String idRumpunHewan, String rumpun,
             String deskripsiRumpun, String idInseminasi, String tanggalIB, String ib1, String ib2, String ib3,
             String ibLain, String idPejantan, String idPembuatan, String bangsaPejantan, String produsen,
-            String lokasiInseminasi) {
+            String lokasiInseminasi, String kapasitas, String jenisKandang, String nilaiBangunan, String alamatKandang,
+            String namaKandang, String latitudeKandang, String longitudeKandang, String luas) {
         this.idKejadian = idKejadian;
         this.tanggalLaporan = tanggalLaporan;
         this.tanggalLahir = tanggalLahir;
         this.idPeternak = idPeternak;
         this.idHewan = idHewan;
-        this.kandang_id = kandang_id;
         this.petugas_id = petugas_id;
         this.eartagAnak = eartagAnak;
         this.jenisKelaminAnak = jenisKelaminAnak;
@@ -133,6 +143,17 @@ public class KelahiranRequest {
         this.desaPeternak = desaPeternak;
         this.dusunPeternak = dusunPeternak;
         this.tanggalLahirPeternak = tanggalLahirPeternak;
+        // Kandang
+        this.idKandang = idKandang;
+        this.kapasitas = kapasitas;
+        this.jenisKandang = jenisKandang;
+        this.nilaiBangunan = nilaiBangunan;
+        this.alamatKandang = alamatKandang;
+        this.namaKandang = namaKandang;
+        this.latitudeKandang = latitudeKandang;
+        this.longitudeKandang = longitudeKandang;
+        this.luas = luas;
+
         // Hewan
         this.kodeEartagNasional = kodeEartagNasional;
         this.noKartuTernak = noKartuTernak;
@@ -200,14 +221,6 @@ public class KelahiranRequest {
 
     public String getIdHewan() {
         return idHewan;
-    }
-
-    public String getKandang_id() {
-        return kandang_id;
-    }
-
-    public void setKandang_id(String kandang_id) {
-        this.kandang_id = kandang_id;
     }
 
     public void setIdHewan(String idHewan) {
@@ -457,6 +470,79 @@ public class KelahiranRequest {
         this.tanggalLahirPeternak = tanggalLahirPeternak;
     }
 
+    // Kandang
+    public String getIdKandang() {
+        return idKandang;
+    }
+
+    public void setIdKandang(String idKandang) {
+        this.idKandang = idKandang;
+    }
+
+    public String getKapasitas() {
+        return kapasitas;
+    }
+
+    public void setKapasitas(String kapasitas) {
+        this.kapasitas = kapasitas;
+    }
+
+    public String getJenisKandang() {
+        return jenisKandang;
+    }
+
+    public void setJenisKandang(String jenisKandang) {
+        this.jenisKandang = jenisKandang;
+    }
+
+    public String getNilaiBangunan() {
+        return nilaiBangunan;
+    }
+
+    public void setNilaiBangunan(String nilaiBangunan) {
+        this.nilaiBangunan = nilaiBangunan;
+    }
+
+    public String getAlamatKandang() {
+        return alamatKandang;
+    }
+
+    public void setAlamatKandang(String alamatKandang) {
+        this.alamatKandang = alamatKandang;
+    }
+
+    public String getNamaKandang() {
+        return namaKandang;
+    }
+
+    public void setNamaKandang(String namaKandang) {
+        this.namaKandang = namaKandang;
+    }
+
+    public String getLatitudeKandang() {
+        return latitudeKandang;
+    }
+
+    public void setLatitudeKandang(String latitudeKandang) {
+        this.latitudeKandang = latitudeKandang;
+    }
+
+    public String getLongitudeKandang() {
+        return longitudeKandang;
+    }
+
+    public void setLongitudeKandang(String longitudeKandang) {
+        this.longitudeKandang = longitudeKandang;
+    }
+
+    public String getLuas() {
+        return luas;
+    }
+
+    public void setLuas(String luas) {
+        this.luas = luas;
+    }
+
     // Hewan
 
     public String getKodeEartagNasional() {
@@ -698,8 +784,8 @@ public class KelahiranRequest {
             case "idHewan":
                 this.idHewan = value;
                 break;
-            case "kandang_id":
-                this.kandang_id = value;
+            case "idKandang":
+                this.idKandang = value;
                 break;
             case "petugas_id":
                 this.petugas_id = value;

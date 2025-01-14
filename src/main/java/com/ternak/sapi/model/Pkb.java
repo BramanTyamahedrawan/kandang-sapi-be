@@ -9,6 +9,7 @@ public class Pkb {
     private Petugas petugas;
     private RumpunHewan rumpunHewan;
     private JenisHewan jenisHewan;
+    private Kandang kandang;
     private String spesies;
     private String umurKebuntingan;
     private String jumlah;
@@ -17,7 +18,8 @@ public class Pkb {
     }
 
     public Pkb(String idKejadian, String tanggalPkb, Peternak peternak, Hewan hewan, Petugas petugas, String spesies,
-            String umurKebuntingan, RumpunHewan rumpunHewan, JenisHewan jenisHewan, String jumlah, String lokasi) {
+            String umurKebuntingan, RumpunHewan rumpunHewan, JenisHewan jenisHewan, String jumlah, String lokasi,
+            Kandang kandang) {
         this.idKejadian = idKejadian;
         this.tanggalPkb = tanggalPkb;
         this.peternak = peternak;
@@ -29,6 +31,7 @@ public class Pkb {
         this.jenisHewan = jenisHewan;
         this.jumlah = jumlah;
         this.lokasi = lokasi;
+        this.kandang = kandang;
     }
 
     public String getIdKejadian() {
@@ -53,6 +56,14 @@ public class Pkb {
 
     public void setPeternak(Peternak peternak) {
         this.peternak = peternak;
+    }
+
+    public Kandang getKandang() {
+        return kandang;
+    }
+
+    public void setKandang(Kandang kandang) {
+        this.kandang = kandang;
     }
 
     public Hewan getHewan() {

@@ -20,7 +20,8 @@ public class NamaVaksinService {
     private NamaVaksinRepository namaVaksinRepository = new NamaVaksinRepository();
     private JenisVaksinRepository jenisVaksinRepository = new JenisVaksinRepository();
 
-    public PagedResponse<NamaVaksin> getAllNamaVaksin(int page, int size, String userID) throws IOException {
+    public PagedResponse<NamaVaksin> getAllNamaVaksin(int page, int size, String userID, String jenisHewanID,
+            String peternakID, String namaVaksinID) throws IOException {
         validatePageNumberAndSize(page, size);
         List<NamaVaksin> namaVaksinResponse = new ArrayList<>();
 
@@ -53,27 +54,37 @@ public class NamaVaksinService {
 
         for (NamaVaksinRequest request : namaVaksinRequests) {
             try {
-                System.out.println("Jenis Vaksin diterima dari frontend: " + request.getIdJenisVaksin());
+                // System.out.println("Jenis Vaksin diterima dari frontend: " +
+                // request.getJenis());
 
-                JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findById(request.getIdJenisVaksin());
+                if (request.getNama() == null) {
+                    System.err.println("Data Nama Vaksin tidak lengkap: " + request.getNama());
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findByJenisVaksin(request.getJenis());
                 if (jenisVaksinResponse == null) {
-                    System.err.println("Data jenis vaksin tidak ditemukan: " + request.getIdJenisVaksin());
-                    jenisVaksinResponse = new JenisVaksin();
-                    jenisVaksinResponse.setIdJenisVaksin("id jenis vaksin tidak valid");
-                    jenisVaksinResponse.setJenisVaksin("nama vaksin tidak valid");
+                    System.err.println("Data jenis vaksin tidak ditemukan: " +
+                            request.getJenis());
+                    skippedIncomplete++;
+                    continue;
+                    // jenisVaksinResponse = new JenisVaksin();
+                    // jenisVaksinResponse.setIdJenisVaksin("id jenis vaksin tidak valid");
+                    // jenisVaksinResponse.setJenisVaksin("nama vaksin tidak valid");
 
                 }
 
                 NamaVaksin namaVaksin = new NamaVaksin();
                 namaVaksin.setIdNamaVaksin(request.getIdNamaVaksin());
-                namaVaksin.setNamaVaksin(request.getNamaVaksin());
+                namaVaksin.setNama(request.getNama());
                 namaVaksin.setDeskripsi(request.getDeskripsi());
                 namaVaksin.setJenisVaksin(jenisVaksinResponse);
 
                 namaVaksinList.add(namaVaksin);
-                System.out.println("Menambahkan data peternak ke dalam daftar: " + namaVaksin.getIdNamaVaksin());
+                System.out.println("Menambahkan data peternak ke dalam daftar: " + namaVaksin.getNama());
             } catch (Exception e) {
-                System.err.println("Terjadi kesalahan saat memproses data peternak: " + request.getIdNamaVaksin());
+                System.err.println("Terjadi kesalahan saat memproses data peternak: " + request.getNama());
                 e.printStackTrace();
             }
         }

@@ -239,7 +239,6 @@ public class KandangService {
 
                 // Buat objek Kandang
                 Kandang kandang = new Kandang();
-                kandang.setPeternak(peternakResponse);
                 kandang.setIdKandang(request.getIdKandang());
                 kandang.setAlamat(request.getAlamat() != null ? request.getAlamat() : "-");
                 kandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
@@ -251,6 +250,8 @@ public class KandangService {
                 kandang.setLongitude(request.getLongitude() != null ? request.getLongitude() : "-");
                 kandang.setNikPeternak(request.getNikPeternak() != null ? request.getNikPeternak() : "-");
                 kandang.setKapasitas(request.getKapasitas() != null ? request.getKapasitas() : "-");
+
+                kandang.setPeternak(peternakResponse);
 
                 // Tambahkan ke list
                 kandangList.add(kandang);

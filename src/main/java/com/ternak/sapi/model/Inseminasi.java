@@ -6,6 +6,9 @@ public class Inseminasi {
     private Peternak peternak;
     private Hewan hewan;
     private Petugas petugas;
+    private Kandang kandang;
+    private JenisHewan jenisHewan;
+    private RumpunHewan rumpunHewan;
     private String ib1;
     private String ib2;
     private String ib3;
@@ -23,7 +26,8 @@ public class Inseminasi {
     public Inseminasi() {
     }
 
-    public Inseminasi(String idInseminasi, String tanggalIB, Peternak peternak, Hewan hewan, Petugas petugas, String ib,
+    public Inseminasi(String idInseminasi, String tanggalIB, Peternak peternak, Hewan hewan, Petugas petugas,
+            Kandang kandang, JenisHewan jenisHewan, RumpunHewan rumpunHewan, String ib,
             String idPejantan, String idPembuatan, String bangsaPejantan, String produsen, String lokasi, String desa,
             String kecamatan, String kabupaten, String provinsi, String ib1, String ib2, String ib3, String ibLain) {
         this.idInseminasi = idInseminasi;
@@ -31,6 +35,9 @@ public class Inseminasi {
         this.peternak = peternak;
         this.hewan = hewan;
         this.petugas = petugas;
+        this.kandang = kandang;
+        this.jenisHewan = jenisHewan;
+        this.rumpunHewan = rumpunHewan;
         this.ib1 = ib1;
         this.ib2 = ib2;
         this.ib3 = ib3;
@@ -84,6 +91,30 @@ public class Inseminasi {
 
     public void setPetugas(Petugas petugas) {
         this.petugas = petugas;
+    }
+
+    public Kandang getKandang() {
+        return kandang;
+    }
+
+    public void setKandang(Kandang kandang) {
+        this.kandang = kandang;
+    }
+
+    public JenisHewan getJenisHewan() {
+        return jenisHewan;
+    }
+
+    public void setJenisHewan(JenisHewan jenisHewan) {
+        this.jenisHewan = jenisHewan;
+    }
+
+    public RumpunHewan getRumpunHewan() {
+        return rumpunHewan;
+    }
+
+    public void setRumpunHewan(RumpunHewan rumpunHewan) {
+        this.rumpunHewan = rumpunHewan;
     }
 
     public String getIb1() {

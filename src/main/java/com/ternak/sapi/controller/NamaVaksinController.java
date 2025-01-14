@@ -33,8 +33,11 @@ public class NamaVaksinController {
     public PagedResponse<NamaVaksin> getNamaVaksin(
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
+            @RequestParam(value = "jenisHewanID", defaultValue = "*") String jenisHewanID,
+            @RequestParam(value = "namaVaksinID", defaultValue = "*") String namaVaksinID,
             @RequestParam(value = "userID", defaultValue = "*") String userID) throws IOException {
-        return namaVaksinService.getAllNamaVaksin(page, size, userID);
+        return namaVaksinService.getAllNamaVaksin(page, size, userID, jenisHewanID, peternakID, namaVaksinID);
     }
 
     @PostMapping("/bulk")
