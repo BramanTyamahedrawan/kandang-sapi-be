@@ -174,6 +174,30 @@ public class UserRepository {
         }
     }
 
+    public boolean existsByNik(String nik) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("id", "id");
+        columnMapping.put("nik", "nik");
+        columnMapping.put("name", "name");
+        columnMapping.put("username", "username");
+        columnMapping.put("email", "email");
+        columnMapping.put("password", "password");
+        columnMapping.put("alamat", "alamat");
+        columnMapping.put("role", "role");
+
+        User user = client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "nik", nik, User.class);
+        if (user.getNik()!= null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<String> findExistingNik(List<String> nikList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableUser = TableName.valueOf(tableName);

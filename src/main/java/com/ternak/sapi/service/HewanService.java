@@ -49,7 +49,7 @@ public class HewanService {
     // private static final Logger logger =
     // LoggerFactory.getLogger(HewanService.class);
 
-    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakID, String petugasId, String kandangId)
+    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakID, String petugasId, String kandangId, String userId)
             throws IOException {
         validatePageNumberAndSize(page, size);
 
@@ -382,17 +382,7 @@ public class HewanService {
                     continue; // Lewati iterasi jika idHewan duplikat
                 }
 
-                // Buat objek Hewan
-                Hewan hewan = new Hewan();
-                hewan.setIdHewan(request.getIdHewan());
-                hewan.setNoKartuTernak(request.getNoKartuTernak());
-                hewan.setKodeEartagNasional(request.getKodeEartagNasional());
-                hewan.setSex(request.getSex());
-                hewan.setUmur(request.getUmur());
-                hewan.setTanggalTerdaftar(request.getTanggalTerdaftar());
-                hewan.setIdentifikasiHewan(request.getIdentifikasiHewan());
-                hewan.setTanggalLahir(request.getTanggalLahir());
-                hewan.setTempatLahir(request.getTempatLahir());
+
 
                 JenisHewan jenisHewanResponse = null;
                 if (request.getJenis() == null || request.getJenis().trim().isEmpty()) {
@@ -476,6 +466,7 @@ public class HewanService {
                         defaultPeternak.setDusun("Dusun Tidak Valid");
                         defaultPeternak.setEmail("Email Tidak Valid");
                         defaultPeternak.setNoTelepon("08123456789");
+                        defaultPeternak.setPetugasId(petugasResponse.getPetugasId());
                         defaultPeternak.setPetugas(petugasResponse);
                         peternakResponse = peternakRepository.save(defaultPeternak);
 
@@ -530,6 +521,7 @@ public class HewanService {
                                         : "Latitude Tidak Diketahui");
                         newPeternak.setLongitude(
                                 request.getLongitude() != null ? request.getLongitude() : "Longitude Tidak Diketahui");
+                        newPeternak.setPetugasId(petugasResponse.getPetugasId());
                         newPeternak.setPetugas(petugasResponse);
                         peternakResponse = peternakRepository.saveByNamaPeternak(newPeternak);
 
@@ -615,6 +607,19 @@ public class HewanService {
 
                     System.out.println("Tujuan baru berhasil dibuat: " + defaultTujuan.getTujuanPemeliharaan());
                 }
+
+                // Buat objek Hewan
+                Hewan hewan = new Hewan();
+                hewan.setIdHewan(request.getIdHewan());
+                hewan.setNoKartuTernak(request.getNoKartuTernak());
+                hewan.setKodeEartagNasional(request.getKodeEartagNasional());
+                hewan.setSex(request.getSex());
+                hewan.setUmur(request.getUmur());
+                hewan.setTanggalTerdaftar(request.getTanggalTerdaftar());
+                hewan.setIdentifikasiHewan(request.getIdentifikasiHewan());
+                hewan.setTanggalLahir(request.getTanggalLahir());
+                hewan.setTempatLahir(request.getTempatLahir());
+                hewan.setPetugasId(petugasResponse.getPetugasId() != null ? petugasResponse.getPetugasId() : UUID.randomUUID().toString());
 
                 // Set relasi ke objek Hewan
                 hewan.setPeternak(peternakResponse);

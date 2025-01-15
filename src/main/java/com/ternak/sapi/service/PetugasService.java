@@ -1,7 +1,9 @@
 package com.ternak.sapi.service;
 
 // import com.ternak.sapi.repository.UserRepository;
+import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.model.Petugas;
@@ -28,6 +30,7 @@ public class PetugasService {
     String tableName = "petugasdev";
     private PetugasRepository petugasRepository = new PetugasRepository();
     private PeternakRepository peternakRepository = new PeternakRepository();
+    private HewanRepository hewanRepository = new HewanRepository();
     // private UserRepository userRepository = new UserRepository();
 
     // private static final Logger logger =
@@ -94,7 +97,13 @@ public class PetugasService {
                 petugasResponse.isValid() ? 1 : 0, "Successfully get data");
     }
 
+//    public void save(Hewan hewan) throws IOException {
+//        // Simulasi penyimpanan hewan, sesuaikan dengan HBaseClient Anda
+//        hBaseClient.saveData("hewanTable", hewan);
+//    }
+
     public Petugas updatePetugas(String petugasId, PetugasRequest petugasRequest) throws IOException {
+
         Petugas petugas = new Petugas();
         petugas.setNikPetugas(petugasRequest.getNikPetugas());
         petugas.setNamaPetugas(petugasRequest.getNamaPetugas());
@@ -102,8 +111,29 @@ public class PetugasService {
         petugas.setEmail(petugasRequest.getEmail());
         petugas.setJob(petugasRequest.getJob());
         petugas.setWilayah(petugasRequest.getWilayah());
+
+        List<Hewan> hewanList = hewanRepository.findByPetugasId(petugasId);
+        if(hewanList != null) {
+            for (Hewan hewan : hewanList) {
+                // Update field hewan sesuai dengan kebutuhan
+                hewan.setPetugas(petugas);
+                hewanRepository.updatePetugasByHewan(hewan.getIdHewan(), hewan);
+            }
+        }
+
+        List<Peternak> peternakList = peternakRepository.findByPetugasId(petugasId);
+        if (peternakList != null) {
+            // Jika peternak ditemukan, lakukan update pada petugas yang terkait
+            for (Peternak peternak : peternakList) {
+                // Update field hewan sesuai dengan kebutuhan
+                peternak.setPetugas(petugas);
+                peternakRepository.updatePetugasByPeternak(peternak.getIdPeternak(), peternak);
+            }
+        }
+
         return petugasRepository.update(petugasId, petugas);
     }
+
 
     public void deletePetugasById(String idPetugas) throws IOException {
         Petugas petugasResponse = petugasRepository.findById(idPetugas);

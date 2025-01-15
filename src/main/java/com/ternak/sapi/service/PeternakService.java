@@ -59,7 +59,7 @@ public class PeternakService {
 
         Peternak peternak = new Peternak();
 
-        Petugas petugasResponse = petugasRepository.findByNamaPetugas(peternakRequest.getNamaPetugas());
+        Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugas_id());
 
         if (petugasResponse.getNamaPetugas() != null) {
             peternak.setIdPeternak(peternakRequest.getIdPeternak());

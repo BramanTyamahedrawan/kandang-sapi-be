@@ -73,31 +73,31 @@ public class UserController {
         return userService.getUserNotUsedAccount(page, size);
     }
 
-//    @PostMapping ("/users")
-//    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) throws IOException {
-//        try {
-//            User user = userService.createUser(userRequest);
-//
-//            URI location = ServletUriComponentsBuilder
-//                    .fromCurrentRequest().path("/{userId}")
-//                    .buildAndExpand(user.getId()).toUri();
-//
-//            return ResponseEntity.created(location)
-//                    .body(new ApiResponse(true, "User Created Successfully"));
-//
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest()
-//                    .body(new ApiResponse(false, e.getMessage()));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.badRequest()
-//                    .body(new ApiResponse(false, "Error while inserting data"));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(false, "An unexpected error occurred."));
-//        }
-//
-//    }
+    @PostMapping ("/users")
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) throws IOException {
+        try {
+            User user = userService.createUser(userRequest);
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{userId}")
+                    .buildAndExpand(user.getId()).toUri();
+
+            return ResponseEntity.created(location)
+                    .body(new ApiResponse(true, "User Created Successfully"));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Error while inserting data"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "An unexpected error occurred."));
+        }
+
+    }
 
     @PostMapping ("/users/bulk")
     public ResponseEntity<?> createUserBulk(@RequestBody List<UserRequest> userRequest) throws IOException {

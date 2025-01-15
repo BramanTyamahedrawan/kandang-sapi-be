@@ -36,8 +36,9 @@ public class HewanController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
             @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
             @RequestParam(value = "petugasID", defaultValue = "*") String petugasID,
-            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID) throws IOException {
-        return hewanService.getAllHewan(page, size, peternakID, petugasID, hewanID);
+            @RequestParam(value = "hewanID", defaultValue = "*") String hewanID,
+            @RequestParam(value = "userID", defaultValue = "*") String userID) throws IOException {
+        return hewanService.getAllHewan(page, size, peternakID, petugasID, hewanID, userID);
     }
 
     @GetMapping("/file/{fileName}")

@@ -7,6 +7,7 @@ public class Hewan {
     private String nama;
     private String noKartuTernak;
     private Petugas petugas;
+    private String petugasId;
     private Peternak peternak;
     private Kandang kandang;
     private JenisHewan jenisHewan;
@@ -223,6 +224,14 @@ public class Hewan {
         this.idIsikhnas = idIsikhnas;
     }
 
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
+    }
+
+    public String getPetugasId() {
+        return petugasId;
+    }
+
     public boolean isValid() {
         return this.idHewan != null &&
                 this.petugas != null &&
@@ -277,6 +286,9 @@ public class Hewan {
                 break;
             case "idIsikhnas":
                 this.idIsikhnas = value;
+                break;
+            case "petugasId":
+                this.petugasId = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

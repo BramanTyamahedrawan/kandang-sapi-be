@@ -2,6 +2,7 @@ package com.ternak.sapi.model;
 
 public class Peternak {
     private String idPeternak;
+    private String petugasId;
     private String nikPeternak;
     private String namaPeternak;
     private String lokasi;
@@ -201,6 +202,14 @@ public class Peternak {
         this.provinsi = provinsi;
     }
 
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
+    }
+
+    public String getPetugasId() {
+        return petugasId;
+    }
+
     public boolean isValid() {
         return this.idPeternak != null &&
                 this.nikPeternak != null &&
@@ -227,6 +236,9 @@ public class Peternak {
         switch (fieldName) {
             case "idPeternak":
                 this.idPeternak = value;
+                break;
+            case "petugasId":
+                this.petugasId = value;
                 break;
             case "nikPeternak":
                 this.nikPeternak = value;

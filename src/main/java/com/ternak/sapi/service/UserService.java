@@ -35,6 +35,10 @@ public class UserService {
     // private static final Logger logger =
     // LoggerFactory.getLogger(UserService.class);
 
+    ZoneId zoneId = ZoneId.of("Asia/Jakarta");
+    ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
+    Instant instant = zonedDateTime.toInstant();
+
     public PagedResponse<User> getAllUser(int page, int size) throws IOException {
         validatePageNumberAndSize(page, size);
 
@@ -44,31 +48,32 @@ public class UserService {
         return new PagedResponse<>(userResponse, userResponse.size(), "Successfully get data", 200);
     }
 
-    // @Transactional
-    // public User createUser(UserRequest userRequest) throws IOException {
-    // // Validasi jika email sudah ada
-    // if (userRepository.existsByEmail(userRequest.getEmail())) {
-    // throw new IllegalArgumentException("Email sudah terdaftar!");
-    // }
-    //
-    // if(userRepository.existsByUsername(userRequest.getUsername())) {
-    // throw new IllegalArgumentException("Username sudah terdaftar!");
-    // }
-    // if(userRepository.existsByNik(userRequest.getNik())) {
-    // throw new IllegalArgumentException("Nik sudah terdaftar!");
-    // }
-    //
-    // User user = new User();
-    // user.setId(userRequest.getId());
-    // user.setName(userRequest.getName());
-    // user.setNik(userRequest.getNik());
-    // user.setUsername(userRequest.getUsername());
-    // user.setEmail(userRequest.getEmail());
-    // user.setPassword(passwordEncoder.encode(user.getPassword()));
-    // user.setAlamat(userRequest.getAlamat());
-    // user.setRole(userRequest.getRole());
-    // return userRepository.saveForm(user);
-    // }
+     @Transactional
+     public User createUser(UserRequest userRequest) throws IOException {
+     // Validasi jika email sudah ada
+     if (userRepository.existsByEmail(userRequest.getEmail())) {
+     throw new IllegalArgumentException("Email sudah terdaftar!");
+     }
+
+     if(userRepository.existsByUsername(userRequest.getUsername())) {
+     throw new IllegalArgumentException("Username sudah terdaftar!");
+     }
+     if(userRepository.existsByNik(userRequest.getNik())) {
+     throw new IllegalArgumentException("Nik sudah terdaftar!");
+     }
+
+     User user = new User();
+     user.setId(userRequest.getId());
+     user.setName(userRequest.getName());
+     user.setNik(userRequest.getNik());
+     user.setUsername(userRequest.getUsername());
+     user.setEmail(userRequest.getEmail());
+     user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+     user.setAlamat(userRequest.getAlamat());
+     user.setRole(userRequest.getRole());
+     user.setCreatedAt(userRequest.getCreatedAt() != null ? userRequest.getCreatedAt() : instant);
+     return userRepository.saveForm(user);
+     }
 
     @Transactional
     public void createBulkUser(List<UserRequest> userRequest) throws IOException {
@@ -103,10 +108,6 @@ public class UserService {
                     skippedExisting++;
                     continue;
                 }
-                ZoneId zoneId = ZoneId.of("Asia/Jakarta");
-                ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
-                Instant instant = zonedDateTime.toInstant();
-
                 String password = passwordEncoder.encode(request.getPassword().toString());
 
                 User user = new User();

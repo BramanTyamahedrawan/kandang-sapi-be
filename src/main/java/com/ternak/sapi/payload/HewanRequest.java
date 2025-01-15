@@ -3,7 +3,6 @@ package com.ternak.sapi.payload;
 public class HewanRequest {
     private String idHewan;
     private String kodeEartagNasional;
-    private String petugas_id;
     private String noKartuTernak;
     private String sex;
     private String umur;
@@ -37,6 +36,7 @@ public class HewanRequest {
     private String idPeternak;
 
     // petugas
+    private String petugas_id;
     private String nikPetugas;
     private String namaPetugas;
     private String emailPetugas;
@@ -406,6 +406,7 @@ public class HewanRequest {
     }
 
     // petugas
+
     public String getNamaPetugas() {
         return namaPetugas;
     }
