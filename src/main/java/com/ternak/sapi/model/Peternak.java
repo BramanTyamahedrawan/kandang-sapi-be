@@ -220,7 +220,6 @@ public class Peternak {
                 this.noTelepon != null &&
                 this.email != null &&
                 this.idIsikhnas != null &&
-                this.petugas != null &&
                 this.tanggalPendaftaran != null &&
                 this.dusun != null &&
                 this.desa != null &&

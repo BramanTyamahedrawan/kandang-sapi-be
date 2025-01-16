@@ -46,6 +46,16 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public boolean isValid(){
+        return this.id != null &&
+                this.name != null &&
+                this.nik != null &&
+                this.email != null &&
+                this.password != null &&
+                this.alamat != null &&
+                this.role != null;
+    }
+
     public String getId() {
         return id;
     }

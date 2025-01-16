@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.payload.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,6 +140,15 @@ public class UserService {
         }
 
         System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete);
+    }
+
+    public void deleteUserById(String userId) throws IOException {
+        User userResponse = userRepository.findById(userId);
+        if (userResponse.isValid()) {
+            userRepository.deleteById(userId);
+        } else {
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
     }
 
     // public User createUserPetugasBulk(UserRequest userRequest) throws IOException

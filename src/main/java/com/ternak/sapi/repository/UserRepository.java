@@ -108,6 +108,12 @@ public class UserRepository {
         return client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "username", username, User.class);
     }
 
+    public boolean deleteById(String userId) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        client.deleteRecord(tableName, userId);
+        return true;
+    }
+
     public User findById(String id) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -116,10 +122,12 @@ public class UserRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("id", "id");
+        columnMapping.put("nik","nik");
         columnMapping.put("name", "name");
         columnMapping.put("username", "username");
         columnMapping.put("email", "email");
         columnMapping.put("password", "password");
+        columnMapping.put("alamat","alamat");
         columnMapping.put("role", "role");
 
         return client.showDataTable(tableUsers.toString(), columnMapping, id, User.class);
