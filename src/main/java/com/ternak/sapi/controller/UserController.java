@@ -111,6 +111,12 @@ public class UserController {
 
     }
 
+    @DeleteMapping("/user/{userId}")
+    public HttpStatus deleteUser(@PathVariable(value = "userId") String userId) throws IOException {
+        userService.deleteUserById(userId);
+        return HttpStatus.FORBIDDEN;
+    }
+
 //    @PostMapping ("/users/petugasBulk")
 //    public ResponseEntity<?> createUserPetugas(@Valid @RequestBody UserRequest userRequest) throws IOException {
 //        try {

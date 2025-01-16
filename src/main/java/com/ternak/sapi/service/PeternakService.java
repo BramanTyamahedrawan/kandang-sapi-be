@@ -77,6 +77,7 @@ public class PeternakService {
             peternak.setDesa(peternakRequest.getDesa());
             peternak.setKecamatan(peternakRequest.getKecamatan());
             peternak.setKabupaten(peternakRequest.getKabupaten());
+            peternak.setProvinsi(peternakRequest.getProvinsi());
             peternak.setAlamat(peternakRequest.getAlamat());
             peternak.setLatitude(peternakRequest.getLatitude());
             peternak.setLongitude(peternakRequest.getLongitude());
@@ -125,9 +126,44 @@ public class PeternakService {
     public void deletePeternakById(String peternakId) throws IOException {
         Peternak peternakResponse = peternakRepository.findById(peternakId);
         if (peternakResponse.isValid()) {
+            System.out.println("data valid " + peternakResponse.getIdPeternak()
+                    + peternakResponse.getNamaPeternak()
+                    + peternakResponse.getNikPeternak()
+                    + peternakResponse.getDesa()
+                    + peternakResponse.getAlamat()
+                    + peternakResponse.getDusun()
+                    + peternakResponse.getEmail()
+                    + peternakResponse.getIdIsikhnas()
+                    + peternakResponse.getJenisKelamin()
+                    + peternakResponse.getKabupaten()
+                    + peternakResponse.getKecamatan()
+                    + peternakResponse.getProvinsi()
+                    + peternakResponse.getLatitude()
+                    + peternakResponse.getLokasi()
+                    + peternakResponse.getLongitude()
+                    + peternakResponse.getTanggalLahir()
+                    + peternakResponse.getTanggalPendaftaran()
+                    + peternakResponse.getNoTelepon());
             peternakRepository.deleteById(peternakId);
         } else {
-            throw new ResourceNotFoundException("Peternak", "id", peternakId);
+            System.out.println("data tidak valid " + peternakResponse.getIdPeternak()
+                    + peternakResponse.getNamaPeternak()
+                    + peternakResponse.getNikPeternak()
+                    + peternakResponse.getDesa()
+                    + peternakResponse.getAlamat()
+                    + peternakResponse.getDusun()
+                    + peternakResponse.getEmail()
+                    + peternakResponse.getIdIsikhnas()
+                    + peternakResponse.getJenisKelamin()
+                    + peternakResponse.getKabupaten()
+                    + peternakResponse.getKecamatan()
+                    + peternakResponse.getProvinsi()
+                    + peternakResponse.getLatitude()
+                    + peternakResponse.getLokasi()
+                    + peternakResponse.getLongitude()
+                    + peternakResponse.getTanggalLahir()
+                    + peternakResponse.getTanggalPendaftaran()
+                    + peternakResponse.getNoTelepon());
         }
     }
 
@@ -213,6 +249,7 @@ public class PeternakService {
                 peternak.setDesa(request.getDesa());
                 peternak.setKecamatan(request.getKecamatan());
                 peternak.setKabupaten(request.getKabupaten());
+                peternak.setProvinsi(request.getProvinsi());
                 peternak.setTanggalPendaftaran(request.getTanggalPendaftaran());
                 peternak.setPetugas(petugasResponse); // Masukkan objek lengkap Petugas
                 peternak.setTanggalLahir(request.getTanggalLahir());
@@ -341,6 +378,7 @@ public class PeternakService {
                 peternak.setDesa(request.getDesa());
                 peternak.setKecamatan(request.getKecamatan());
                 peternak.setKabupaten(request.getKabupaten());
+                peternak.setProvinsi(request.getProvinsi());
                 peternak.setTanggalPendaftaran(request.getTanggalPendaftaran());
                 peternak.setPetugas(petugasResponse); // Masukkan objek lengkap Petugas
                 peternak.setTanggalLahir(request.getTanggalLahir());
@@ -405,6 +443,7 @@ public class PeternakService {
                 peternak.setDesa(request.getDesa() != null ? request.getDesa() : "-");
                 peternak.setKecamatan(request.getKecamatan() != null ? request.getKecamatan() : "-");
                 peternak.setKabupaten(request.getKabupaten() != null ? request.getKabupaten() : "-");
+                peternak.setProvinsi(request.getProvinsi() != null ? request.getProvinsi() : "-");
                 peternak.setTanggalPendaftaran(
                         request.getTanggalPendaftaran() != null ? request.getTanggalPendaftaran() : "-");
                 peternak.setTanggalLahir(request.getTanggalLahir() != null ? request.getTanggalLahir() : "-");

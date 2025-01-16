@@ -39,6 +39,7 @@ public class PeternakRepository {
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
+        columnMapping.put("provinsi","provinsi");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
@@ -98,6 +99,7 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "desa", peternak.getDesa());
         client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", peternak.getKecamatan());
         client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", peternak.getKabupaten());
+        client.insertRecord(tablePeternak,rowKey,"main","provinsi",peternak.getProvinsi());
         client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
         client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
@@ -388,6 +390,7 @@ public class PeternakRepository {
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
+        columnMapping.put("provinsi","provinsi");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
