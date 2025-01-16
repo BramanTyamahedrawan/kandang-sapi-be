@@ -7,7 +7,7 @@ public class PeternakRequest {
     private String nikPeternak;
     private String namaPeternak;
     private String lokasi;
-    private String petugas_id;
+    private String petugasId;
     private String tanggalPendaftaran;
     private String noTelepon;
     private String email;
@@ -35,7 +35,7 @@ public class PeternakRequest {
     public PeternakRequest() {
     }
 
-    public PeternakRequest(String idPeternak, String nikPeternak, String namaPeternak, String lokasi, String petugas_id,
+    public PeternakRequest(String idPeternak, String nikPeternak, String namaPeternak, String lokasi, String petugasId,
             String nikPetugas,
             String tanggalPendaftaran, String noTelepon, String email, String jenisKelamin, String tanggalLahir,
             String idIsikhnas, String dusun, String desa, String kecamatan, String kabupaten, String alamat,
@@ -45,7 +45,7 @@ public class PeternakRequest {
         this.nikPeternak = nikPeternak;
         this.namaPeternak = namaPeternak;
         this.lokasi = lokasi;
-        this.petugas_id = petugas_id;
+        this.petugasId = petugasId;
         this.nikPetugas = nikPetugas;
         this.tanggalPendaftaran = tanggalPendaftaran;
         this.noTelepon = noTelepon;
@@ -109,12 +109,12 @@ public class PeternakRequest {
         this.lokasi = lokasi;
     }
 
-    public String getPetugas_id() {
-        return petugas_id;
+    public String getPetugasId() {
+        return petugasId;
     }
 
-    public void setPetugas_id(String petugas_id) {
-        this.petugas_id = petugas_id;
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
     }
 
     public String getNikPetugas() {
@@ -291,8 +291,8 @@ public class PeternakRequest {
             case "lokasi":
                 this.lokasi = value;
                 break;
-            case "petugas_id":
-                this.petugas_id = value;
+            case "petugasId":
+                this.petugasId = value;
                 break;
             case "nikPetugas":
                 this.nikPetugas = value;

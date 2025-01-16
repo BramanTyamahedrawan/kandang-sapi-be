@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -407,6 +406,8 @@ public class KandangRepository {
                                                 safeString(peternak.getKecamatan()));
                                 client.insertRecord(tableKandang, rowKey, "peternak", "kabupaten",
                                                 safeString(peternak.getKabupaten()));
+                                client.insertRecord(tableKandang, rowKey, "peternak", "provinsi",
+                                                safeString(peternak.getProvinsi()));
                                 client.insertRecord(tableKandang, rowKey, "peternak", "latitude",
                                                 safeString(peternak.getLatitude()));
                                 client.insertRecord(tableKandang, rowKey, "peternak", "longitude",
@@ -514,6 +515,19 @@ public class KandangRepository {
                 return kandang;
         }
 
+        public List<Kandang> findByPeternakId(String idPeternak) throws IOException {
+
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKandang = TableName.valueOf(tableName); // Sesuaikan nama tabel HBase Anda
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKandang", "idKandang");
+                columnMapping.put("idPeternak", "idPeternak");
+                columnMapping.put("peternak", "peternak");
+
+                return client.getDataListByColumn(tableKandang.toString(), columnMapping,
+                                "peternak", "idPeternak", idPeternak, Kandang.class, -1);
+        }
+
         public List<Kandang> findAllById(List<String> kandangIds) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -569,6 +583,48 @@ public class KandangRepository {
                 client.insertRecord(tableKandang, kandangId, "jenisHewan", "jenis", kandang.getJenisHewan().getJenis());
                 client.insertRecord(tableKandang, kandangId, "jenisHewan", "deskripsi",
                                 kandang.getJenisHewan().getDeskripsi());
+                client.insertRecord(tableKandang, kandangId, "detail", "created_by", "Polinema");
+                return kandang;
+        }
+
+        public Kandang updatePeternakByKandang(String kandangId, Kandang kandang) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+
+                TableName tableKandang = TableName.valueOf(tableName);
+
+                client.insertRecord(tableKandang, kandangId, "main", "namaKandang",
+                                "Kandang " + kandang.getPeternak().getNamaPeternak());
+                client.insertRecord(tableKandang, kandangId, "peternak", "nikPeternak",
+                                kandang.getPeternak().getNikPeternak());
+                client.insertRecord(tableKandang, kandangId, "peternak", "namaPeternak",
+                                kandang.getPeternak().getNamaPeternak());
+                client.insertRecord(tableKandang, kandangId, "peternak", "lokasi", kandang.getPeternak().getLokasi());
+                client.insertRecord(tableKandang, kandangId, "peternak", "tanggalPendaftaran",
+                                kandang.getPeternak().getTanggalPendaftaran());
+
+                client.insertRecord(tableKandang, kandangId, "peternak", "noTelepon",
+                                kandang.getPeternak().getNoTelepon());
+                client.insertRecord(tableKandang, kandangId, "peternak", "email", kandang.getPeternak().getEmail());
+                client.insertRecord(tableKandang, kandangId, "peternak", "jenisKelamin",
+                                kandang.getPeternak().getJenisKelamin());
+                client.insertRecord(tableKandang, kandangId, "peternak", "tanggalLahir",
+                                kandang.getPeternak().getTanggalLahir());
+                client.insertRecord(tableKandang, kandangId, "peternak", "idIsikhnas",
+                                kandang.getPeternak().getIdIsikhnas());
+
+                client.insertRecord(tableKandang, kandangId, "peternak", "dusun", kandang.getPeternak().getDusun());
+                client.insertRecord(tableKandang, kandangId, "peternak", "desa", kandang.getPeternak().getDesa());
+                client.insertRecord(tableKandang, kandangId, "peternak", "kecamatan",
+                                kandang.getPeternak().getKecamatan());
+                client.insertRecord(tableKandang, kandangId, "peternak", "kabupaten",
+                                kandang.getPeternak().getKabupaten());
+                client.insertRecord(tableKandang, kandangId, "peternak", "provinsi",
+                                kandang.getPeternak().getProvinsi());
+                client.insertRecord(tableKandang, kandangId, "peternak", "alamat", kandang.getPeternak().getAlamat());
+                client.insertRecord(tableKandang, kandangId, "peternak", "latitude",
+                                kandang.getPeternak().getLatitude());
+                client.insertRecord(tableKandang, kandangId, "peternak", "longitude",
+                                kandang.getPeternak().getLongitude());
                 client.insertRecord(tableKandang, kandangId, "detail", "created_by", "Polinema");
                 return kandang;
         }

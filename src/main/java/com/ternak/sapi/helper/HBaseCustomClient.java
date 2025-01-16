@@ -488,6 +488,9 @@ public class HBaseCustomClient {
         return null;
     }
 
+
+
+
     private void setField(Field field, Object object, String value) throws IllegalAccessException {
         // Ubah hak akses field agar dapat diakses
         field.setAccessible(true);

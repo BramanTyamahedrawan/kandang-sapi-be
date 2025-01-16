@@ -181,10 +181,11 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "tanggalLahir", peternak.getTanggalLahir());
         client.insertRecord(tablePeternak, rowKey, "main", "idIsikhnas", peternak.getIdIsikhnas());
 
-        client.insertRecord(tablePeternak, rowKey, "main", "dusun", peternak.getIdIsikhnas());
+        client.insertRecord(tablePeternak, rowKey, "main", "dusun", peternak.getDusun());
         client.insertRecord(tablePeternak, rowKey, "main", "desa", peternak.getDesa());
         client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", peternak.getKecamatan());
         client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", peternak.getKabupaten());
+        client.insertRecord(tablePeternak, rowKey,"main","provinsi",peternak.getProvinsi());
         client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
         client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
@@ -413,6 +414,7 @@ public class PeternakRepository {
     public Peternak update(String peternakId, Peternak peternak) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePeternak = TableName.valueOf(tableName);
+        System.out.println("peternak id sampai di repo " + peternakId);
         client.insertRecord(tablePeternak, peternakId, "main", "nikPeternak", peternak.getNikPeternak());
         client.insertRecord(tablePeternak, peternakId, "main", "namaPeternak", peternak.getNamaPeternak());
         client.insertRecord(tablePeternak, peternakId, "main", "lokasi", peternak.getLokasi());

@@ -1,26 +1,17 @@
 package com.ternak.sapi.service;
 
-import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.exception.ResourceNotFoundException;
-import com.ternak.sapi.model.*;
-import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.HewanRequest;
-import com.ternak.sapi.payload.PagedResponse;
-import com.ternak.sapi.repository.*;
-import com.ternak.sapi.util.AppConstants;
-// import org.checkerframework.checker.units.qual.K;
-import org.springframework.stereotype.Service;
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.UUID;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ternak.sapi.exception.BadRequestException;
+import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
@@ -28,6 +19,9 @@ import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.model.TujuanPemeliharaan;
+import com.ternak.sapi.payload.DefaultResponse;
+import com.ternak.sapi.payload.HewanRequest;
+import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.JenisHewanRepository;
 import com.ternak.sapi.repository.KandangRepository;
@@ -35,6 +29,7 @@ import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.repository.RumpunHewanRepository;
 import com.ternak.sapi.repository.TujuanPemeliharaanRepository;
+import com.ternak.sapi.util.AppConstants;
 
 @Service
 public class HewanService {
@@ -78,7 +73,7 @@ public class HewanService {
 
         Hewan hewan = new Hewan();
         Peternak peternakResponse = peternakRepository.findById(hewanRequest.getIdPeternak().toString());
-        Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugas_id().toString());
+        Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugasId().toString());
         Kandang kandangResponse = kandangRepository.findById(hewanRequest.getIdKandang().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
@@ -120,7 +115,7 @@ public class HewanService {
     public Hewan updateHewan(String idHewan, HewanRequest hewanRequest, String savePath) throws IOException {
         Hewan hewan = new Hewan();
         Peternak peternakResponse = peternakRepository.findById(hewanRequest.getIdPeternak().toString());
-        Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugas_id().toString());
+        Petugas petugasResponse = petugasRepository.findById(hewanRequest.getPetugasId().toString());
         Kandang kandangResponse = kandangRepository.findById(hewanRequest.getIdKandang().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
@@ -423,7 +418,7 @@ public class HewanService {
 
                         Petugas newPetugas = new Petugas();
                         newPetugas
-                                .setPetugasId(request.getPetugas_id() != null ? request.getPetugas_id()
+                                .setPetugasId(request.getPetugasId() != null ? request.getPetugasId()
                                         : UUID.randomUUID().toString());
                         newPetugas
                                 .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
@@ -459,7 +454,7 @@ public class HewanService {
                         defaultPeternak.setNikPeternak("Peternak Tidak Valid");
                         defaultPeternak.setNamaPeternak("Peternak Tidak Valid");
                         defaultPeternak.setAlamat("Alamat Peternak Tidak Valid");
-                        // defaultPeternak.setProvinsi("Provinsi Tidak Valid");
+                         defaultPeternak.setProvinsi("Provinsi Tidak Valid");
                         defaultPeternak.setKabupaten("Kabupaten Tidak Valid");
                         defaultPeternak.setKecamatan("Kecamatan Tidak Valid");
                         defaultPeternak.setDesa("Desa Tidak Valid");
@@ -506,10 +501,8 @@ public class HewanService {
                         newPeternak.setIdIsikhnas(
                                 request.getIdIsikhnas() != null ? request.getIdIsikhnas()
                                         : "Id Isikhnas Tidak Diketahui");
-                        // newPeternak.setProvinsi(
-                        // request.getProvinsi() != null ? request.getProvinsi() : "Provinsi Tidak
-                        // Diketahui");
-
+                         newPeternak.setProvinsi(
+                         request.getProvinsi() != null ? request.getProvinsi() : "Provinsi Tidak Diketahui");
                         newPeternak.setDusun(request.getDusun() != null ? request.getDusun() : "Dusun Tidak Diketahui");
                         newPeternak.setDesa(request.getDesa() != null ? request.getDesa() : "Desa Tidak Diketahui");
                         newPeternak.setKecamatan(

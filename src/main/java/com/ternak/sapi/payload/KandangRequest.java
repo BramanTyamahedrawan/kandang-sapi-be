@@ -5,7 +5,7 @@ import com.ternak.sapi.model.Peternak;
 
 public class KandangRequest {
     private String idKandang;
-    private String peternak_id;
+    private String idPeternak;
     private String luas;
     private String idJenisHewan;
     private String kapasitas;
@@ -23,13 +23,13 @@ public class KandangRequest {
     public KandangRequest() {
     }
 
-    public KandangRequest(String idKandang, String peternak_id, String luas, String idJenisHewan,
+    public KandangRequest(String idKandang, String idPeternak, String luas, String idJenisHewan,
             String kapasitas,
             String jenisKandang, String nilaiBangunan, String alamat, String namaKandang, String jenisKandang1,
             String latitude, String longitude, String nikPeternak, JenisHewan jenisHewan, Peternak peternak,
             String namaPeternak) {
         this.idKandang = idKandang;
-        this.peternak_id = peternak_id;
+        this.idPeternak = idPeternak;
         this.luas = luas;
         this.idJenisHewan = idJenisHewan;
         this.kapasitas = kapasitas;
@@ -70,12 +70,12 @@ public class KandangRequest {
         this.idKandang = idKandang;
     }
 
-    public String getPeternak_id() {
-        return peternak_id;
+    public String getidPeternak() {
+        return idPeternak;
     }
 
-    public void setPeternak_id(String peternak_id) {
-        this.peternak_id = peternak_id;
+    public void setidPeternak(String idPeternak) {
+        this.idPeternak = idPeternak;
     }
 
     public String getNamaPeternak() {
@@ -172,8 +172,8 @@ public class KandangRequest {
             case "idKandang":
                 this.idKandang = value;
                 break;
-            case "peternak_id":
-                this.peternak_id = value;
+            case "idPeternak":
+                this.idPeternak = value;
                 break;
             case "luas":
                 this.luas = value;

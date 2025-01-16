@@ -1067,7 +1067,20 @@ public class HewanRepository {
                 columnMapping.put("petugas", "petugas");
 
                 return client.getDataListByColumn(tableHewan.toString(), columnMapping,
-                        "petugas", "petugasId", petugasId, Hewan.class, 100);
+                        "petugas", "petugasId", petugasId, Hewan.class, -1);
+        }
+
+        public List<Hewan> findByPeternakId(String idPeternak) throws IOException {
+                // Get list of Hewan based on petugasId
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableHewan = TableName.valueOf(tableName); // Sesuaikan nama tabel HBase Anda
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idHewan", "idHewan");
+                columnMapping.put("idPeternak", "idPeternak");
+                columnMapping.put("peternak", "peternak");
+
+                return client.getDataListByColumn(tableHewan.toString(), columnMapping,
+                        "peternak", "idPeternak", idPeternak, Hewan.class, -1);
         }
 
         public List<Hewan> findAllById(List<String> ideHewans) throws IOException {
@@ -1215,17 +1228,44 @@ public class HewanRepository {
                 return hewan;
         }
 
-        public Hewan findPetugasIdByHewan(String petugasId) throws  IOException{
+        public Hewan updatePeternakByHewan(String idHewan, Hewan hewan) throws  IOException{
                 HBaseCustomClient client = new HBaseCustomClient(conf);
                 TableName tableHewan = TableName.valueOf(tableName);
-                Map<String, String> columnMapping = new HashMap<>();
-                columnMapping.put("idHewan", "idHewan");
-                columnMapping.put("petugasId", "petugasId");
-                columnMapping.put("petugas", "petugas");
 
-                Hewan hewan = client.getDataByColumn( tableHewan.toString(),columnMapping,"main", "petugasId",petugasId,Hewan.class);
-                return  hewan.getPetugasId() != null ? hewan : null;
+                client.insertRecord(tableHewan, idHewan, "peternak", "nikPeternak",
+                        hewan.getKandang().getPeternak().getNikPeternak());
+                client.insertRecord(tableHewan, idHewan, "peternak", "namaPeternak",
+                       hewan.getKandang().getPeternak().getNamaPeternak());
+                client.insertRecord(tableHewan, idHewan, "peternak", "lokasi", hewan.getKandang().getPeternak().getLokasi());
+                client.insertRecord(tableHewan, idHewan, "peternak", "tanggalPendaftaran",
+                        hewan.getKandang().getPeternak().getTanggalPendaftaran());
+
+                client.insertRecord(tableHewan, idHewan, "peternak", "noTelepon",
+                        hewan.getKandang().getPeternak().getNoTelepon());
+                client.insertRecord(tableHewan, idHewan, "peternak", "email", hewan.getKandang().getPeternak().getEmail());
+                client.insertRecord(tableHewan, idHewan, "peternak", "jenisKelamin",
+                        hewan.getKandang().getPeternak().getJenisKelamin());
+                client.insertRecord(tableHewan, idHewan, "peternak", "tanggalLahir",
+                        hewan.getKandang().getPeternak().getTanggalLahir());
+                client.insertRecord(tableHewan, idHewan, "peternak", "idIsikhnas",
+                        hewan.getKandang().getPeternak().getIdIsikhnas());
+
+                client.insertRecord(tableHewan, idHewan, "peternak", "dusun", hewan.getKandang().getPeternak().getDusun());
+                client.insertRecord(tableHewan, idHewan, "peternak", "desa", hewan.getKandang().getPeternak().getDesa());
+                client.insertRecord(tableHewan, idHewan, "peternak", "kecamatan",
+                        hewan.getKandang().getPeternak().getKecamatan());
+                client.insertRecord(tableHewan, idHewan, "peternak", "kabupaten",
+                        hewan.getKandang().getPeternak().getKabupaten());
+                client.insertRecord(tableHewan, idHewan, "peternak", "provinsi",
+                        hewan.getKandang().getPeternak().getProvinsi());
+                client.insertRecord(tableHewan, idHewan, "peternak", "alamat", hewan.getKandang().getPeternak().getAlamat());
+                client.insertRecord(tableHewan, idHewan, "peternak", "latitude",
+                        hewan.getKandang().getPeternak().getLatitude());
+                client.insertRecord(tableHewan, idHewan, "peternak", "longitude",
+                        hewan.getKandang().getPeternak().getLongitude());
+                return hewan;
         }
+
 
         public boolean deleteById(String idHewan) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);

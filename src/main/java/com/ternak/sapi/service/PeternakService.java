@@ -1,29 +1,37 @@
 package com.ternak.sapi.service;
 
-import com.ternak.sapi.repository.PetugasRepository;
-import com.ternak.sapi.model.Petugas;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.exception.ResourceNotFoundException;
-import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.PeternakRequest;
-import com.ternak.sapi.payload.PagedResponse;
-import com.ternak.sapi.repository.PeternakRepository;
-import com.ternak.sapi.util.AppConstants;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-// import java.time.LocalDate;
-// import java.time.format.DateTimeFormatter;
-// import java.time.format.DateTimeParseException;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.ternak.sapi.exception.BadRequestException;
+import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.payload.DefaultResponse;
+import com.ternak.sapi.payload.PagedResponse;
+import com.ternak.sapi.payload.PeternakRequest;
+import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.KandangRepository;
+import com.ternak.sapi.repository.PeternakRepository;
+import com.ternak.sapi.repository.PetugasRepository;
+import com.ternak.sapi.util.AppConstants;
 
 @Service
 public class PeternakService {
     private PeternakRepository peternakRepository = new PeternakRepository();
     private PetugasRepository petugasRepository = new PetugasRepository();
+    private KandangRepository kandangRepository = new KandangRepository();
+    private HewanRepository hewanRepository = new HewanRepository();
     // private UserRepository userRepository = new UserRepository();
 
     // private static final Logger logger =
@@ -59,9 +67,10 @@ public class PeternakService {
 
         Peternak peternak = new Peternak();
 
-        Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugas_id());
+        Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugasId());
 
         if (petugasResponse.getNamaPetugas() != null) {
+            System.out.println("ID PETERNAK = " + peternakRequest.getIdPeternak());
             peternak.setIdPeternak(peternakRequest.getIdPeternak());
             peternak.setNikPeternak(peternakRequest.getNikPeternak());
             peternak.setNamaPeternak(peternakRequest.getNamaPeternak());
@@ -95,31 +104,49 @@ public class PeternakService {
     }
 
     public Peternak updatePeternak(String peternakId, PeternakRequest peternakRequest) throws IOException {
-        Peternak peternak = new Peternak();
-        Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugas_id().toString());
 
-        if (petugasResponse.getNamaPetugas() != null) {
-            peternak.setNikPeternak(peternakRequest.getNikPeternak());
-            peternak.setNamaPeternak(peternakRequest.getNamaPeternak());
-            peternak.setLokasi(peternakRequest.getLokasi());
-            peternak.setTanggalPendaftaran(peternakRequest.getTanggalPendaftaran());
-            peternak.setPetugas(petugasResponse);
-            peternak.setNoTelepon(peternakRequest.getNoTelepon());
-            peternak.setEmail(peternakRequest.getEmail());
-            peternak.setJenisKelamin(peternakRequest.getJenisKelamin());
-            peternak.setTanggalLahir(peternakRequest.getTanggalLahir());
-            peternak.setIdIsikhnas(peternakRequest.getIdIsikhnas());
-            peternak.setDusun(peternakRequest.getDusun());
-            peternak.setDesa(peternakRequest.getDesa());
-            peternak.setKecamatan(peternakRequest.getKecamatan());
-            peternak.setKabupaten(peternakRequest.getKabupaten());
-            peternak.setAlamat(peternakRequest.getAlamat());
-            peternak.setLatitude(peternakRequest.getLatitude());
-            peternak.setLongitude(peternakRequest.getLongitude());
-            return peternakRepository.update(peternakId, peternak);
-        } else {
-            return null;
+        System.out.println("Peternak id si service " + peternakId);
+        Petugas petugasResponse = petugasRepository.findById(peternakRequest.getPetugasId().toString());
+
+        Peternak peternak = new Peternak();
+        peternak.setNikPeternak(peternakRequest.getNikPeternak());
+        peternak.setNamaPeternak(peternakRequest.getNamaPeternak());
+        peternak.setLokasi(peternakRequest.getLokasi());
+        peternak.setTanggalPendaftaran(peternakRequest.getTanggalPendaftaran());
+        peternak.setPetugas(petugasResponse);
+        peternak.setNoTelepon(peternakRequest.getNoTelepon());
+        peternak.setEmail(peternakRequest.getEmail());
+        peternak.setJenisKelamin(peternakRequest.getJenisKelamin());
+        peternak.setTanggalLahir(peternakRequest.getTanggalLahir());
+        peternak.setIdIsikhnas(peternakRequest.getIdIsikhnas());
+        peternak.setDusun(peternakRequest.getDusun());
+        peternak.setDesa(peternakRequest.getDesa());
+        peternak.setKecamatan(peternakRequest.getKecamatan());
+        peternak.setKabupaten(peternakRequest.getKabupaten());
+        peternak.setProvinsi(peternakRequest.getProvinsi());
+        peternak.setAlamat(peternakRequest.getAlamat());
+        peternak.setLatitude(peternakRequest.getLatitude());
+        peternak.setLongitude(peternakRequest.getLongitude());
+        System.out.println("Nama Peternak " + peternakRequest.getNamaPeternak());
+        List<Kandang> kandangList = kandangRepository.findByPeternakId(peternakId);
+        if (kandangList != null) {
+            for (Kandang kandang : kandangList) {
+                kandang.setPeternak(peternak);
+                kandangRepository.updatePeternakByKandang(kandang.getIdKandang(), kandang);
+            }
         }
+
+        List<Hewan> hewanList = hewanRepository.findByPeternakId(peternakId);
+        if (hewanList != null) {
+            for (Hewan hewan : hewanList) {
+                hewan.setPeternak(peternak);
+                hewanRepository.updatePeternakByHewan(hewan.getIdHewan(), hewan);
+            }
+
+        }
+
+        return peternakRepository.update(peternakId, peternak);
+
     }
 
     public void deletePeternakById(String peternakId) throws IOException {
@@ -307,7 +334,7 @@ public class PeternakService {
 
                         Petugas newPetugas = new Petugas();
                         newPetugas
-                                .setPetugasId(request.getPetugas_id() != null ? request.getPetugas_id()
+                                .setPetugasId(request.getPetugasId() != null ? request.getPetugasId()
                                         : UUID.randomUUID().toString());
                         newPetugas
                                 .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()

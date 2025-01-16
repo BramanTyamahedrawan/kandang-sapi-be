@@ -36,7 +36,7 @@ public class HewanRequest {
     private String idPeternak;
 
     // petugas
-    private String petugas_id;
+    private String petugasId;
     private String nikPetugas;
     private String namaPetugas;
     private String emailPetugas;
@@ -68,7 +68,7 @@ public class HewanRequest {
     public HewanRequest() {
     }
 
-    public HewanRequest(String idHewan, String kodeEartagNasional, String noKartuTernak, String petugas_id,
+    public HewanRequest(String idHewan, String kodeEartagNasional, String noKartuTernak, String petugasId,
             String idPeternak,
             String idKandang, String rumpunHewanId, String jenisHewanId, String sex, String umur, String tanggalLahir,
             String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude, String tempatLahir,
@@ -82,7 +82,7 @@ public class HewanRequest {
         this.idHewan = idHewan;
         this.kodeEartagNasional = kodeEartagNasional;
         this.noKartuTernak = noKartuTernak;
-        this.petugas_id = petugas_id;
+        this.petugasId = petugasId;
         this.idPeternak = idPeternak;
         this.idKandang = idKandang;
         this.jenisHewanId = jenisHewanId;
@@ -156,12 +156,12 @@ public class HewanRequest {
         this.noKartuTernak = noKartuTernak;
     }
 
-    public String getPetugas_id() {
-        return petugas_id;
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
     }
 
-    public void setPetugas_id(String petugas_id) {
-        this.petugas_id = petugas_id;
+    public String getPetugasId() {
+        return petugasId;
     }
 
     public String getIdPeternak() {
@@ -556,8 +556,8 @@ public class HewanRequest {
             case "noKartuTernak":
                 this.noKartuTernak = value;
                 break;
-            case "petugas_id":
-                this.petugas_id = value;
+            case "petugasId":
+                this.petugasId = value;
                 break;
             case "idPeternak":
                 this.idPeternak = value;
