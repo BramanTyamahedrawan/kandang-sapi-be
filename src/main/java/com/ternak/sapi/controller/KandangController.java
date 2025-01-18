@@ -180,58 +180,89 @@ public class KandangController {
 
     @PutMapping("/{kandangId}")
     public ResponseEntity<?> updateKandang(@PathVariable String kandangId,
-            @RequestParam("file") MultipartFile file, @ModelAttribute KandangRequest kandangRequest)
+            @RequestPart(value = "file", required = false) MultipartFile file, @ModelAttribute KandangRequest kandangRequest)
             throws IOException {
-        // upload file
-        try {
-            // Mendapatkan nama file asli
-            String originalFileName = file.getOriginalFilename();
+        System.out.println("File Dicontroller  " + file);
+        if(file != null && !file.isEmpty()) {
+            System.out.println("File tidak null");
+            // upload file
+            // Proses upload file
+            try {
+                // Mendapatkan nama file asli
+                String originalFileName = file.getOriginalFilename();
 
-            // Mendapatkan ekstensi file
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                // Memeriksa apakah originalFileName tidak null
+                if (originalFileName == null) {
+                    return ResponseEntity.badRequest()
+                            .body(new ApiResponse(false, "File name is invalid"));
+                }
 
-            // Mendapatkan timestamp saat ini
-            String timestamp = String.valueOf(System.currentTimeMillis());
+                // Mendapatkan ekstensi file
+                String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-            // Membuat UUID baru
-            String uuid = UUID.randomUUID().toString();
+                // Mendapatkan timestamp saat ini
+                String timestamp = String.valueOf(System.currentTimeMillis());
 
-            // Menggabungkan timestamp dan UUID
-            String newFileName = "file_" + timestamp + "_" + uuid;
-            String filePath = PathConfig.storagePath + "/" + newFileName + fileExtension;
-            File newFile = new File(filePath);
+                // Membuat UUID baru
+                String uuid = UUID.randomUUID().toString();
 
-            // Menyimpan file ke lokasi yang ditentukan di server
-            file.transferTo(newFile);
+                // Menggabungkan timestamp dan UUID
+                String newFileName = "file_" + timestamp + "_" + uuid;
+                String filePath = PathConfig.storagePath + "/" + newFileName + fileExtension;
+                File newFile = new File(filePath);
 
-            // Mendapatkan local path dari file yang disimpan
-            String localPath = newFile.getAbsolutePath();
-            String uri = "hdfs://hadoop-primary:9000";
-            String hdfsDir = "hdfs://hadoop-primary:9000/kandang/" + newFileName + fileExtension;
-            // String uri = "hdfs://h-primary:6912";
-            // String hdfsDir = "hdfs://h-primary:6912/kandang/" + newFileName +
-            // fileExtension;
-            Configuration configuration = new Configuration();
-            FileSystem fs = FileSystem.get(URI.create(uri), configuration);
-            fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/" + newFileName + fileExtension;
+                // Menyimpan file ke lokasi yang ditentukan di server
+                file.transferTo(newFile);
 
-            newFile.delete();
-            Kandang kandang = kandangService.updateKandang(kandangId, kandangRequest, savePath);
+                // Mendapatkan local path dari file yang disimpan
+                String localPath = newFile.getAbsolutePath();
+                String uri = "hdfs://hadoop-primary:9000";
+                String hdfsDir = "hdfs://hadoop-primary:9000/kandang/" + newFileName + fileExtension;
+                Configuration configuration = new Configuration();
+                FileSystem fs = FileSystem.get(URI.create(uri), configuration);
+                fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
+                String savePath = "file/" + newFileName + fileExtension;
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{kandangId}")
-                    .buildAndExpand(kandang.getIdKandang()).toUri();
+                newFile.delete();
+                Kandang kandang = kandangService.updateKandang(kandangId, kandangRequest, savePath);
 
-            return ResponseEntity.created(location)
-                    .body(new ApiResponse(true, "Kandang Updated Successfully"));
-        } catch (IOException e) {
-            // Penanganan kesalahan saat menyimpan file
-            e.printStackTrace();
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+                URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{kandangId}")
+                        .buildAndExpand(kandang.getIdKandang()).toUri();
+
+                return ResponseEntity.created(location)
+                        .body(new ApiResponse(true, "Kandang Updated Successfully"));
+            } catch (IOException e) {
+                // Penanganan kesalahan saat menyimpan file
+                e.printStackTrace();
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+            }
+        }else{
+            System.out.println("file null");
+            try {
+                Kandang kandang = kandangService.updateKandang(kandangId, kandangRequest, "");
+                if (kandang == null) {
+                    return ResponseEntity.badRequest()
+                            .body(new ApiResponse(false, "Please check relational ID"));
+                } else {
+                    URI location = ServletUriComponentsBuilder
+                            .fromCurrentRequest().path("/{idKandang}")
+                            .buildAndExpand(kandang.getIdKandang()).toUri();
+
+                    return ResponseEntity.created(location)
+                            .body(new ApiResponse(true, "Kandang Created Successfully"));
+                }
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, e.getMessage()));
+            } catch (IOException e) {
+                // Penanganan kesalahan saat menyimpan file
+                e.printStackTrace();
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+            }
         }
-
     }
 
     @DeleteMapping("/{kandangId}")

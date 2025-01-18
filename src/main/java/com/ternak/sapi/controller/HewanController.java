@@ -228,6 +228,7 @@ public class HewanController {
 
     @DeleteMapping("/{idHewan}")
     public HttpStatus deleteHewan(@PathVariable(value = "idHewan") String idHewan) throws IOException {
+        System.out.println("id Hewan yang dikirim" + idHewan);
         hewanService.deleteHewanById(idHewan);
         return HttpStatus.FORBIDDEN;
     }

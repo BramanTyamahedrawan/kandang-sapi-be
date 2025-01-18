@@ -151,47 +151,7 @@ public class PeternakService {
     }
 
     public void deletePeternakById(String peternakId) throws IOException {
-        Peternak peternakResponse = peternakRepository.findById(peternakId);
-        if (peternakResponse.isValid()) {
-            System.out.println("data valid " + peternakResponse.getIdPeternak()
-                    + peternakResponse.getNamaPeternak()
-                    + peternakResponse.getNikPeternak()
-                    + peternakResponse.getDesa()
-                    + peternakResponse.getAlamat()
-                    + peternakResponse.getDusun()
-                    + peternakResponse.getEmail()
-                    + peternakResponse.getIdIsikhnas()
-                    + peternakResponse.getJenisKelamin()
-                    + peternakResponse.getKabupaten()
-                    + peternakResponse.getKecamatan()
-                    + peternakResponse.getProvinsi()
-                    + peternakResponse.getLatitude()
-                    + peternakResponse.getLokasi()
-                    + peternakResponse.getLongitude()
-                    + peternakResponse.getTanggalLahir()
-                    + peternakResponse.getTanggalPendaftaran()
-                    + peternakResponse.getNoTelepon());
             peternakRepository.deleteById(peternakId);
-        } else {
-            System.out.println("data tidak valid " + peternakResponse.getIdPeternak()
-                    + peternakResponse.getNamaPeternak()
-                    + peternakResponse.getNikPeternak()
-                    + peternakResponse.getDesa()
-                    + peternakResponse.getAlamat()
-                    + peternakResponse.getDusun()
-                    + peternakResponse.getEmail()
-                    + peternakResponse.getIdIsikhnas()
-                    + peternakResponse.getJenisKelamin()
-                    + peternakResponse.getKabupaten()
-                    + peternakResponse.getKecamatan()
-                    + peternakResponse.getProvinsi()
-                    + peternakResponse.getLatitude()
-                    + peternakResponse.getLokasi()
-                    + peternakResponse.getLongitude()
-                    + peternakResponse.getTanggalLahir()
-                    + peternakResponse.getTanggalPendaftaran()
-                    + peternakResponse.getNoTelepon());
-        }
     }
 
     private void validatePageNumberAndSize(int page, int size) {

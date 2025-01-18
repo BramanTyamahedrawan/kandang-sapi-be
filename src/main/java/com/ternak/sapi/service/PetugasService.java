@@ -136,14 +136,7 @@ public class PetugasService {
 
 
     public void deletePetugasById(String idPetugas) throws IOException {
-        Petugas petugasResponse = petugasRepository.findById(idPetugas);
-        if (petugasResponse.isValid()) {
-            System.out.println("Data " + petugasResponse.getPetugasId() + petugasResponse.getNamaPetugas() + petugasResponse.getNikPetugas() + petugasResponse.getEmail() + petugasResponse.getWilayah() + petugasResponse.getJob() + petugasResponse.getNoTelp());
-            petugasRepository.deleteById(petugasResponse.getPetugasId());
-        } else {
-       System.out.println("Data Tidak valid" + petugasResponse.getPetugasId() + petugasResponse.getNamaPetugas() + petugasResponse.getNikPetugas() + petugasResponse.getEmail() + petugasResponse.getWilayah() + petugasResponse.getJob() + petugasResponse.getNoTelp());
-
-   }
+       petugasRepository.deleteById(idPetugas);
     }
 
     private void validatePageNumberAndSize(int page, int size) {

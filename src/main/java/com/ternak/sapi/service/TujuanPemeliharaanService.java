@@ -2,11 +2,13 @@ package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.TujuanPemeliharaan;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.payload.PetugasRequest;
 import com.ternak.sapi.payload.TujuanPemeliharaanRequest;
+import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.TujuanPemeliharaanRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ import java.util.List;
 @Service
 public class TujuanPemeliharaanService {
     private TujuanPemeliharaanRepository tujuanpemeliharaanRepository = new TujuanPemeliharaanRepository();
-
+    private HewanRepository hewanRepository = new HewanRepository();
     // private static final Logger logger =
     // LoggerFactory.getLogger(BeritaService.class);
 
@@ -44,22 +46,24 @@ public class TujuanPemeliharaanService {
         return tujuanpemeliharaanRepository.save(tujuan);
     }
 
-    public TujuanPemeliharaan update(String idTujuanPemeliharaan, TujuanPemeliharaanRequest tujuanRequest) throws  IOException{
+    public TujuanPemeliharaan update(String idTujuanPemeliharaan, TujuanPemeliharaanRequest tujuanRequest) throws IOException {
         TujuanPemeliharaan tujuan = new TujuanPemeliharaan();
-        tujuan.setIdTujuanPemeliharaan(tujuanRequest.getIdTujuanPemeliharaan());
         tujuan.setTujuanPemeliharaan(tujuanRequest.getTujuanPemeliharaan());
         tujuan.setDeskripsi(tujuanRequest.getDeskripsi());
+
+        List<Hewan> hewanList = hewanRepository.findByTujuanPemeliharaanId(idTujuanPemeliharaan);
+        if (hewanList != null) {
+            for (Hewan hewan : hewanList) {
+                hewan.setTujuanPemeliharaan(tujuan);
+                hewanRepository.updateTujuanPemeliharaanByHewan(hewan.getIdHewan(), hewan);
+            }
+        }
+
         return tujuanpemeliharaanRepository.update(idTujuanPemeliharaan, tujuan);
     }
 
     public void deleteTujuanById(String tujuanPemeliharaanId) throws IOException {
-        TujuanPemeliharaan tujuanResponse = tujuanpemeliharaanRepository.findById(tujuanPemeliharaanId);
-        if(tujuanResponse.isValid()){
-              tujuanpemeliharaanRepository.deleteById(tujuanPemeliharaanId);
-        }else{
-            System.out.println("data tidak valid "+tujuanResponse.getIdTujuanPemeliharaan() + tujuanResponse.getTujuanPemeliharaan() + tujuanResponse.getDeskripsi());
-        }
-
+        tujuanpemeliharaanRepository.deleteById(tujuanPemeliharaanId);
     }
 
     @Transactional

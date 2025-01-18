@@ -126,7 +126,7 @@ public class RumpunHewanRepository {
             client.insertRecord(tableRumpunHewan, rumpunhewanId, "main", "rumpun", rumpunhewan.getRumpun());
         }
         if (rumpunhewan.getDeskripsi() != null) {
-            client.insertRecord(tableRumpunHewan, rumpunhewanId, "main", "deskripsi", rumpunhewan.getDeskripsi());
+            client.insertRecord(tableRumpunHewan, rumpunhewanId, "main", "deskripsi",rumpunhewan.getDeskripsi());
         }
 
         client.insertRecord(tableRumpunHewan, rumpunhewanId, "detail", "created_by", "Polinema");

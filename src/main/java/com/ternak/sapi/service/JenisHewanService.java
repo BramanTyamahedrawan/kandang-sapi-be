@@ -2,12 +2,17 @@ package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Kandang;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.JenisHewanRequest;
 import com.ternak.sapi.payload.PagedResponse;
+import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.JenisHewanRepository;
+import com.ternak.sapi.repository.KandangRepository;
 import com.ternak.sapi.util.AppConstants;
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +23,8 @@ import java.util.List;
 @Service
 public class JenisHewanService {
     private JenisHewanRepository jenishewanRepository = new JenisHewanRepository();
+    private HewanRepository hewanRepository = new HewanRepository();
+    private KandangRepository kandangRepository = new KandangRepository();
 
     public PagedResponse<JenisHewan> getAllJenisHewan(int page, int size, String peternakId, String hewanId,
             String kandangId) throws IOException {
@@ -51,22 +58,33 @@ public class JenisHewanService {
                 jenishewanResponse.isValid() ? 1 : 0, "Successfully get data");
     }
 
-    public JenisHewan updateJenisHewan(String jenishewanId, JenisHewanRequest jenishewanRequest, String savePath)
+    public JenisHewan updateJenisHewan(String jenishewanId, JenisHewanRequest jenishewanRequest)
             throws IOException {
         JenisHewan jenishewan = new JenisHewan();
-        jenishewan.setIdJenisHewan(jenishewanRequest.getIdJenisHewan());
         jenishewan.setJenis(jenishewanRequest.getJenis());
         jenishewan.setDeskripsi(jenishewanRequest.getDeskripsi());
+
+        List<Hewan> hewanList = hewanRepository.findByJenisHewanId(jenishewanId);
+        if(hewanList != null){
+            for(Hewan hewan : hewanList){
+                hewan.setJenisHewan(jenishewan);
+                hewanRepository.updateJenisHewanByHewan(hewan.getIdHewan(),hewan);
+            }
+        }
+
+        List<Kandang> kandangList = kandangRepository.findByJenisHewanId(jenishewanId);
+        if(kandangList != null){
+            for (Kandang kandang : kandangList){
+                kandang.setJenisHewan(jenishewan);
+                kandangRepository.updateJenisHewanByKandang(kandang.getIdKandang(),kandang);
+            }
+        }
+
         return jenishewanRepository.update(jenishewanId, jenishewan);
     }
 
     public void deleteJenisHewanById(String jenishewanId) throws IOException {
-        JenisHewan jenishewanResponse = jenishewanRepository.findById(jenishewanId);
-        if (jenishewanResponse.isValid()) {
             jenishewanRepository.deleteById(jenishewanId);
-        } else {
-            throw new ResourceNotFoundException("JenisHewan", "id", jenishewanId);
-        }
     }
 
     private void validatePageNumberAndSize(int page, int size) {

@@ -120,7 +120,6 @@ public class TujuanPemeliharaanRepository {
     public TujuanPemeliharaan update(String tujuanPemeliharaanId, TujuanPemeliharaan tujuanPemeliharaan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableTujuan = TableName.valueOf(tableName);
-        client.insertRecord(tableTujuan, tujuanPemeliharaanId, "main", "idTujuanPemeliharaan", tujuanPemeliharaan.getIdTujuanPemeliharaan());
         client.insertRecord(tableTujuan, tujuanPemeliharaanId, "main", "tujuanPemeliharaan", tujuanPemeliharaan.getTujuanPemeliharaan());
         client.insertRecord(tableTujuan, tujuanPemeliharaanId, "main", "deskripsi", tujuanPemeliharaan.getDeskripsi());
         return tujuanPemeliharaan;

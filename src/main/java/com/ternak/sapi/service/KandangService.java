@@ -56,9 +56,8 @@ public class KandangService {
 
         Kandang kandang = new Kandang();
         Peternak peternakResponse = peternakRepository.findById(kandangRequest.getidPeternak().toString());
-        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan().toString());
-
-        if (peternakResponse.getNamaPeternak() != null && jenisHewanResponse.getJenis() != null) {
+        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan());
+        if (peternakResponse.getIdPeternak() != null && jenisHewanResponse.getIdJenisHewan() != null) {
             kandang.setIdKandang(kandangRequest.getIdKandang());
             kandang.setLuas(kandangRequest.getLuas());
             kandang.setKapasitas(kandangRequest.getKapasitas());
@@ -69,18 +68,8 @@ public class KandangService {
             kandang.setLongitude(kandangRequest.getLongitude());
             kandang.setFile_path(savePath);
             kandang.setNamaKandang(kandangRequest.getNamaKandang());
-            kandang.setPeternak(peternakResponse);
             kandang.setJenisHewan(jenisHewanResponse);
-            System.out.println(kandangRequest.getIdKandang());
-            System.out.println(kandangRequest.getLuas());
-            System.out.println(kandangRequest.getKapasitas());
-            System.out.println(kandangRequest.getJenisKandang());
-            System.out.println(kandangRequest.getNilaiBangunan());
-            System.out.println(kandangRequest.getAlamat());
-            System.out.println(kandangRequest.getLatitude());
-            System.out.println(kandangRequest.getLongitude());
-            System.out.println(savePath);
-            System.out.println(kandangRequest.getNamaKandang());
+            kandang.setPeternak(peternakResponse);
             return kandangRepository.save(kandang);
         } else {
             return null;
@@ -95,11 +84,14 @@ public class KandangService {
     }
 
     public Kandang updateKandang(String kandangId, KandangRequest kandangRequest, String savePath) throws IOException {
-        Kandang kandang = new Kandang();
+        Kandang kandangSave = null;
         Peternak peternakResponse = peternakRepository.findById(kandangRequest.getidPeternak().toString());
+        Kandang kandangResponse = kandangRepository.findByFotoKandang(kandangId);
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan().toString());
+        if (kandangResponse != null && peternakResponse != null && peternakResponse.getIdPeternak() != null && jenisHewanResponse.getIdJenisHewan() != null) {
+            System.out.println("file = " + kandangResponse.getFile_path());
 
-        if (peternakResponse.getNamaPeternak() != null) {
+            Kandang kandang = new Kandang();
             kandang.setLuas(kandangRequest.getLuas());
             kandang.setKapasitas(kandangRequest.getKapasitas());
             kandang.setJenisKandang(kandangRequest.getJenisKandang());
@@ -108,14 +100,25 @@ public class KandangService {
             kandang.setLatitude(kandangRequest.getLatitude());
             kandang.setLongitude(kandangRequest.getLongitude());
             kandang.setNamaKandang(kandangRequest.getNamaKandang());
-            kandang.setFile_path(savePath);
+
+            // Cek kondisi file path
+            if (savePath == null || savePath.isEmpty()) {
+                // Jika tidak ada file baru dan file sebelumnya juga tidak ada, set file_path ke ""
+                kandang.setFile_path(kandangResponse.getFile_path().isEmpty() ? "" : kandangResponse.getFile_path());
+            } else {
+                // Jika ada file baru, perbarui file_path
+                System.out.println("save file " + savePath);
+                kandang.setFile_path(savePath);
+            }
+
             kandang.setPeternak(peternakResponse);
             kandang.setJenisHewan(jenisHewanResponse);
-            return kandangRepository.update(kandangId, kandang);
-        } else {
-            return null;
+            kandangSave = kandangRepository.update(kandangId, kandang);
         }
+
+        return kandangSave;
     }
+
 
     public void deleteKandangById(String kandangId) throws IOException {
         // Kandang kandangResponse = kandangRepository.findById(kandangId);
@@ -162,12 +165,12 @@ public class KandangService {
                     peternakResponse.setNamaPeternak("Peternak Tidak Diketahui");
                 }
 
-                JenisHewan jenisHewanResponse = null;
-                if (request.getIdJenisHewan() != null) {
-                    jenisHewanResponse = jenisHewanRepository.findById(request.getIdJenisHewan().toString());
-                    if (jenisHewanResponse == null) {
-                        System.out.println("Jenis Hewan dengan ID: " + request.getIdJenisHewan() + " tidak ditemukan");
-                    }
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getIdJenisHewan());
+                if (request.getIdJenisHewan() == null) {
+                    jenisHewanResponse = new JenisHewan();
+                    jenisHewanResponse.setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : "-");
+                    jenisHewanResponse.setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
+                    jenisHewanResponse.setDeskripsi("-");
                 }
                 // Buat objek Kandang
                 Kandang kandang = new Kandang();

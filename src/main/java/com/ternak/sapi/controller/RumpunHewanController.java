@@ -3,6 +3,7 @@ package com.ternak.sapi.controller;
 import com.ternak.sapi.config.PathConfig;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.TujuanPemeliharaan;
 import com.ternak.sapi.payload.*;
 import com.ternak.sapi.service.RumpunHewanService;
 import com.ternak.sapi.util.AppConstants;
@@ -99,58 +100,20 @@ public class RumpunHewanController {
 
     @PutMapping("/{rumpunhewanId}")
     public ResponseEntity<?> updateRumpunHewan(@PathVariable String rumpunhewanId,
-            @RequestParam("file") MultipartFile file, @ModelAttribute RumpunHewanRequest rumpunhewanRequest)
-            throws IOException {
-        // upload file
-        try {
-            // Mendapatkan nama file asli
-            String originalFileName = file.getOriginalFilename();
+                                                      @Valid @RequestBody RumpunHewanRequest rumpunHewanRequest) throws IOException {
+        RumpunHewan rumpunHewan = rumpunhewanService.updateRumpunHewan(rumpunhewanId, rumpunHewanRequest);
 
-            // Mendapatkan ekstensi file
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-            // Mendapatkan timestamp saat ini
-            String timestamp = String.valueOf(System.currentTimeMillis());
-
-            // Membuat UUID baru
-            String uuid = UUID.randomUUID().toString();
-
-            // Menggabungkan timestamp dan UUID
-            String newFileName = "file_" + timestamp + "_" + uuid;
-            String filePath = PathConfig.storagePath + "/" + newFileName + fileExtension;
-            File newFile = new File(filePath);
-
-            // Menyimpan file ke lokasi yang ditentukan di server
-            file.transferTo(newFile);
-
-            // Mendapatkan local path dari file yang disimpan
-            String localPath = newFile.getAbsolutePath();
-            String uri = "hdfs://hadoop-primary:9000";
-            String hdfsDir = "hdfs://hadoop-primary:9000/rumpunhewan/" + newFileName + fileExtension;
-            // String uri = "hdfs://h-primary:6912";
-            // String hdfsDir = "hdfs://h-primary:6912/rumpunhewan/" + newFileName +
-            // fileExtension;
-            Configuration configuration = new Configuration();
-            FileSystem fs = FileSystem.get(URI.create(uri), configuration);
-            fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/" + newFileName + fileExtension;
-
-            newFile.delete();
-            RumpunHewan rumpunhewan = rumpunhewanService.updateRumpunHewan(rumpunhewanId, rumpunhewanRequest, savePath);
-
+        if (rumpunHewan == null) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Rumpun ID not found"));
+        } else {
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{rumpunhewanId}")
-                    .buildAndExpand(rumpunhewan.getIdRumpunHewan()).toUri();
+                    .buildAndExpand(rumpunHewan.getIdRumpunHewan()).toUri();
 
             return ResponseEntity.created(location)
-                    .body(new ApiResponse(true, "RumpunHewan Updated Successfully"));
-        } catch (IOException e) {
-            // Penanganan kesalahan saat menyimpan file
-            e.printStackTrace();
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+                    .body(new ApiResponse(true, "Tujuan Updated Successfully"));
         }
-
     }
 
     @DeleteMapping("/{rumpunhewanId}")

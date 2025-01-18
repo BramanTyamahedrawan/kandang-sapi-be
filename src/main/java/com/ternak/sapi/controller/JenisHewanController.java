@@ -3,6 +3,7 @@ package com.ternak.sapi.controller;
 import com.ternak.sapi.config.PathConfig;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Peternak;
+import com.ternak.sapi.model.TujuanPemeliharaan;
 import com.ternak.sapi.payload.*;
 import com.ternak.sapi.service.JenisHewanService;
 import com.ternak.sapi.util.AppConstants;
@@ -102,57 +103,20 @@ public class JenisHewanController {
     }
 
     @PutMapping("/{jenishewanId}")
-    public ResponseEntity<?> updateJenisHewan(@PathVariable String jenishewanId,
-            @RequestParam("file") MultipartFile file, @ModelAttribute JenisHewanRequest jenishewanRequest)
+    public ResponseEntity<?> updateJenisHewan(@PathVariable String jenishewanId, @Valid @RequestBody JenisHewanRequest jenishewanRequest)
             throws IOException {
-        // upload file
-        try {
-            // Mendapatkan nama file asli
-            String originalFileName = file.getOriginalFilename();
+        JenisHewan jenisHewan = jenishewanService.updateJenisHewan(jenishewanId,jenishewanRequest);
 
-            // Mendapatkan ekstensi file
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-            // Mendapatkan timestamp saat ini
-            String timestamp = String.valueOf(System.currentTimeMillis());
-
-            // Membuat UUID baru
-            String uuid = UUID.randomUUID().toString();
-
-            // Menggabungkan timestamp dan UUID
-            String newFileName = "file_" + timestamp + "_" + uuid;
-            String filePath = PathConfig.storagePath + "/" + newFileName + fileExtension;
-            File newFile = new File(filePath);
-
-            // Menyimpan file ke lokasi yang ditentukan di server
-            file.transferTo(newFile);
-
-            // Mendapatkan local path dari file yang disimpan
-            String localPath = newFile.getAbsolutePath();
-            String uri = "hdfs://hadoop-primary:9000";
-            String hdfsDir = "hdfs://hadoop-primary:9000/jenishewan/" + newFileName + fileExtension;
-            // String uri = "hdfs://h-primary:6912";
-            // String hdfsDir = "hdfs://h-primary:6912/jenishewan/" + newFileName +
-            // fileExtension;
-            Configuration configuration = new Configuration();
-            FileSystem fs = FileSystem.get(URI.create(uri), configuration);
-            fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/" + newFileName + fileExtension;
-
-            newFile.delete();
-            JenisHewan jenishewan = jenishewanService.updateJenisHewan(jenishewanId, jenishewanRequest, savePath);
-
+        if (jenisHewan == null) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Jenis Hewan ID not found"));
+        } else {
             URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{jenishewanId}")
-                    .buildAndExpand(jenishewan.getIdJenisHewan()).toUri();
+                    .fromCurrentRequest().path("/jenishewanId}")
+                    .buildAndExpand(jenisHewan.getIdJenisHewan()).toUri();
 
             return ResponseEntity.created(location)
-                    .body(new ApiResponse(true, "JenisHewan Updated Successfully"));
-        } catch (IOException e) {
-            // Penanganan kesalahan saat menyimpan file
-            e.printStackTrace();
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+                    .body(new ApiResponse(true, "Jenis Hewan Updated Successfully"));
         }
 
     }

@@ -2,10 +2,12 @@ package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.RumpunHewanRequest;
 import com.ternak.sapi.payload.PagedResponse;
+import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.RumpunHewanRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.List;
 @Service
 public class RumpunHewanService {
     private RumpunHewanRepository rumpunhewanRepository = new RumpunHewanRepository();
+    private HewanRepository hewanRepository = new HewanRepository();
 
     public PagedResponse<RumpunHewan> getAllRumpunHewan(int page, int size) throws IOException {
         validatePageNumberAndSize(page, size);
@@ -52,22 +55,24 @@ public class RumpunHewanService {
                 rumpunhewanResponse.isValid() ? 1 : 0, "Successfully get data");
     }
 
-    public RumpunHewan updateRumpunHewan(String rumpunhewanId, RumpunHewanRequest rumpunhewanRequest, String savePath)
+    public RumpunHewan updateRumpunHewan(String rumpunhewanId, RumpunHewanRequest rumpunhewanRequest)
             throws IOException {
         RumpunHewan rumpunhewan = new RumpunHewan();
-        rumpunhewan.setIdRumpunHewan(rumpunhewanRequest.getIdRumpunHewan());
         rumpunhewan.setRumpun(rumpunhewanRequest.getRumpun());
         rumpunhewan.setDeskripsi(rumpunhewanRequest.getDeskripsi());
+
+        List<Hewan> hewanList = hewanRepository.findByRumpunId(rumpunhewanId);
+        if (hewanList != null) {
+            for (Hewan hewan : hewanList) {
+                hewan.setRumpunHewan(rumpunhewan);
+                hewanRepository.updateRumpunHewanByHewan(hewan.getIdHewan(), hewan);
+            }
+        }
         return rumpunhewanRepository.update(rumpunhewanId, rumpunhewan);
     }
 
     public void deleteRumpunHewanById(String rumpunhewanId) throws IOException {
-        RumpunHewan rumpunhewanResponse = rumpunhewanRepository.findById(rumpunhewanId);
-        if (rumpunhewanResponse.isValid()) {
-            rumpunhewanRepository.deleteById(rumpunhewanId);
-        } else {
-            throw new ResourceNotFoundException("RumpunHewan", "id", rumpunhewanId);
-        }
+       rumpunhewanRepository.deleteById(rumpunhewanId);
     }
 
     private void validatePageNumberAndSize(int page, int size) {
