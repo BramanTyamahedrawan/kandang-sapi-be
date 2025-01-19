@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.repository.HewanRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ public class KandangService {
     private KandangRepository kandangRepository = new KandangRepository();
     private PeternakRepository peternakRepository = new PeternakRepository();
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
+    private HewanRepository hewanRepository = new HewanRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(KandangService.class);
@@ -101,18 +104,24 @@ public class KandangService {
             kandang.setLongitude(kandangRequest.getLongitude());
             kandang.setNamaKandang(kandangRequest.getNamaKandang());
 
-            // Cek kondisi file path
             if (savePath == null || savePath.isEmpty()) {
-                // Jika tidak ada file baru dan file sebelumnya juga tidak ada, set file_path ke ""
                 kandang.setFile_path(kandangResponse.getFile_path().isEmpty() ? "" : kandangResponse.getFile_path());
             } else {
-                // Jika ada file baru, perbarui file_path
                 System.out.println("save file " + savePath);
                 kandang.setFile_path(savePath);
             }
 
             kandang.setPeternak(peternakResponse);
             kandang.setJenisHewan(jenisHewanResponse);
+
+            List<Hewan> hewanList = hewanRepository.findByKandangId(kandangId);
+            if(hewanList != null){
+                for(Hewan hewan : hewanList){
+                    hewan.setKandang(kandang);
+                    hewanRepository.updateKandangByHewan(hewan.getIdHewan(),hewan);
+                }
+            }
+
             kandangSave = kandangRepository.update(kandangId, kandang);
         }
 

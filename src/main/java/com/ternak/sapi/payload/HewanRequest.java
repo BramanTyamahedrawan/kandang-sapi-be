@@ -4,6 +4,7 @@ public class HewanRequest {
     private String idHewan;
     private String kodeEartagNasional;
     private String noKartuTernak;
+    private String idIsikhnasTernak;
     private String sex;
     private String umur;
     private String tanggalLahir;
@@ -154,6 +155,14 @@ public class HewanRequest {
 
     public void setNoKartuTernak(String noKartuTernak) {
         this.noKartuTernak = noKartuTernak;
+    }
+
+    public void setIdIsikhnasTernak(String idIsikhnasTernak) {
+        this.idIsikhnasTernak = idIsikhnasTernak;
+    }
+
+    public String getIdIsikhnasTernak() {
+        return idIsikhnasTernak;
     }
 
     public void setPetugasId(String petugasId) {

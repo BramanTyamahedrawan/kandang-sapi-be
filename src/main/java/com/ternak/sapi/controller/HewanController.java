@@ -173,55 +173,81 @@ public class HewanController {
 
     @PutMapping("/{idHewan}")
     public ResponseEntity<?> updateHewan(@PathVariable String idHewan,
-            @RequestParam("file") MultipartFile file, @ModelAttribute HewanRequest hewanRequest) throws IOException {
+            @RequestPart(value = "file",required = false) MultipartFile file, @ModelAttribute HewanRequest hewanRequest) throws IOException {
         // upload file
-        try {
-            // Mendapatkan nama file asli
-            String originalFileName = file.getOriginalFilename();
+        if(file != null && !file.isEmpty()) {
+            try {
+                // Mendapatkan nama file asli
+                String originalFileName = file.getOriginalFilename();
 
-            // Mendapatkan ekstensi file
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                // Mendapatkan ekstensi file
+                String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-            // Mendapatkan timestamp saat ini
-            String timestamp = String.valueOf(System.currentTimeMillis());
+                // Mendapatkan timestamp saat ini
+                String timestamp = String.valueOf(System.currentTimeMillis());
 
-            // Membuat UUID baru
-            String uuid = UUID.randomUUID().toString();
+                // Membuat UUID baru
+                String uuid = UUID.randomUUID().toString();
 
-            // Menggabungkan timestamp dan UUID
-            String newFileName = "file_" + timestamp + "_" + uuid;
-            String filePath = PathConfig.storagePath + "/" + newFileName + fileExtension;
-            File newFile = new File(filePath);
+                // Menggabungkan timestamp dan UUID
+                String newFileName = "file_" + timestamp + "_" + uuid;
+                String filePath = PathConfig.storagePath + "/" + newFileName + fileExtension;
+                File newFile = new File(filePath);
 
-            // Menyimpan file ke lokasi yang ditentukan di server
-            file.transferTo(newFile);
+                // Menyimpan file ke lokasi yang ditentukan di server
+                file.transferTo(newFile);
 
-            // Mendapatkan local path dari file yang disimpan
-            String localPath = newFile.getAbsolutePath();
-            String uri = "hdfs://hadoop-primary:9000";
-            String hdfsDir = "hdfs://hadoop-primary:9000/hewan/" + newFileName + fileExtension;
-            // String uri = "hdfs://h-primary:6912";
-            // String hdfsDir = "hdfs://h-primary:6912/hewan/" + newFileName +
-            // fileExtension;
-            Configuration configuration = new Configuration();
-            FileSystem fs = FileSystem.get(URI.create(uri), configuration);
-            fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
-            String savePath = "file/" + newFileName + fileExtension;
+                // Mendapatkan local path dari file yang disimpan
+                String localPath = newFile.getAbsolutePath();
+                String uri = "hdfs://hadoop-primary:9000";
+                String hdfsDir = "hdfs://hadoop-primary:9000/hewan/" + newFileName + fileExtension;
+                // String uri = "hdfs://h-primary:6912";
+                // String hdfsDir = "hdfs://h-primary:6912/hewan/" + newFileName +
+                // fileExtension;
+                Configuration configuration = new Configuration();
+                FileSystem fs = FileSystem.get(URI.create(uri), configuration);
+                fs.copyFromLocalFile(new Path(localPath), new Path(hdfsDir));
+                String savePath = "file/" + newFileName + fileExtension;
 
-            newFile.delete();
-            Hewan hewan = hewanService.updateHewan(idHewan, hewanRequest, savePath);
+                newFile.delete();
+                Hewan hewan = hewanService.updateHewan(idHewan, hewanRequest, savePath);
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{idHewan}")
-                    .buildAndExpand(hewan.getIdHewan()).toUri();
+                URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{idHewan}")
+                        .buildAndExpand(hewan.getIdHewan()).toUri();
 
-            return ResponseEntity.created(location)
-                    .body(new ApiResponse(true, "Hewan Updated Successfully"));
-        } catch (IOException e) {
-            // Penanganan kesalahan saat menyimpan file
-            e.printStackTrace();
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+                return ResponseEntity.created(location)
+                        .body(new ApiResponse(true, "Hewan Updated Successfully"));
+            } catch (IOException e) {
+                // Penanganan kesalahan saat menyimpan file
+                e.printStackTrace();
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+            }
+        }else{
+            try {
+                Hewan hewan = hewanService.updateHewan(idHewan,hewanRequest, "");
+
+                if (hewan == null) {
+                    return ResponseEntity.badRequest()
+                            .body(new ApiResponse(false, "Please check relational ID"));
+                } else {
+                    URI location = ServletUriComponentsBuilder
+                            .fromCurrentRequest().path("/{idHewan}")
+                            .buildAndExpand(hewan.getIdHewan()).toUri();
+
+                    return ResponseEntity.created(location)
+                            .body(new ApiResponse(true, "Hewan Created Successfully"));
+                }
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, e.getMessage()));
+            } catch (IOException e) {
+                // Penanganan kesalahan saat menyimpan file
+                e.printStackTrace();
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Cannot Upload File into Hadoop"));
+            }
         }
 
     }

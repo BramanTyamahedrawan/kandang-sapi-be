@@ -4,7 +4,7 @@ public class Hewan {
     private String idHewan;
     private String idIsikhnasTernak;
     private String kodeEartagNasional;
-    private String nama;
+//    private String nama;
     private String noKartuTernak;
     private Petugas petugas;
     private String petugasId;
@@ -19,10 +19,10 @@ public class Hewan {
     private String tempatLahir;
     private String identifikasiHewan;
     private String tanggalTerdaftar;
-    private String latitude;
-    private String longitude;
+//    private String latitude;
+//    private String longitude;
     private String file_path;
-    private String idIsikhnas;
+//    private String idIsikhnas;
 
     public Hewan() {
     }
@@ -30,14 +30,14 @@ public class Hewan {
     public Hewan(String idHewan, String kodeEartagNasional, String noKartuTernak, Petugas petugas, Peternak peternak,
             Kandang kandang,
             String sex, String umur, String identifikasiHewan, String tanggalTerdaftar, String latitude,
-            String longitude, String file_path, String idIsikhnasTernak, String nama,
+            String longitude, String file_path, String idIsikhnasTernak,
             JenisHewan jenisHewan, RumpunHewan rumpunHewan, String tanggalLahir, String tempatLahir,
             String idIsikhnas,TujuanPemeliharaan tujuanPemeliharaan) {
         this.idHewan = idHewan;
         this.idIsikhnasTernak = idIsikhnasTernak;
         this.kodeEartagNasional = kodeEartagNasional;
-        this.noKartuTernak = noKartuTernak;
-        this.nama = nama;
+//        this.noKartuTernak = noKartuTernak;
+//        this.nama = nama;
         this.petugas = petugas;
         this.peternak = peternak;
         this.kandang = kandang;
@@ -50,10 +50,10 @@ public class Hewan {
         this.tujuanPemeliharaan = tujuanPemeliharaan;
         this.identifikasiHewan = identifikasiHewan;
         this.tanggalTerdaftar = tanggalTerdaftar;
-        this.latitude = latitude;
-        this.longitude = longitude;
+//        this.latitude = latitude;
+//        this.longitude = longitude;
         this.file_path = file_path;
-        this.idIsikhnas = idIsikhnas;
+//        this.idIsikhnas = idIsikhnas;
     }
 
     public String getIdHewan() {
@@ -72,13 +72,13 @@ public class Hewan {
         this.idIsikhnasTernak = idIsikhnasTernak;
     }
 
-    public String getNama() {
-        return nama;
-    }
-
-    public void setNama(String nama) {
-        this.nama = nama;
-    }
+//    public String getNama() {
+//        return nama;
+//    }
+//
+//    public void setNama(String nama) {
+//        this.nama = nama;
+//    }
 
     public String getKodeEartagNasional() {
         return kodeEartagNasional;
@@ -152,21 +152,21 @@ public class Hewan {
         this.kandang = kandang;
     }
 
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
+//    public String getLatitude() {
+//        return latitude;
+//    }
+//
+//    public void setLatitude(String latitude) {
+//        this.latitude = latitude;
+//    }
+//
+//    public String getLongitude() {
+//        return longitude;
+//    }
+//
+//    public void setLongitude(String longitude) {
+//        this.longitude = longitude;
+//    }
 
     public String getFile_path() {
         return file_path;
@@ -216,13 +216,13 @@ public class Hewan {
         this.tujuanPemeliharaan = tujuanPemeliharaan;
     }
 
-    public String getIdIsikhnas() {
-        return idIsikhnas;
-    }
-
-    public void setIdIsikhnas(String idIsikhnas) {
-        this.idIsikhnas = idIsikhnas;
-    }
+//    public String getIdIsikhnas() {
+//        return idIsikhnas;
+//    }
+//
+//    public void setIdIsikhnas(String idIsikhnas) {
+//        this.idIsikhnas = idIsikhnas;
+//    }
 
     public void setPetugasId(String petugasId) {
         this.petugasId = petugasId;
@@ -254,9 +254,9 @@ public class Hewan {
             case "noKartuTernak":
                 this.noKartuTernak = value;
                 break;
-            case "nama":
-                this.nama = value;
-                break;
+//            case "nama":
+//                this.nama = value;
+//                break;
             case "sex":
                 this.sex = value;
                 break;
@@ -275,18 +275,18 @@ public class Hewan {
             case "tanggalTerdaftar":
                 this.tanggalTerdaftar = value;
                 break;
-            case "latitude":
-                this.latitude = value;
-                break;
-            case "longitude":
-                this.longitude = value;
-                break;
+//            case "latitude":
+//                this.latitude = value;
+//                break;
+//            case "longitude":
+//                this.longitude = value;
+//                break;
             case "file_path":
                 this.file_path = value;
                 break;
-            case "idIsikhnas":
-                this.idIsikhnas = value;
-                break;
+//            case "idIsikhnas":
+//                this.idIsikhnas = value;
+//                break;
             case "petugasId":
                 this.petugasId = value;
                 break;
