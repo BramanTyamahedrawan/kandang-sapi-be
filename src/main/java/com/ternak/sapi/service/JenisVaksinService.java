@@ -72,27 +72,15 @@ public class JenisVaksinService {
                 jenisVaksinResponse.isValid() ? 1 : 0, "Successfully get data");
     }
 
-    public JenisVaksin updateJenisVaksin(String jenisvaksinId, JenisVaksinRequest jenisVaksinRequest)
-            throws IOException {
+    public JenisVaksin update(String idJenisVaksin, JenisVaksinRequest jenisVaksinRequest) throws IOException {
         JenisVaksin jenisVaksin = new JenisVaksin();
         jenisVaksin.setJenis(jenisVaksinRequest.getJenis());
         jenisVaksin.setDeskripsi(jenisVaksinRequest.getDeskripsi());
-
-        // List<NamaVaksin> namaVaksinList =
-        // namaVaksinRepository.findByNamaVaksin(idJenisVaksin);
-        // if (namaVaksinList != null) {
-        // for (NamaVaksin namaVaksin : namaVaksinList) {
-        // namaVaksin.setJenisVaksin(jenisVaksin);
-        // namaVaksinRepository.updateJenisVaksinByNamaVaksin(namaVaksin.getIdNamaVaksin(),
-        // namaVaksin);
-        // }
-        // }
-
-        return jenisVaksinRepository.update(jenisvaksinId, jenisVaksin);
+        return jenisVaksinRepository.update(idJenisVaksin, jenisVaksin);
     }
 
-    public void deleteJenisVaksinById(String jenisvaksinId) throws IOException {
-        jenisVaksinRepository.deleteById(jenisvaksinId);
+    public void deleteById(String idJenisVaksin) throws IOException {
+        jenisVaksinRepository.deleteById(idJenisVaksin);
     }
 
     @Transactional

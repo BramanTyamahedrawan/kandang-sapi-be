@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/vaksin")
 public class VaksinController {
+
     private VaksinService vaksinService = new VaksinService();
 
     @GetMapping
@@ -40,7 +41,7 @@ public class VaksinController {
             Vaksin vaksin = vaksinService.createVaksin(vaksinRequest);
 
             URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{vaksinId}")
+                    .fromCurrentRequest().path("/{idVaksin}")
                     .buildAndExpand(vaksin.getIdVaksin()).toUri();
 
             return ResponseEntity.created(location)

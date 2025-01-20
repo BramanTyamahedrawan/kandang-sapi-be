@@ -1,11 +1,8 @@
 package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.JenisVaksin;
-import com.ternak.sapi.model.Peternak;
-import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.*;
 
-import com.ternak.sapi.model.RumpunHewan;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -52,18 +49,26 @@ public class JenisVaksinRepository {
 
     public JenisVaksin save(JenisVaksin jenisVaksin) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
-
-        String rowKey = jenisVaksin.getIdJenisVaksin();
         TableName tableJenisVaksin = TableName.valueOf(tableName);
+        String rowKey = jenisVaksin.getIdJenisVaksin();
         client.insertRecord(tableJenisVaksin, rowKey, "main", "idJenisVaksin", rowKey);
-        if (jenisVaksin.getJenis() != null) {
-            client.insertRecord(tableJenisVaksin, rowKey, "main", "jenis", jenisVaksin.getJenis());
-        }
-        if (jenisVaksin.getDeskripsi() != null) {
-            client.insertRecord(tableJenisVaksin, rowKey, "main", "deskripsi", jenisVaksin.getDeskripsi());
-        }
-        client.insertRecord(tableJenisVaksin, rowKey, "detail", "created_by", "Polinema");
+        client.insertRecord(tableJenisVaksin, rowKey, "main", "jenis", jenisVaksin.getJenis());
+        client.insertRecord(tableJenisVaksin, rowKey, "main", "deskripsi", jenisVaksin.getDeskripsi());
         return jenisVaksin;
+    }
+
+    public JenisVaksin update(String idJenisVaksin, JenisVaksin jenisVaksin) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableJenisVaksin = TableName.valueOf(tableName);
+        client.insertRecord(tableJenisVaksin, idJenisVaksin, "main", "jenis", jenisVaksin.getJenis());
+        client.insertRecord(tableJenisVaksin, idJenisVaksin, "main", "deskripsi", jenisVaksin.getDeskripsi());
+        return jenisVaksin;
+    }
+
+    public boolean deleteById(String idJenisVaksin) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        client.deleteRecord(tableName, idJenisVaksin);
+        return true;
     }
 
     public List<JenisVaksin> saveAll(List<JenisVaksin> jenisVaksinList) throws IOException {
@@ -102,26 +107,6 @@ public class JenisVaksinRepository {
         return jenisVaksinList;
     }
 
-    public JenisVaksin update(String jenisvaksinId, JenisVaksin jenisVaksin) throws IOException {
-        HBaseCustomClient client = new HBaseCustomClient(conf);
-
-        TableName tableJenisVaksin = TableName.valueOf(tableName);
-        if (jenisVaksin.getJenis() != null) {
-            client.insertRecord(tableJenisVaksin, jenisvaksinId, "main", "jenis", jenisVaksin.getJenis());
-        }
-        if (jenisVaksin.getDeskripsi() != null) {
-            client.insertRecord(tableJenisVaksin, jenisvaksinId, "main", "deskripsi", jenisVaksin.getDeskripsi());
-        }
-        client.insertRecord(tableJenisVaksin, jenisvaksinId, "detail", "updated_by", "Polinema");
-        return jenisVaksin;
-    }
-
-    public boolean deleteById(String jenisvaksinId) throws IOException {
-        HBaseCustomClient client = new HBaseCustomClient(conf);
-        client.deleteRecord(tableName, jenisvaksinId);
-        return true;
-    }
-
     public JenisVaksin findById(String idJenisVaksin) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -134,8 +119,7 @@ public class JenisVaksinRepository {
         columnMapping.put("deskripsi", "deskripsi");
 
         JenisVaksin jenisVaksin = client.getDataByColumn(tableJenisVaksin.toString(), columnMapping, "main",
-                "idJenisVaksin", idJenisVaksin, JenisVaksin.class);
-        System.out.println("Jenis vaksi ditemukan " + jenisVaksin);
+                "'idJenisVaksin", idJenisVaksin, JenisVaksin.class);
         return jenisVaksin.getIdJenisVaksin() != null ? jenisVaksin : null;
     }
 

@@ -44,15 +44,7 @@ public class VaksinRepository {
                 String rowKey = vaksin.getIdVaksin();
 
                 TableName tableVaksin = TableName.valueOf(tableName);
-                client.insertRecord(tableVaksin, rowKey, "main", "idVaksin", vaksin.getIdVaksin());
-                // if (vaksin.getNamaVaksin() != null) {
-                // client.insertRecord(tableVaksin, rowKey, "main", "namaVaksin",
-                // vaksin.getNamaVaksin());
-                // }
-                // if (vaksin.getJenisVaksin() != null) {
-                // client.insertRecord(tableVaksin, rowKey, "main", "jenisVaksin",
-                // vaksin.getJenisVaksin());
-                // }
+                client.insertRecord(tableVaksin, rowKey, "main", "idVaksin", rowKey);
                 if (vaksin.getTglVaksin() != null) {
                         client.insertRecord(tableVaksin, rowKey, "main", "tglVaksin", vaksin.getTglVaksin());
                 }
@@ -62,6 +54,8 @@ public class VaksinRepository {
                 if (vaksin.getVaksinKe() != null) {
                         client.insertRecord(tableVaksin, rowKey, "main", "vaksinKe", vaksin.getVaksinKe());
                 }
+
+//                Peternak
                 client.insertRecord(tableVaksin, rowKey, "peternak", "idPeternak",
                                 vaksin.getPeternak().getIdPeternak());
                 client.insertRecord(tableVaksin, rowKey, "peternak", "nikPeternak",
@@ -69,11 +63,26 @@ public class VaksinRepository {
                 client.insertRecord(tableVaksin, rowKey, "peternak", "namaPeternak",
                                 vaksin.getPeternak().getNamaPeternak());
                 client.insertRecord(tableVaksin, rowKey, "peternak", "lokasi", vaksin.getPeternak().getLokasi());
+
+//                Petugas
+                client.insertRecord(tableVaksin,rowKey,"petugas","petugasId",vaksin.getPetugas().getPetugasId());
                 client.insertRecord(tableVaksin, rowKey, "petugas", "nikPetugas", vaksin.getPetugas().getNikPetugas());
                 client.insertRecord(tableVaksin, rowKey, "petugas", "namaPetugas",
                                 vaksin.getPetugas().getNamaPetugas());
+
+//                Hewan
+                client.insertRecord(tableVaksin,rowKey,"hewan","idHewan",vaksin.getHewan().getIdHewan());
                 client.insertRecord(tableVaksin, rowKey, "hewan", "kodeEartagNasional",
                                 vaksin.getHewan().getKodeEartagNasional());
+                client.insertRecord(tableVaksin,rowKey,"hewan","tanggalTerdaftar",vaksin.getHewan().getTanggalTerdaftar());
+
+//                Jenis Vaksin
+                client.insertRecord(tableVaksin,rowKey,"jenisVaksin","idJenisVaksin",vaksin.getJenisVaksin().getIdJenisVaksin());
+                client.insertRecord(tableVaksin,rowKey,"jenisVaksin","jenis",vaksin.getJenisVaksin().getJenis());
+
+//                Nama Vaksin
+                client.insertRecord(tableVaksin,rowKey,"namaVaksin","idNamaVaksin",vaksin.getNamaVaksin().getIdNamaVaksin());
+                client.insertRecord(tableVaksin,rowKey,"namaVaksin","nama",vaksin.getNamaVaksin().getNama());
                 client.insertRecord(tableVaksin, rowKey, "detail", "created_by", "Polinema");
                 return vaksin;
         }
@@ -215,14 +224,6 @@ public class VaksinRepository {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 
                 TableName tableVaksin = TableName.valueOf(tableName);
-                // if (vaksin.getNamaVaksin() != null) {
-                // client.insertRecord(tableVaksin, vaksinId, "main", "namaVaksin",
-                // vaksin.getNamaVaksin());
-                // }
-                // if (vaksin.getJenisVaksin() != null) {
-                // client.insertRecord(tableVaksin, vaksinId, "main", "jenisVaksin",
-                // vaksin.getJenisVaksin());
-                // }
                 if (vaksin.getTglVaksin() != null) {
                         client.insertRecord(tableVaksin, vaksinId, "main", "tglVaksin", vaksin.getTglVaksin());
                 }
@@ -232,19 +233,36 @@ public class VaksinRepository {
                 if (vaksin.getVaksinKe() != null) {
                         client.insertRecord(tableVaksin, vaksinId, "main", "vaksinKe", vaksin.getVaksinKe());
                 }
+
+//                Peternak
                 client.insertRecord(tableVaksin, vaksinId, "peternak", "idPeternak",
-                                vaksin.getPeternak().getIdPeternak());
+                        vaksin.getPeternak().getIdPeternak());
                 client.insertRecord(tableVaksin, vaksinId, "peternak", "nikPeternak",
-                                vaksin.getPeternak().getNikPeternak());
+                        vaksin.getPeternak().getNikPeternak());
                 client.insertRecord(tableVaksin, vaksinId, "peternak", "namaPeternak",
-                                vaksin.getPeternak().getNamaPeternak());
+                        vaksin.getPeternak().getNamaPeternak());
                 client.insertRecord(tableVaksin, vaksinId, "peternak", "lokasi", vaksin.getPeternak().getLokasi());
-                client.insertRecord(tableVaksin, vaksinId, "petugas", "nikPetugas",
-                                vaksin.getPetugas().getNikPetugas());
+
+//                Petugas
+                client.insertRecord(tableVaksin,vaksinId,"petugas","petugasId",vaksin.getPetugas().getPetugasId());
+                client.insertRecord(tableVaksin, vaksinId, "petugas", "nikPetugas", vaksin.getPetugas().getNikPetugas());
                 client.insertRecord(tableVaksin, vaksinId, "petugas", "namaPetugas",
-                                vaksin.getPetugas().getNamaPetugas());
+                        vaksin.getPetugas().getNamaPetugas());
+
+//                Hewan
+                client.insertRecord(tableVaksin,vaksinId,"hewan","idHewan",vaksin.getHewan().getIdHewan());
                 client.insertRecord(tableVaksin, vaksinId, "hewan", "kodeEartagNasional",
-                                vaksin.getHewan().getKodeEartagNasional());
+                        vaksin.getHewan().getKodeEartagNasional());
+                client.insertRecord(tableVaksin,vaksinId,"hewan","tanggalTerdaftar",vaksin.getHewan().getTanggalTerdaftar());
+
+//                Jenis Vaksin
+                client.insertRecord(tableVaksin,vaksinId,"jenisVaksin","idJenisVaksin",vaksin.getJenisVaksin().getIdJenisVaksin());
+                client.insertRecord(tableVaksin,vaksinId,"jenisVaksin","jenis",vaksin.getJenisVaksin().getJenis());
+
+//                Nama Vaksin
+                client.insertRecord(tableVaksin,vaksinId,"namaVaksin","idNamaVaksin",vaksin.getNamaVaksin().getIdNamaVaksin());
+                client.insertRecord(tableVaksin,vaksinId,"namaVaksin","nama",vaksin.getNamaVaksin().getNama());
+                client.insertRecord(tableVaksin, vaksinId, "detail", "created_by", "Polinema");
                 return vaksin;
         }
 

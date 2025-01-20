@@ -1,8 +1,8 @@
 package com.ternak.sapi.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.ternak.sapi.model.TujuanPemeliharaan;
+import com.ternak.sapi.payload.TujuanPemeliharaanRequest;
+import org.springframework.web.bind.annotation.*;
 import com.ternak.sapi.service.JenisVaksinService;
 import com.ternak.sapi.util.AppConstants;
 import com.ternak.sapi.model.JenisVaksin;
@@ -16,26 +16,20 @@ import org.springframework.http.ResponseEntity;
 import org.apache.hadoop.classification.InterfaceAudience.Public;
 import org.apache.hadoop.hbase.protobuf.generated.ClientProtos.GetResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
-import javax.validation.Valid;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/jenisvaksin")
 public class JenisVaksinController {
 
-    private JenisVaksinService JenisVaksinService = new JenisVaksinService();
+    private JenisVaksinService jenisVaksinService = new JenisVaksinService();
 
     JenisVaksinRepository jenisVaksinRepository;
 
@@ -45,18 +39,17 @@ public class JenisVaksinController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
             @RequestParam(value = "peternakID", defaultValue = "*") String peternakID,
             @RequestParam(value = "userID", defaultValue = "*") String userID) throws IOException {
-        return JenisVaksinService.getAllJenisVaksin(page, size, userID, peternakID);
+        return jenisVaksinService.getAllJenisVaksin(page, size, userID, peternakID);
     }
 
     @PostMapping
-    public ResponseEntity<?> createJenisVaksin(@Valid @RequestBody JenisVaksinRequest jenisVaksinRequest)
-            throws IOException {
+    public ResponseEntity<?> createJenisVaksin(@Valid @RequestBody JenisVaksinRequest jenisVaksinRequest) {
         try {
-            JenisVaksin jenisVaksin = JenisVaksinService.createJenisVaksin(jenisVaksinRequest);
+            JenisVaksin jenisVaksin = jenisVaksinService.createJenisVaksin(jenisVaksinRequest);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{idJenisVaksin}")
-                    .buildAndExpand(jenisVaksin.getIdJenisVaksin()).toUri();
+                    .buildAndExpand(jenisVaksinRequest.getIdJenisVaksin()).toUri();
 
             return ResponseEntity.created(location)
                     .body(new ApiResponse(true, "Jenis Vaksin Created Successfully"));
@@ -70,43 +63,37 @@ public class JenisVaksinController {
         }
     }
 
-    @GetMapping("/{jenisvaksinId}")
-    public DefaultResponse<JenisVaksin> getJenisVaksinById(@PathVariable String jenisvaksinId) throws IOException {
-        return JenisVaksinService.getJenisVaksinById(jenisvaksinId);
-    }
+    @PutMapping("/{idJenisVaksin}")
+    public ResponseEntity<?> updateJenisVaksin(@PathVariable String idJenisVaksin,
+            @Valid @RequestBody JenisVaksinRequest jenisVaksinRequest) throws IOException {
 
-    @PutMapping("/{jenisvaksinId}")
-    public ResponseEntity<?> updateJenisVaksin(@PathVariable String jenisvaksinId,
-            @Valid @RequestBody JenisVaksinRequest jenisVaksinRequest)
-            throws IOException {
-        JenisVaksin jenisVaksin = JenisVaksinService.updateJenisVaksin(jenisvaksinId, jenisVaksinRequest);
+        JenisVaksin jenisVaksin = jenisVaksinService.update(idJenisVaksin, jenisVaksinRequest);
 
         if (jenisVaksin == null) {
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, "Jenis Vaksin ID not found"));
+                    .body(new ApiResponse(false, "Tujuan ID not found"));
         } else {
             URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/jenisvaksinId}")
+                    .fromCurrentRequest().path("/{idJenisVaksin}")
                     .buildAndExpand(jenisVaksin.getIdJenisVaksin()).toUri();
 
             return ResponseEntity.created(location)
-                    .body(new ApiResponse(true, "Jenis Hewan Updated Successfully"));
+                    .body(new ApiResponse(true, "Tujuan Updated Successfully"));
         }
-
     }
 
-    @DeleteMapping("/{jenisvaksinId}")
-    public HttpStatus deleteJenisVaksin(@PathVariable(value = "jenisvaksinId") String jenisvaksinId)
+    @DeleteMapping("/{idJenisVaksin}")
+    public HttpStatus deleteJenisVaksin(@PathVariable(value = "idJenisVaksin") String idJenisVaksin)
             throws IOException {
-        JenisVaksinService.deleteJenisVaksinById(jenisvaksinId);
-        return HttpStatus.FORBIDDEN;
+        jenisVaksinService.deleteById(idJenisVaksin);
+        return HttpStatus.NO_CONTENT;
     }
 
     @PostMapping("/bulk")
     public ResponseEntity<?> createBulkJenisVaksin(
             @RequestBody List<JenisVaksinRequest> jenisVaksinListRequests) throws IOException {
         try {
-            JenisVaksinService.createBulkJenisVaksin(jenisVaksinListRequests);
+            jenisVaksinService.createBulkJenisVaksin(jenisVaksinListRequests);
             return ResponseEntity.ok(new ApiResponse(true, "Bulk Jenis Vaksin created successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(false, e.getMessage()));

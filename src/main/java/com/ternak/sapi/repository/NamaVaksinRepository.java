@@ -52,6 +52,36 @@ public class NamaVaksinRepository {
                 size);
     }
 
+    public NamaVaksin save(NamaVaksin namaVaksin)throws IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableNamaVaksin = TableName.valueOf(tableName);
+        String rowKey = namaVaksin.getIdNamaVaksin();
+        client.insertRecord(tableNamaVaksin,rowKey,"main","idNamaVaksin",rowKey);
+        client.insertRecord(tableNamaVaksin,rowKey,"main","nama",namaVaksin.getNama());
+        client.insertRecord(tableNamaVaksin,rowKey,"main","deskripsi",namaVaksin.getDeskripsi());
+        client.insertRecord(tableNamaVaksin,rowKey,"jenisVaksin","idJenisVaksin",namaVaksin.getJenisVaksin().getIdJenisVaksin());
+        client.insertRecord(tableNamaVaksin,rowKey,"jenisVaksin","jenis",namaVaksin.getJenisVaksin().getJenis());
+        client.insertRecord(tableNamaVaksin,rowKey,"jenisVaksin","deskripsi",namaVaksin.getJenisVaksin().getDeskripsi());
+        return namaVaksin;
+    }
+
+    public NamaVaksin update(String idNamaVaksin, NamaVaksin namaVaksin)throws IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableNamaVaksin = TableName.valueOf(tableName);
+        client.insertRecord(tableNamaVaksin,idNamaVaksin,"main","nama",namaVaksin.getNama());
+        client.insertRecord(tableNamaVaksin,idNamaVaksin,"main","deskripsi",namaVaksin.getDeskripsi());
+        client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","idJenisVaksin",namaVaksin.getJenisVaksin().getIdJenisVaksin());
+        client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","jenis",namaVaksin.getJenisVaksin().getJenis());
+        client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","deskripsi",namaVaksin.getJenisVaksin().getDeskripsi());
+        return namaVaksin;
+    }
+
+    public boolean deleteById(String idNamaVaksin)throws IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        client.deleteRecord(tableName,idNamaVaksin);
+        return true;
+    }
+
     public List<NamaVaksin> saveAll(List<NamaVaksin> namaVaksinList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableNamaVaksin = TableName.valueOf(tableName);

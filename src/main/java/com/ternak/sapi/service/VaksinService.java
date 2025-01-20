@@ -72,23 +72,21 @@ public class VaksinService {
         Peternak peternakResponse = peternakRepository.findById(vaksinRequest.getPeternak_id().toString());
         Petugas petugasResponse = petugasRepository.findById(vaksinRequest.getPetugas_id().toString());
         Hewan hewanResponse = hewanRepository.findById(vaksinRequest.getHewan_id().toString());
-        if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
-                && hewanResponse.getIdHewan() != null) {
+        JenisVaksin jenisVaksin = jenisVaksinRepository.findById(vaksinRequest.getIdJenisVaksin().toString());
+        NamaVaksin namaVaksin = namaVaksinRepository.findById(vaksinRequest.getIdNamaVaksin().toString());
+        if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
+                && hewanResponse.getIdHewan() != null && jenisVaksin.getIdJenisVaksin() != null && namaVaksin.getIdNamaVaksin() != null) {
             vaksin.setIdVaksin(vaksinRequest.getIdVaksin());
-            // vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
-            // vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
             vaksin.setBatchVaksin(vaksinRequest.getBatchVaksin());
             vaksin.setVaksinKe(vaksinRequest.getVaksinKe());
-
+            vaksin.setJenisVaksin(jenisVaksin);
+            vaksin.setNamaVaksin(namaVaksin);
             vaksin.setPeternak(peternakResponse);
             vaksin.setPetugas(petugasResponse);
             vaksin.setHewan(hewanResponse);
-
-            return vaksinRepository.save(vaksin);
-        } else {
-            return null;
         }
+        return vaksinRepository.save(vaksin);
     }
 
     public DefaultResponse<Vaksin> getVaksinById(String vaksinId) throws IOException {
@@ -103,16 +101,18 @@ public class VaksinService {
         Peternak peternakResponse = peternakRepository.findById(vaksinRequest.getPeternak_id().toString());
         Petugas petugasResponse = petugasRepository.findById(vaksinRequest.getPetugas_id().toString());
         Hewan hewanResponse = hewanRepository.findById(vaksinRequest.getHewan_id().toString());
-        if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
-                && hewanResponse.getIdHewan() != null) {
-            // vaksin.setNamaVaksin(vaksinRequest.getNamaVaksin());
-            // vaksin.setJenisVaksin(vaksinRequest.getJenisVaksin());
+        JenisVaksin jenisVaksin = jenisVaksinRepository.findById(vaksinRequest.getIdJenisVaksin().toString());
+        NamaVaksin namaVaksin = namaVaksinRepository.findById(vaksinRequest.getIdNamaVaksin().toString());
+        if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
+                && hewanResponse.getIdHewan() != null && jenisVaksin.getIdJenisVaksin() != null && namaVaksin.getIdNamaVaksin() != null) {
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
+            vaksin.setBatchVaksin(vaksinRequest.getBatchVaksin());
+            vaksin.setVaksinKe(vaksinRequest.getVaksinKe());
+            vaksin.setJenisVaksin(jenisVaksin);
+            vaksin.setNamaVaksin(namaVaksin);
             vaksin.setPeternak(peternakResponse);
             vaksin.setPetugas(petugasResponse);
             vaksin.setHewan(hewanResponse);
-            vaksin.setBatchVaksin(vaksinRequest.getBatchVaksin());
-            vaksin.setVaksinKe(vaksinRequest.getVaksinKe());
 
             return vaksinRepository.update(vaksinId, vaksin);
         } else {
@@ -121,12 +121,7 @@ public class VaksinService {
     }
 
     public void deleteVaksinById(String vaksinId) throws IOException {
-        Vaksin vaksinResponse = vaksinRepository.findVaksinById(vaksinId);
-        if (vaksinResponse.isValid()) {
-            vaksinRepository.deleteById(vaksinId);
-        } else {
-            throw new ResourceNotFoundException("Vaksin", "id", vaksinId);
-        }
+        vaksinRepository.deleteById(vaksinId);
     }
 
     private void validatePageNumberAndSize(int page, int size) {

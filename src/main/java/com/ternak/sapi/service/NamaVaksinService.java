@@ -43,6 +43,33 @@ public class NamaVaksinService {
         }
     }
 
+    public NamaVaksin create(NamaVaksinRequest namaVaksinRequest)throws IOException{
+        NamaVaksin namaVaksin = new NamaVaksin();
+        JenisVaksin jenisVaksin = jenisVaksinRepository.findById(namaVaksinRequest.getIdJenisVaksin());
+        if(jenisVaksin != null){
+            namaVaksin.setIdNamaVaksin(namaVaksinRequest.getIdNamaVaksin());
+            namaVaksin.setJenisVaksin(jenisVaksin);
+            namaVaksin.setNama(namaVaksinRequest.getNama());
+            namaVaksin.setDeskripsi(namaVaksinRequest.getDeskripsi());
+        }
+        return namaVaksinRepository.save(namaVaksin);
+    }
+
+    public NamaVaksin update(String idNamaVaksin, NamaVaksinRequest namaVaksinRequest) throws IOException{
+        NamaVaksin namaVaksin = new NamaVaksin();
+        JenisVaksin jenisVaksin = jenisVaksinRepository.findById(namaVaksinRequest.getIdJenisVaksin());
+        if(jenisVaksin != null){
+            namaVaksin.setJenisVaksin(jenisVaksin);
+            namaVaksin.setNama(namaVaksinRequest.getNama());
+            namaVaksin.setDeskripsi(namaVaksinRequest.getDeskripsi());
+        }
+        return namaVaksinRepository.update(idNamaVaksin,namaVaksin);
+    }
+
+    public void deleteById(String idNamaVaksin)throws IOException{
+        namaVaksinRepository.deleteById(idNamaVaksin);
+    }
+
     @Transactional
     public void createBulkNamaVaksin(List<NamaVaksinRequest> namaVaksinRequests) throws IOException {
 
