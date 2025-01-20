@@ -38,6 +38,11 @@ public class JenisVaksin {
         this.deskripsi = deskripsi;
     }
 
+    public boolean isValid() {
+        return this.jenis != null &&
+                this.deskripsi != null;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idJenisVaksin":

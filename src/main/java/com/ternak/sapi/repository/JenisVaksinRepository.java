@@ -50,6 +50,22 @@ public class JenisVaksinRepository {
                 size);
     }
 
+    public JenisVaksin save(JenisVaksin jenisVaksin) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        String rowKey = jenisVaksin.getIdJenisVaksin();
+        TableName tableJenisVaksin = TableName.valueOf(tableName);
+        client.insertRecord(tableJenisVaksin, rowKey, "main", "idJenisVaksin", rowKey);
+        if (jenisVaksin.getJenis() != null) {
+            client.insertRecord(tableJenisVaksin, rowKey, "main", "jenis", jenisVaksin.getJenis());
+        }
+        if (jenisVaksin.getDeskripsi() != null) {
+            client.insertRecord(tableJenisVaksin, rowKey, "main", "deskripsi", jenisVaksin.getDeskripsi());
+        }
+        client.insertRecord(tableJenisVaksin, rowKey, "detail", "created_by", "Polinema");
+        return jenisVaksin;
+    }
+
     public List<JenisVaksin> saveAll(List<JenisVaksin> jenisVaksinList) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableJenisVaksin = TableName.valueOf(tableName);
@@ -86,6 +102,26 @@ public class JenisVaksinRepository {
         return jenisVaksinList;
     }
 
+    public JenisVaksin update(String jenisvaksinId, JenisVaksin jenisVaksin) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableJenisVaksin = TableName.valueOf(tableName);
+        if (jenisVaksin.getJenis() != null) {
+            client.insertRecord(tableJenisVaksin, jenisvaksinId, "main", "jenis", jenisVaksin.getJenis());
+        }
+        if (jenisVaksin.getDeskripsi() != null) {
+            client.insertRecord(tableJenisVaksin, jenisvaksinId, "main", "deskripsi", jenisVaksin.getDeskripsi());
+        }
+        client.insertRecord(tableJenisVaksin, jenisvaksinId, "detail", "updated_by", "Polinema");
+        return jenisVaksin;
+    }
+
+    public boolean deleteById(String jenisvaksinId) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        client.deleteRecord(tableName, jenisvaksinId);
+        return true;
+    }
+
     public JenisVaksin findById(String idJenisVaksin) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -97,7 +133,10 @@ public class JenisVaksinRepository {
         columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
-        return client.showDataTable(tableJenisVaksin.toString(), columnMapping, idJenisVaksin, JenisVaksin.class);
+        JenisVaksin jenisVaksin = client.getDataByColumn(tableJenisVaksin.toString(), columnMapping, "main",
+                "idJenisVaksin", idJenisVaksin, JenisVaksin.class);
+        System.out.println("Jenis vaksi ditemukan " + jenisVaksin);
+        return jenisVaksin.getIdJenisVaksin() != null ? jenisVaksin : null;
     }
 
     public JenisVaksin findByJenisVaksin(String jenis) throws IOException {
@@ -118,6 +157,17 @@ public class JenisVaksinRepository {
                 JenisVaksin.class);
         return jenisVaksin;
 
+    }
+
+    public boolean existsByJenis(String jenis) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableJenisVaksin = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("jenis", "jenis");
+
+        JenisVaksin jenisVaksin = client.getDataByColumn(tableJenisVaksin.toString(), columnMapping, "main", "jenis",
+                jenis, JenisVaksin.class);
+        return jenisVaksin.getJenis() != null;
     }
 
 }

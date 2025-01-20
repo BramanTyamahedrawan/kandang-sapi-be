@@ -1,10 +1,15 @@
 package com.ternak.sapi.service;
 
 import com.ternak.sapi.exception.BadRequestException;
+import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.JenisVaksin;
+import com.ternak.sapi.model.NamaVaksin;
+import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.JenisVaksinRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.JenisVaksinRepository;
+import com.ternak.sapi.repository.NamaVaksinRepository;
+
 // import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 // import org.slf4j.Logger;
@@ -19,11 +24,12 @@ import java.util.HashSet;
 
 public class JenisVaksinService {
     private JenisVaksinRepository jenisVaksinRepository = new JenisVaksinRepository();
+    private NamaVaksinRepository namaVaksinRepository = new NamaVaksinRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(JenisVaksinService.class);
 
-    public PagedResponse<JenisVaksin> getAllJenisVaksin(int page, int size, String userID, String jenisHewanID,
+    public PagedResponse<JenisVaksin> getAllJenisVaksin(int page, int size, String userID,
             String peternakID) throws IOException {
         validatePageNumberAndSize(page, size);
         List<JenisVaksin> jenisVaksinResponse = new ArrayList<>();
@@ -44,6 +50,49 @@ public class JenisVaksinService {
         if (size > AppConstants.MAX_PAGE_SIZE) {
             throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
         }
+    }
+
+    public JenisVaksin createJenisVaksin(JenisVaksinRequest jenisVaksinRequest) throws IOException {
+        // Validasi jika jenis vaksin sudah ada
+        if (jenisVaksinRepository.existsByJenis(jenisVaksinRequest.getJenis())) {
+            throw new IllegalArgumentException("Jenis Vaksin sudah terdaftar!");
+        }
+
+        JenisVaksin jenisVaksin = new JenisVaksin();
+        jenisVaksin.setIdJenisVaksin(jenisVaksinRequest.getIdJenisVaksin());
+        jenisVaksin.setJenis(jenisVaksinRequest.getJenis());
+        jenisVaksin.setDeskripsi(jenisVaksinRequest.getDeskripsi());
+        return jenisVaksinRepository.save(jenisVaksin);
+    }
+
+    public DefaultResponse<JenisVaksin> getJenisVaksinById(String jenisvaksinId) throws IOException {
+        // Retrieve Hewan
+        JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findById(jenisvaksinId);
+        return new DefaultResponse<>(jenisVaksinResponse.isValid() ? jenisVaksinResponse : null,
+                jenisVaksinResponse.isValid() ? 1 : 0, "Successfully get data");
+    }
+
+    public JenisVaksin updateJenisVaksin(String jenisvaksinId, JenisVaksinRequest jenisVaksinRequest)
+            throws IOException {
+        JenisVaksin jenisVaksin = new JenisVaksin();
+        jenisVaksin.setJenis(jenisVaksinRequest.getJenis());
+        jenisVaksin.setDeskripsi(jenisVaksinRequest.getDeskripsi());
+
+        // List<NamaVaksin> namaVaksinList =
+        // namaVaksinRepository.findByNamaVaksin(idJenisVaksin);
+        // if (namaVaksinList != null) {
+        // for (NamaVaksin namaVaksin : namaVaksinList) {
+        // namaVaksin.setJenisVaksin(jenisVaksin);
+        // namaVaksinRepository.updateJenisVaksinByNamaVaksin(namaVaksin.getIdNamaVaksin(),
+        // namaVaksin);
+        // }
+        // }
+
+        return jenisVaksinRepository.update(jenisvaksinId, jenisVaksin);
+    }
+
+    public void deleteJenisVaksinById(String jenisvaksinId) throws IOException {
+        jenisVaksinRepository.deleteById(jenisvaksinId);
     }
 
     @Transactional
@@ -86,4 +135,5 @@ public class JenisVaksinService {
 
         System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete);
     }
+
 }
