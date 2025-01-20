@@ -46,6 +46,25 @@ public class JenisVaksinService {
         }
     }
 
+    public JenisVaksin createJenisVaksin(JenisVaksinRequest jenisVaksinRequest) throws IOException{
+        JenisVaksin jenisVaksin = new JenisVaksin();
+        jenisVaksin.setIdJenisVaksin(jenisVaksinRequest.getIdJenisVaksin());
+        jenisVaksin.setJenis(jenisVaksinRequest.getJenis());
+        jenisVaksin.setDeskripsi(jenisVaksinRequest.getDeskripsi());
+        return jenisVaksinRepository.save(jenisVaksin);
+    }
+
+    public JenisVaksin update(String idJenisVaksin,JenisVaksinRequest jenisVaksinRequest)throws IOException{
+        JenisVaksin jenisVaksin = new JenisVaksin();
+        jenisVaksin.setJenis(jenisVaksinRequest.getJenis());
+        jenisVaksin.setDeskripsi(jenisVaksinRequest.getDeskripsi());
+        return jenisVaksinRepository.update(idJenisVaksin,jenisVaksin);
+    }
+
+    public void deleteById (String idJenisVaksin) throws IOException{
+        jenisVaksinRepository.deleteById(idJenisVaksin);
+    }
+
     @Transactional
     public void createBulkJenisVaksin(List<JenisVaksinRequest> jenisVaksinRequests) throws IOException {
         System.out.println("Memulai proses penyimpanan data jenis hewan secara bulk...");
