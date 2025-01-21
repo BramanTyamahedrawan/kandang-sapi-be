@@ -3,6 +3,7 @@ package com.ternak.sapi.repository;
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
+import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -22,12 +23,12 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
-        columnMapping.put("petugasId","petugasId");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
         columnMapping.put("email", "email");
-        columnMapping.put("wilayah","wilayah");
+        columnMapping.put("wilayah", "wilayah");
         columnMapping.put("job", "job");
 
         return client.showListTable(tablePetugas.toString(), columnMapping, Petugas.class, size);
@@ -40,7 +41,7 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
-        columnMapping.put("petugasId","petugasId");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
@@ -57,7 +58,7 @@ public class PetugasRepository {
         String rowKey = petugas.getPetugasId();
 
         TableName tablePetugas = TableName.valueOf(tableName);
-        client.insertRecord(tablePetugas,rowKey,"main","petugasId", petugas.getPetugasId());
+        client.insertRecord(tablePetugas, rowKey, "main", "petugasId", petugas.getPetugasId());
         client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
         client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
         client.insertRecord(tablePetugas, rowKey, "main", "noTelp", petugas.getNoTelp());
@@ -91,7 +92,7 @@ public class PetugasRepository {
         String rowKey = petugas.getPetugasId() != null ? petugas.getPetugasId() : UUID.randomUUID().toString();
 
         TableName tablePetugas = TableName.valueOf(tableName);
-        if(!existsByNamaPetugas(petugas.getNamaPetugas())) {
+        if (!existsByNamaPetugas(petugas.getNamaPetugas())) {
             client.insertRecord(tablePetugas, rowKey, "main", "petugasId", rowKey);
             client.insertRecord(tablePetugas, rowKey, "main", "nikPetugas", petugas.getNikPetugas());
             client.insertRecord(tablePetugas, rowKey, "main", "namaPetugas", petugas.getNamaPetugas());
@@ -207,16 +208,17 @@ public class PetugasRepository {
         columnMapping.put("wilayah", "wilayah");
 
         Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "petugasId",
-               petugasId, Petugas.class);
+                petugasId, Petugas.class);
         return petugas.getPetugasId() != null ? petugas : null; // Jika ada data dengan nikPetugas yang sama
     }
 
     public Petugas update(String petugasId, Petugas petugas) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf(tableName);
-        System.out.println("Data " + petugasId + petugas.getNamaPetugas() + petugas.getNikPetugas() +petugas.getEmail() + petugas.getWilayah() + petugas.getJob() + petugas.getNoTelp());
+        System.out.println("Data " + petugasId + petugas.getNamaPetugas() + petugas.getNikPetugas() + petugas.getEmail()
+                + petugas.getWilayah() + petugas.getJob() + petugas.getNoTelp());
 
-//        client.insertRecord(tablePetugas, petugasId, "main", "petugasId",petugasId);
+        // client.insertRecord(tablePetugas, petugasId, "main", "petugasId",petugasId);
         client.insertRecord(tablePetugas, petugasId, "main", "nikPetugas", petugas.getNikPetugas());
         client.insertRecord(tablePetugas, petugasId, "main", "namaPetugas", petugas.getNamaPetugas());
         client.insertRecord(tablePetugas, petugasId, "main", "noTelp", petugas.getNoTelp());
@@ -266,12 +268,12 @@ public class PetugasRepository {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tablePetugas = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
-        columnMapping.put("petugasId","petugasId");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
         columnMapping.put("email", "email");
-        columnMapping.put("wilayah","wilayah");
+        columnMapping.put("wilayah", "wilayah");
         columnMapping.put("job", "job");
 
         Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "nikPetugas",
@@ -285,7 +287,7 @@ public class PetugasRepository {
         TableName tablePetugas = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
 
-        columnMapping.put("petugasId","petugasId");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPetugas", "nikPetugas");
         columnMapping.put("namaPetugas", "namaPetugas");
         columnMapping.put("noTelp", "noTelp");
@@ -316,7 +318,8 @@ public class PetugasRepository {
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("namaPetugas", "namaPetugas");
 
-        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "namaPetugas", namaPetugas,
+        Petugas petugas = client.getDataByColumn(tablePetugas.toString(), columnMapping, "main", "namaPetugas",
+                namaPetugas,
                 Petugas.class);
         return petugas.getNamaPetugas() != null; // Jika ada data dengan email yang sama
     }

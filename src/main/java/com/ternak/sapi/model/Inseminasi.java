@@ -17,19 +17,14 @@ public class Inseminasi {
     private String idPembuatan;
     private String bangsaPejantan;
     private String produsen;
-    private String lokasi;
-    private String desa;
-    private String kecamatan;
-    private String kabupaten;
-    private String provinsi;
 
     public Inseminasi() {
     }
 
     public Inseminasi(String idInseminasi, String tanggalIB, Peternak peternak, Hewan hewan, Petugas petugas,
             Kandang kandang, JenisHewan jenisHewan, RumpunHewan rumpunHewan, String ib,
-            String idPejantan, String idPembuatan, String bangsaPejantan, String produsen, String lokasi, String desa,
-            String kecamatan, String kabupaten, String provinsi, String ib1, String ib2, String ib3, String ibLain) {
+            String idPejantan, String idPembuatan, String bangsaPejantan, String produsen, String ib1, String ib2,
+            String ib3, String ibLain) {
         this.idInseminasi = idInseminasi;
         this.tanggalIB = tanggalIB;
         this.peternak = peternak;
@@ -46,11 +41,6 @@ public class Inseminasi {
         this.idPembuatan = idPembuatan;
         this.bangsaPejantan = bangsaPejantan;
         this.produsen = produsen;
-        this.lokasi = lokasi;
-        this.desa = desa;
-        this.kecamatan = kecamatan;
-        this.kabupaten = kabupaten;
-        this.provinsi = provinsi;
     }
 
     public String getIdInseminasi() {
@@ -181,46 +171,6 @@ public class Inseminasi {
         this.produsen = produsen;
     }
 
-    public String getLokasi() {
-        return lokasi;
-    }
-
-    public void setLokasi(String lokasi) {
-        this.lokasi = lokasi;
-    }
-
-    public String getDesa() {
-        return desa;
-    }
-
-    public void setDesa(String desa) {
-        this.desa = desa;
-    }
-
-    public String getKecamatan() {
-        return kecamatan;
-    }
-
-    public void setKecamatan(String kecamatan) {
-        this.kecamatan = kecamatan;
-    }
-
-    public String getKabupaten() {
-        return kabupaten;
-    }
-
-    public void setKabupaten(String kabupaten) {
-        this.kabupaten = kabupaten;
-    }
-
-    public String getProvinsi() {
-        return provinsi;
-    }
-
-    public void setProvinsi(String provinsi) {
-        this.provinsi = provinsi;
-    }
-
     public boolean isValid() {
         return this.idInseminasi != null;
     }
@@ -256,21 +206,6 @@ public class Inseminasi {
                 break;
             case "produsen":
                 this.produsen = value;
-                break;
-            case "lokasi":
-                this.lokasi = value;
-                break;
-            case "desa":
-                this.desa = value;
-                break;
-            case "kecamatan":
-                this.kecamatan = value;
-                break;
-            case "kabupaten":
-                this.kabupaten = value;
-                break;
-            case "provinsi":
-                this.provinsi = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);

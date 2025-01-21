@@ -58,16 +58,6 @@ public class VaksinService {
             throw new IllegalArgumentException("Vaksin ID sudah terdaftar!");
         }
 
-        // Validasi hewan ID, pastikan hewan tersebut belum divaksin sebelumnya dengan
-        // kombinasi namaVaksin dan vaksinKe
-        // if (vaksinRepository.existsByHewanIdAndNamaVaksinAndVaksinKe(
-        // vaksinRequest.getHewan_id().toString(),
-        // vaksinRequest.getNamaVaksin(),
-        // vaksinRequest.getVaksinKe())) {
-        // throw new IllegalArgumentException(
-        // "Hewan ini sudah divaksin dengan vaksin yang sama pada urutan yang sama!");
-        // }
-
         Vaksin vaksin = new Vaksin();
         Peternak peternakResponse = peternakRepository.findById(vaksinRequest.getPeternak_id().toString());
         Petugas petugasResponse = petugasRepository.findById(vaksinRequest.getPetugas_id().toString());
@@ -75,7 +65,8 @@ public class VaksinService {
         JenisVaksin jenisVaksin = jenisVaksinRepository.findById(vaksinRequest.getIdJenisVaksin().toString());
         NamaVaksin namaVaksin = namaVaksinRepository.findById(vaksinRequest.getIdNamaVaksin().toString());
         if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
-                && hewanResponse.getIdHewan() != null && jenisVaksin.getIdJenisVaksin() != null && namaVaksin.getIdNamaVaksin() != null) {
+                && hewanResponse.getIdHewan() != null && jenisVaksin.getIdJenisVaksin() != null
+                && namaVaksin.getIdNamaVaksin() != null) {
             vaksin.setIdVaksin(vaksinRequest.getIdVaksin());
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
             vaksin.setBatchVaksin(vaksinRequest.getBatchVaksin());
@@ -104,7 +95,8 @@ public class VaksinService {
         JenisVaksin jenisVaksin = jenisVaksinRepository.findById(vaksinRequest.getIdJenisVaksin().toString());
         NamaVaksin namaVaksin = namaVaksinRepository.findById(vaksinRequest.getIdNamaVaksin().toString());
         if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
-                && hewanResponse.getIdHewan() != null && jenisVaksin.getIdJenisVaksin() != null && namaVaksin.getIdNamaVaksin() != null) {
+                && hewanResponse.getIdHewan() != null && jenisVaksin.getIdJenisVaksin() != null
+                && namaVaksin.getIdNamaVaksin() != null) {
             vaksin.setTglVaksin(vaksinRequest.getTglVaksin());
             vaksin.setBatchVaksin(vaksinRequest.getBatchVaksin());
             vaksin.setVaksinKe(vaksinRequest.getVaksinKe());

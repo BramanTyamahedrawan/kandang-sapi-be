@@ -58,7 +58,7 @@ public class KandangService {
         // }
 
         Kandang kandang = new Kandang();
-        Peternak peternakResponse = peternakRepository.findById(kandangRequest.getidPeternak().toString());
+        Peternak peternakResponse = peternakRepository.findById(kandangRequest.getIdPeternak().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan());
         if (peternakResponse.getIdPeternak() != null && jenisHewanResponse.getIdJenisHewan() != null) {
             kandang.setIdKandang(kandangRequest.getIdKandang());
@@ -88,10 +88,11 @@ public class KandangService {
 
     public Kandang updateKandang(String kandangId, KandangRequest kandangRequest, String savePath) throws IOException {
         Kandang kandangSave = null;
-        Peternak peternakResponse = peternakRepository.findById(kandangRequest.getidPeternak().toString());
+        Peternak peternakResponse = peternakRepository.findById(kandangRequest.getIdPeternak().toString());
         Kandang kandangResponse = kandangRepository.findByFotoKandang(kandangId);
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan().toString());
-        if (kandangResponse != null && peternakResponse != null && peternakResponse.getIdPeternak() != null && jenisHewanResponse.getIdJenisHewan() != null) {
+        if (kandangResponse != null && peternakResponse != null && peternakResponse.getIdPeternak() != null
+                && jenisHewanResponse.getIdJenisHewan() != null) {
             System.out.println("file = " + kandangResponse.getFile_path());
 
             Kandang kandang = new Kandang();
@@ -115,10 +116,10 @@ public class KandangService {
             kandang.setJenisHewan(jenisHewanResponse);
 
             List<Hewan> hewanList = hewanRepository.findByKandangId(kandangId);
-            if(hewanList != null){
-                for(Hewan hewan : hewanList){
+            if (hewanList != null) {
+                for (Hewan hewan : hewanList) {
                     hewan.setKandang(kandang);
-                    hewanRepository.updateKandangByHewan(hewan.getIdHewan(),hewan);
+                    hewanRepository.updateKandangByHewan(hewan.getIdHewan(), hewan);
                 }
             }
 
@@ -127,7 +128,6 @@ public class KandangService {
 
         return kandangSave;
     }
-
 
     public void deleteKandangById(String kandangId) throws IOException {
         // Kandang kandangResponse = kandangRepository.findById(kandangId);
@@ -174,11 +174,13 @@ public class KandangService {
                     peternakResponse.setNamaPeternak("Peternak Tidak Diketahui");
                 }
 
-                JenisHewan jenisHewanResponse = jenisHewanRepository.findById(request.getIdJenisHewan());
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
                 if (request.getIdJenisHewan() == null) {
                     jenisHewanResponse = new JenisHewan();
-                    jenisHewanResponse.setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : "-");
-                    jenisHewanResponse.setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
+                    jenisHewanResponse
+                            .setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : "-");
+                    jenisHewanResponse
+                            .setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
                     jenisHewanResponse.setDeskripsi("-");
                 }
                 // Buat objek Kandang

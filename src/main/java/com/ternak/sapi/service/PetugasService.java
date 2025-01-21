@@ -2,8 +2,10 @@ package com.ternak.sapi.service;
 
 // import com.ternak.sapi.repository.UserRepository;
 import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.InseminasiRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.model.Petugas;
@@ -31,6 +33,7 @@ public class PetugasService {
     private PetugasRepository petugasRepository = new PetugasRepository();
     private PeternakRepository peternakRepository = new PeternakRepository();
     private HewanRepository hewanRepository = new HewanRepository();
+    private InseminasiRepository inseminasiRepository = new InseminasiRepository();
     // private UserRepository userRepository = new UserRepository();
 
     // private static final Logger logger =
@@ -75,7 +78,8 @@ public class PetugasService {
 
         // Membuat objek Petugas dan mengisi datanya
         Petugas petugas = new Petugas();
-        petugas.setPetugasId(petugasRequest.getPetugasId() != null ? petugasRequest.getPetugasId() : UUID.randomUUID().toString());
+        petugas.setPetugasId(
+                petugasRequest.getPetugasId() != null ? petugasRequest.getPetugasId() : UUID.randomUUID().toString());
         petugas.setNikPetugas(petugasRequest.getNikPetugas());
         petugas.setNamaPetugas(petugasRequest.getNamaPetugas());
         petugas.setNoTelp(petugasRequest.getNoTelp());
@@ -89,7 +93,6 @@ public class PetugasService {
         return dataPetugas;
     }
 
-
     public DefaultResponse<Petugas> getPetugasById(String petugasId) throws IOException {
         // Retrieve Petugas
         Petugas petugasResponse = petugasRepository.findById(petugasId);
@@ -97,10 +100,10 @@ public class PetugasService {
                 petugasResponse.isValid() ? 1 : 0, "Successfully get data");
     }
 
-//    public void save(Hewan hewan) throws IOException {
-//        // Simulasi penyimpanan hewan, sesuaikan dengan HBaseClient Anda
-//        hBaseClient.saveData("hewanTable", hewan);
-//    }
+    // public void save(Hewan hewan) throws IOException {
+    // // Simulasi penyimpanan hewan, sesuaikan dengan HBaseClient Anda
+    // hBaseClient.saveData("hewanTable", hewan);
+    // }
 
     public Petugas updatePetugas(String petugasId, PetugasRequest petugasRequest) throws IOException {
 
@@ -113,7 +116,7 @@ public class PetugasService {
         petugas.setWilayah(petugasRequest.getWilayah());
 
         List<Hewan> hewanList = hewanRepository.findByPetugasId(petugasId);
-        if(hewanList != null) {
+        if (hewanList != null) {
             for (Hewan hewan : hewanList) {
                 // Update field hewan sesuai dengan kebutuhan
                 hewan.setPetugas(petugas);
@@ -131,12 +134,21 @@ public class PetugasService {
             }
         }
 
+        List<Inseminasi> inseminasiList = inseminasiRepository.findByPetugasId(petugasId);
+        if (inseminasiList != null) {
+            // Jika inseminasi ditemukan, lakukan update pada petugas yang terkait
+            for (Inseminasi inseminasi : inseminasiList) {
+                // Update field hewan sesuai dengan kebutuhan
+                inseminasi.setPetugas(petugas);
+                inseminasiRepository.updatePetugasByInseminasi(inseminasi.getIdInseminasi(), inseminasi);
+            }
+        }
+
         return petugasRepository.update(petugasId, petugas);
     }
 
-
     public void deletePetugasById(String idPetugas) throws IOException {
-       petugasRepository.deleteById(idPetugas);
+        petugasRepository.deleteById(idPetugas);
     }
 
     private void validatePageNumberAndSize(int page, int size) {
@@ -198,7 +210,8 @@ public class PetugasService {
 
             // Create the Petugas object and add to the list
             Petugas petugas = new Petugas();
-            petugas.setPetugasId(request.getPetugasId() != null ? request.getPetugasId() : UUID.randomUUID().toString());
+            petugas.setPetugasId(
+                    request.getPetugasId() != null ? request.getPetugasId() : UUID.randomUUID().toString());
             petugas.setNikPetugas(request.getNikPetugas());
             petugas.setNamaPetugas(request.getNamaPetugas());
             petugas.setNoTelp(request.getNoTelp());
@@ -242,7 +255,8 @@ public class PetugasService {
             }
             // Create the Petugas object and add to the list
             Petugas petugas = new Petugas();
-            petugas.setPetugasId(request.getPetugasId() != null ? request.getPetugasId() : UUID.randomUUID().toString());
+            petugas.setPetugasId(
+                    request.getPetugasId() != null ? request.getPetugasId() : UUID.randomUUID().toString());
             petugas.setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas() : "-");
             petugas.setNamaPetugas(request.getNamaPetugas() != null ? request.getNamaPetugas() : "-");
             petugas.setNoTelp(request.getNoTelp() != null ? request.getNoTelp() : "-");

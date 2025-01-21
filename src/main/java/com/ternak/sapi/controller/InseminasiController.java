@@ -1,10 +1,12 @@
 package com.ternak.sapi.controller;
 
 import com.ternak.sapi.model.Inseminasi;
+import com.ternak.sapi.model.Vaksin;
 import com.ternak.sapi.payload.ApiResponse;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.InseminasiRequest;
 import com.ternak.sapi.payload.PagedResponse;
+import com.ternak.sapi.payload.VaksinRequest;
 import com.ternak.sapi.service.InseminasiService;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.http.HttpStatus;

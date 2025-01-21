@@ -151,7 +151,7 @@ public class PeternakService {
     }
 
     public void deletePeternakById(String peternakId) throws IOException {
-            peternakRepository.deleteById(peternakId);
+        peternakRepository.deleteById(peternakId);
     }
 
     private void validatePageNumberAndSize(int page, int size) {
@@ -230,8 +230,8 @@ public class PeternakService {
                 peternak.setEmail(request.getEmail());
                 peternak.setNoTelepon(request.getNoTelepon());
                 peternak.setNamaPeternak(request.getNamaPeternak());
-                peternak.setLokasi(request.getLokasi() != null ? request.getLokasi() : "Lokasi tidak diketahui");
-                peternak.setAlamat(request.getAlamat() != null ? request.getAlamat() : "Alamat tidak diketahui");
+                peternak.setLokasi(request.getLokasi() != null ? request.getLokasi() : "-");
+                peternak.setAlamat(request.getAlamat() != null ? request.getAlamat() : "-");
                 peternak.setDusun(request.getDusun());
                 peternak.setDesa(request.getDesa());
                 peternak.setKecamatan(request.getKecamatan());

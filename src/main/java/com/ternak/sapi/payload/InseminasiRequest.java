@@ -3,7 +3,6 @@ package com.ternak.sapi.payload;
 public class InseminasiRequest {
     private String idInseminasi;
     private String tanggalIB;
-    private String petugas_id;
     private String ib1;
     private String ib2;
     private String ib3;
@@ -50,6 +49,7 @@ public class InseminasiRequest {
     private String longitude;
 
     // Petugas
+    private String petugasId;
     private String nikPetugas;
     private String namaPetugas;
     private String emailPetugas;
@@ -82,7 +82,7 @@ public class InseminasiRequest {
     }
 
     public InseminasiRequest(String idInseminasi, String tanggalIB, String idPeternak,
-            String idHewan, String petugas_id, String ib, String idPejantan, String idPembuatan,
+            String idHewan, String petugasId, String ib, String idPejantan, String idPembuatan,
             String bangsaPejantan, String produsen, String lokasi, String desa, String kecamatan, String kabupaten,
             String provinsi, String ib1, String ib2, String ib3, String ibLain, String namaPeternak, String alamat,
             String email, String jenisKelamin, String noTelepon, String idIsikhnas, String tanggalPendaftaran,
@@ -98,7 +98,7 @@ public class InseminasiRequest {
         this.tanggalIB = tanggalIB;
         this.idPeternak = idPeternak;
         this.idHewan = idHewan;
-        this.petugas_id = petugas_id;
+        this.petugasId = petugasId;
         this.ib1 = ib1;
         this.ib2 = ib2;
         this.ib3 = ib3;
@@ -195,12 +195,12 @@ public class InseminasiRequest {
         this.idHewan = idHewan;
     }
 
-    public String getPetugas_id() {
-        return petugas_id;
+    public String getPetugasId() {
+        return petugasId;
     }
 
-    public void setPetugas_id(String petugas_id) {
-        this.petugas_id = petugas_id;
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
     }
 
     public String getIb1() {
@@ -699,8 +699,8 @@ public class InseminasiRequest {
             case "idHewan":
                 this.idHewan = value;
                 break;
-            case "petugas_id":
-                this.petugas_id = value;
+            case "petugasId":
+                this.petugasId = value;
                 break;
             case "ib1":
                 this.ib1 = value;

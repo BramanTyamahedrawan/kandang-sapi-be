@@ -397,9 +397,6 @@ public class KelahiranRepository {
                                                         "bangsaPejantan",
                                                         safeString(inseminasi.getBangsaPejantan()));
                                         client.insertRecord(tableKelahiran, safeString(kelahiran.getIdKejadian()),
-                                                        "inseminasi", "lokasi",
-                                                        safeString(inseminasi.getLokasi()));
-                                        client.insertRecord(tableKelahiran, safeString(kelahiran.getIdKejadian()),
                                                         "inseminasi", "ib1",
                                                         safeString(inseminasi.getIb1()));
                                         client.insertRecord(tableKelahiran, safeString(kelahiran.getIdKejadian()),

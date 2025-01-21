@@ -70,15 +70,24 @@ public class InseminasiService {
     }
 
     public Inseminasi createInseminasi(InseminasiRequest inseminasiRequest) throws IOException {
+        if (inseminasiRepository.existsById(inseminasiRequest.getIdInseminasi())) {
+            throw new BadRequestException("Inseminasi ID " + inseminasiRequest.getIdInseminasi() + " already exists");
+        }
+
         Inseminasi inseminasi = new Inseminasi();
         Peternak peternakResponse = peternakRepository.findById(inseminasiRequest.getIdPeternak().toString());
-        Petugas petugasResponse = petugasRepository.findById(inseminasiRequest.getPetugas_id().toString());
+        Petugas petugasResponse = petugasRepository.findById(inseminasiRequest.getPetugasId().toString());
         Hewan hewanResponse = hewanRepository.findById(inseminasiRequest.getIdHewan().toString());
-        if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
-                && hewanResponse.getIdHewan() != null) {
+        RumpunHewan rumpunHewanResponse = rumpunHewanRepository
+                .findById(inseminasiRequest.getIdRumpunHewan().toString());
+        if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
+                && hewanResponse.getIdHewan() != null && rumpunHewanResponse.getIdRumpunHewan() != null) {
             inseminasi.setIdInseminasi(inseminasiRequest.getIdInseminasi());
             inseminasi.setTanggalIB(inseminasiRequest.getTanggalIB());
             inseminasi.setIb1(inseminasiRequest.getIb1());
+            inseminasi.setIb2(inseminasiRequest.getIb2());
+            inseminasi.setIb3(inseminasiRequest.getIb3());
+            inseminasi.setIbLain(inseminasiRequest.getIbLain());
             inseminasi.setIdPejantan(inseminasiRequest.getIdPejantan());
             inseminasi.setIdPembuatan(inseminasiRequest.getIdPembuatan());
             inseminasi.setBangsaPejantan(inseminasiRequest.getBangsaPejantan());
@@ -86,6 +95,7 @@ public class InseminasiService {
             inseminasi.setPeternak(peternakResponse);
             inseminasi.setPetugas(petugasResponse);
             inseminasi.setHewan(hewanResponse);
+            inseminasi.setRumpunHewan(rumpunHewanResponse);
 
             return inseminasiRepository.save(inseminasi);
         } else {
@@ -103,20 +113,31 @@ public class InseminasiService {
     public Inseminasi updateInseminasi(String inseminasiId, InseminasiRequest inseminasiRequest) throws IOException {
         Inseminasi inseminasi = new Inseminasi();
         Peternak peternakResponse = peternakRepository.findById(inseminasiRequest.getIdPeternak().toString());
-        Petugas petugasResponse = petugasRepository.findById(inseminasiRequest.getPetugas_id().toString());
+        Petugas petugasResponse = petugasRepository.findById(inseminasiRequest.getPetugasId().toString());
         Hewan hewanResponse = hewanRepository.findById(inseminasiRequest.getIdHewan().toString());
+        RumpunHewan rumpunHewanResponse = rumpunHewanRepository
+                .findById(inseminasiRequest.getIdRumpunHewan().toString());
+        if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
+                && hewanResponse.getIdHewan() != null && rumpunHewanResponse.getIdRumpunHewan() != null) {
 
-        inseminasi.setTanggalIB(inseminasiRequest.getTanggalIB());
-        inseminasi.setIb1(inseminasiRequest.getIb1());
-        inseminasi.setIdPejantan(inseminasiRequest.getIdPejantan());
-        inseminasi.setIdPembuatan(inseminasiRequest.getIdPembuatan());
-        inseminasi.setBangsaPejantan(inseminasiRequest.getBangsaPejantan());
-        inseminasi.setProdusen(inseminasiRequest.getProdusen());
-        inseminasi.setPeternak(peternakResponse);
-        inseminasi.setPetugas(petugasResponse);
-        inseminasi.setHewan(hewanResponse);
+            inseminasi.setTanggalIB(inseminasiRequest.getTanggalIB());
+            inseminasi.setIb1(inseminasiRequest.getIb1());
+            inseminasi.setIb2(inseminasiRequest.getIb2());
+            inseminasi.setIb3(inseminasiRequest.getIb3());
+            inseminasi.setIbLain(inseminasiRequest.getIbLain());
+            inseminasi.setIdPejantan(inseminasiRequest.getIdPejantan());
+            inseminasi.setIdPembuatan(inseminasiRequest.getIdPembuatan());
+            inseminasi.setBangsaPejantan(inseminasiRequest.getBangsaPejantan());
+            inseminasi.setProdusen(inseminasiRequest.getProdusen());
+            inseminasi.setPeternak(peternakResponse);
+            inseminasi.setPetugas(petugasResponse);
+            inseminasi.setHewan(hewanResponse);
+            inseminasi.setRumpunHewan(rumpunHewanResponse);
 
-        return inseminasiRepository.update(inseminasiId, inseminasi);
+            return inseminasiRepository.update(inseminasiId, inseminasi);
+        } else {
+            return null;
+        }
 
     }
 
@@ -158,11 +179,6 @@ public class InseminasiService {
                 Inseminasi inseminasi = new Inseminasi();
                 inseminasi.setIdInseminasi(request.getIdInseminasi());
                 inseminasi.setTanggalIB(request.getTanggalIB());
-                inseminasi.setLokasi(request.getLokasi());
-                inseminasi.setProvinsi(request.getProvinsi());
-                inseminasi.setKabupaten(request.getKabupaten());
-                inseminasi.setKecamatan(request.getKecamatan());
-                inseminasi.setDesa(request.getDesa());
                 inseminasi.setIb1(request.getIb1());
                 inseminasi.setIb2(request.getIb2());
                 inseminasi.setIb3(request.getIb3());
@@ -374,8 +390,10 @@ public class InseminasiService {
                 System.out.println("id Kandang diterima dari frontend (inseminasi): " + request.getIdKandang());
                 Kandang kandangResponse = kandangRepository.findByIdKandang(request.getIdKandang());
 
-                System.out.println("Jenis Hewan diterima dari frontend (inseminasi): " + request.getJenis());
-                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
+                // System.out.println("Jenis Hewan diterima dari frontend (inseminasi): " +
+                // request.getJenis());
+                // JenisHewan jenisHewanResponse =
+                // jenisHewanRepository.findByJenis(request.getJenis());
 
                 System.out.println("Rumpun Hewan diterima dari frontend (inseminasi): " + request.getRumpun());
                 RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpun());
@@ -391,11 +409,6 @@ public class InseminasiService {
                 Inseminasi inseminasi = new Inseminasi();
                 inseminasi.setIdInseminasi(request.getIdInseminasi());
                 inseminasi.setTanggalIB(request.getTanggalIB());
-                inseminasi.setLokasi(request.getLokasi());
-                // inseminasi.setProvinsi(request.getProvinsi());
-                // inseminasi.setKabupaten(request.getKabupaten());
-                // inseminasi.setKecamatan(request.getKecamatan());
-                // inseminasi.setDesa(request.getDesa());
                 inseminasi.setIb1(request.getIb1());
                 inseminasi.setIb2(request.getIb2());
                 inseminasi.setIb3(request.getIb3());
@@ -408,7 +421,7 @@ public class InseminasiService {
                 inseminasi.setPetugas(petugasResponse);
                 inseminasi.setPeternak(peternakResponse);
                 inseminasi.setKandang(kandangResponse);
-                inseminasi.setJenisHewan(jenisHewanResponse);
+                // inseminasi.setJenisHewan(jenisHewanResponse);
                 inseminasi.setRumpunHewan(rumpunHewanResponse);
                 inseminasi.setHewan(hewanResponse);
 

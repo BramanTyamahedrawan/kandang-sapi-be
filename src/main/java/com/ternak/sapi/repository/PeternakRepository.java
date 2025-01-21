@@ -39,7 +39,7 @@ public class PeternakRepository {
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
-        columnMapping.put("provinsi","provinsi");
+        columnMapping.put("provinsi", "provinsi");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
@@ -99,7 +99,7 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "desa", peternak.getDesa());
         client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", peternak.getKecamatan());
         client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", peternak.getKabupaten());
-        client.insertRecord(tablePeternak,rowKey,"main","provinsi",peternak.getProvinsi());
+        client.insertRecord(tablePeternak, rowKey, "main", "provinsi", peternak.getProvinsi());
         client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
         client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
@@ -187,11 +187,11 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "desa", peternak.getDesa());
         client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", peternak.getKecamatan());
         client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", peternak.getKabupaten());
-        client.insertRecord(tablePeternak, rowKey,"main","provinsi",peternak.getProvinsi());
+        client.insertRecord(tablePeternak, rowKey, "main", "provinsi", peternak.getProvinsi());
         client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
         client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
-        client.insertRecord(tablePeternak,rowKey,"main","petugasId", peternak.getPetugasId());
+        client.insertRecord(tablePeternak, rowKey, "main", "petugasId", peternak.getPetugasId());
 
         if (peternak.getPetugas() != null) {
             Petugas petugas = peternak.getPetugas();
@@ -208,7 +208,6 @@ public class PeternakRepository {
                 client.insertRecord(tablePeternak, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
             }
         }
-
 
         return peternak;
     }
@@ -336,6 +335,7 @@ public class PeternakRepository {
                 client.insertRecord(tablePeternak, rowKey, "main", "desa", safeString(peternak.getDesa()));
                 client.insertRecord(tablePeternak, rowKey, "main", "kecamatan", safeString(peternak.getKecamatan()));
                 client.insertRecord(tablePeternak, rowKey, "main", "kabupaten", safeString(peternak.getKabupaten()));
+                client.insertRecord(tablePeternak, rowKey, "main", "provinsi", safeString(peternak.getProvinsi()));
                 client.insertRecord(tablePeternak, rowKey, "main", "latitude", safeString(peternak.getLatitude()));
                 client.insertRecord(tablePeternak, rowKey, "main", "longitude", safeString(peternak.getLongitude()));
                 client.insertRecord(tablePeternak, rowKey, "main", "jenisKelamin",
@@ -391,7 +391,7 @@ public class PeternakRepository {
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
-        columnMapping.put("provinsi","provinsi");
+        columnMapping.put("provinsi", "provinsi");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
@@ -461,8 +461,6 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, peternakId, "detail", "created_by", "Polinema");
         return peternak;
     }
-
-
 
     // public boolean existsByUserID(String UID) throws IOException {
     // HBaseCustomClient client = new HBaseCustomClient(conf);
@@ -552,8 +550,6 @@ public class PeternakRepository {
         return client.getDataListByColumn(tablePeternak.toString(), columnMapping,
                 "petugas", "petugasId", petugasId, Peternak.class, 100);
     }
-
-
 
     public Peternak findByNamaPeternak(String namaPeternak) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
