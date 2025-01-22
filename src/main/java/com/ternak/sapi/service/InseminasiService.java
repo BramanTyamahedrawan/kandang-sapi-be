@@ -390,10 +390,9 @@ public class InseminasiService {
                 System.out.println("id Kandang diterima dari frontend (inseminasi): " + request.getIdKandang());
                 Kandang kandangResponse = kandangRepository.findByIdKandang(request.getIdKandang());
 
-                // System.out.println("Jenis Hewan diterima dari frontend (inseminasi): " +
-                // request.getJenis());
-                // JenisHewan jenisHewanResponse =
-                // jenisHewanRepository.findByJenis(request.getJenis());
+                System.out.println("Jenis Hewan diterima dari frontend (inseminasi): " +
+                        request.getJenis());
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
 
                 System.out.println("Rumpun Hewan diterima dari frontend (inseminasi): " + request.getRumpun());
                 RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findByRumpun(request.getRumpun());
@@ -421,7 +420,7 @@ public class InseminasiService {
                 inseminasi.setPetugas(petugasResponse);
                 inseminasi.setPeternak(peternakResponse);
                 inseminasi.setKandang(kandangResponse);
-                // inseminasi.setJenisHewan(jenisHewanResponse);
+                inseminasi.setJenisHewan(jenisHewanResponse);
                 inseminasi.setRumpunHewan(rumpunHewanResponse);
                 inseminasi.setHewan(hewanResponse);
 

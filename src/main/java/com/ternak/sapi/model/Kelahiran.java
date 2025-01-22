@@ -11,12 +11,12 @@ public class Kelahiran {
     private Inseminasi inseminasi;
     private JenisHewan jenisHewan;
     private RumpunHewan rumpunHewan;
-    private String lokasi;
     private String kategori;
     private String jumlah;
     private String idHewanAnak;
     private String eartagAnak;
     private String jenisKelaminAnak;
+    private String noKartuTernakAnak;
     private String spesies;
     private String urutanIB;
 
@@ -25,7 +25,8 @@ public class Kelahiran {
 
     public Kelahiran(String idKejadian, String tanggalLaporan, String tanggalLahir, Peternak peternak,
             Hewan hewan, Kandang kandang, Petugas petugas, Inseminasi inseminasi, String eartagAnak,
-            String jenisKelaminAnak, String spesies, String urutanIB, JenisHewan jenisHewan, RumpunHewan rumpunHewan,
+            String jenisKelaminAnak, String noKartuTernakAnak, String spesies, String urutanIB, JenisHewan jenisHewan,
+            RumpunHewan rumpunHewan,
             String lokasi, String kategori, String jumlah, String idHewanAnak) {
         this.idKejadian = idKejadian;
         this.tanggalLaporan = tanggalLaporan;
@@ -37,11 +38,11 @@ public class Kelahiran {
         this.inseminasi = inseminasi;
         this.eartagAnak = eartagAnak;
         this.jenisKelaminAnak = jenisKelaminAnak;
+        this.noKartuTernakAnak = noKartuTernakAnak;
         this.spesies = spesies;
         this.urutanIB = urutanIB;
         this.jenisHewan = jenisHewan;
         this.rumpunHewan = rumpunHewan;
-        this.lokasi = lokasi;
         this.kategori = kategori;
         this.jumlah = jumlah;
         this.idHewanAnak = idHewanAnak;
@@ -127,6 +128,14 @@ public class Kelahiran {
         this.jenisKelaminAnak = jenisKelaminAnak;
     }
 
+    public String getNoKartuTernakAnak() {
+        return noKartuTernakAnak;
+    }
+
+    public void setNoKartuTernakAnak(String noKartuTernakAnak) {
+        this.noKartuTernakAnak = noKartuTernakAnak;
+    }
+
     public String getSpesies() {
         return spesies;
     }
@@ -157,14 +166,6 @@ public class Kelahiran {
 
     public void setRumpunHewan(RumpunHewan rumpunHewan) {
         this.rumpunHewan = rumpunHewan;
-    }
-
-    public String getLokasi() {
-        return lokasi;
-    }
-
-    public void setLokasi(String lokasi) {
-        this.lokasi = lokasi;
     }
 
     public String getKategori() {
@@ -216,14 +217,14 @@ public class Kelahiran {
             case "jenisKelaminAnak":
                 this.jenisKelaminAnak = value;
                 break;
+            case "noKartuTernakAnak":
+                this.noKartuTernakAnak = value;
+                break;
             case "spesies":
                 this.spesies = value;
                 break;
             case "urutanIB":
                 this.urutanIB = value;
-                break;
-            case "lokasi":
-                this.lokasi = value;
                 break;
             case "kategori":
                 this.kategori = value;

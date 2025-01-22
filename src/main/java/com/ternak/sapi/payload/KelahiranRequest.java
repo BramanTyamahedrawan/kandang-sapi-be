@@ -4,9 +4,9 @@ public class KelahiranRequest {
     private String idKejadian;
     private String tanggalLaporan;
     private String tanggalLahir;
-    private String petugas_id;
     private String eartagAnak;
     private String jenisKelaminAnak;
+    private String noKartuTernakAnak;
     private String spesies;
     private String urutanIB;
     private String lokasi;
@@ -15,6 +15,7 @@ public class KelahiranRequest {
     private String idHewanAnak;
 
     // Petugas
+    private String petugasId;
     private String nikPetugas;
     private String namaPetugas;
     private String noTelpPetugas;
@@ -91,8 +92,8 @@ public class KelahiranRequest {
     }
 
     public KelahiranRequest(String idKejadian, String tanggalLaporan, String tanggalLahir, String idPeternak,
-            String idHewan, String idKandang, String petugas_id, String inseminasi_id, String eartagAnak,
-            String jenisKelaminAnak,
+            String idHewan, String idKandang, String petugasId, String inseminasi_id, String eartagAnak,
+            String jenisKelaminAnak, String noKartuTernakAnak,
             String spesies, String urutanIB, String lokasi, String kategori, String jumlah, String idHewanAnak,
             String nikPetugas, String namaPetugas, String noTelpPetugas, String emailPetugas,
             String job, String wilayah, String nikPeternak, String namaPeternak, String alamatPeternak,
@@ -111,9 +112,10 @@ public class KelahiranRequest {
         this.tanggalLahir = tanggalLahir;
         this.idPeternak = idPeternak;
         this.idHewan = idHewan;
-        this.petugas_id = petugas_id;
+        this.petugasId = petugasId;
         this.eartagAnak = eartagAnak;
         this.jenisKelaminAnak = jenisKelaminAnak;
+        this.noKartuTernakAnak = noKartuTernakAnak;
         this.spesies = spesies;
         this.urutanIB = urutanIB;
         this.lokasi = lokasi;
@@ -227,12 +229,12 @@ public class KelahiranRequest {
         this.idHewan = idHewan;
     }
 
-    public String getPetugas_id() {
-        return petugas_id;
+    public String getPetugasId() {
+        return petugasId;
     }
 
-    public void setPetugas_id(String petugas_id) {
-        this.petugas_id = petugas_id;
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
     }
 
     public String getEartagAnak() {
@@ -249,6 +251,14 @@ public class KelahiranRequest {
 
     public void setJenisKelaminAnak(String jenisKelaminAnak) {
         this.jenisKelaminAnak = jenisKelaminAnak;
+    }
+
+    public String getNoKartuTernakAnak() {
+        return noKartuTernakAnak;
+    }
+
+    public void setNoKartuTernakAnak(String noKartuTernakAnak) {
+        this.noKartuTernakAnak = noKartuTernakAnak;
     }
 
     public String getSpesies() {
@@ -787,8 +797,8 @@ public class KelahiranRequest {
             case "idKandang":
                 this.idKandang = value;
                 break;
-            case "petugas_id":
-                this.petugas_id = value;
+            case "petugasId":
+                this.petugasId = value;
                 break;
             case "idInseminasi":
                 this.idInseminasi = value;

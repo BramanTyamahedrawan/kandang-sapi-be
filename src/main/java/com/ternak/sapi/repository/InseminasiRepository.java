@@ -28,7 +28,7 @@ public class InseminasiRepository {
                 columnMapping.put("hewan", "hewan");
                 columnMapping.put("petugas", "petugas");
                 columnMapping.put("kandang", "kandang");
-                // columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("jenisHewan", "jenisHewan");
                 columnMapping.put("rumpunHewan", "rumpunHewan");
                 columnMapping.put("ib1", "ib1");
                 columnMapping.put("ib2", "ib2");
@@ -432,20 +432,20 @@ public class InseminasiRepository {
                                         }
                                 }
 
-                                // if (inseminasi.getJenisHewan() != null) {
-                                // JenisHewan jenisHewan = inseminasi.getJenisHewan();
-                                // if (jenisHewan.getJenis() != null) {
-                                // client.insertRecord(tableInseminasi, rowKey,
-                                // "jenisHewan", "idJenisHewan",
-                                // safeString(jenisHewan.getIdJenisHewan()));
-                                // client.insertRecord(tableInseminasi, rowKey,
-                                // "jenisHewan", "jenis",
-                                // safeString(jenisHewan.getJenis()));
-                                // client.insertRecord(tableInseminasi, rowKey,
-                                // "jenisHewan", "deskripsi",
-                                // safeString(jenisHewan.getDeskripsi()));
-                                // }
-                                // }
+                                if (inseminasi.getJenisHewan() != null) {
+                                        JenisHewan jenisHewan = inseminasi.getJenisHewan();
+                                        if (jenisHewan.getJenis() != null) {
+                                                client.insertRecord(tableInseminasi, rowKey,
+                                                                "jenisHewan", "idJenisHewan",
+                                                                safeString(jenisHewan.getIdJenisHewan()));
+                                                client.insertRecord(tableInseminasi, rowKey,
+                                                                "jenisHewan", "jenis",
+                                                                safeString(jenisHewan.getJenis()));
+                                                client.insertRecord(tableInseminasi, rowKey,
+                                                                "jenisHewan", "deskripsi",
+                                                                safeString(jenisHewan.getDeskripsi()));
+                                        }
+                                }
 
                                 if (inseminasi.getRumpunHewan() != null) {
                                         RumpunHewan rumpunHewan = inseminasi.getRumpunHewan();
@@ -650,7 +650,7 @@ public class InseminasiRepository {
                 columnMapping.put("hewan", "hewan");
                 columnMapping.put("petugas", "petugas");
                 columnMapping.put("kandang", "kandang");
-                // columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("jenisHewan", "jenisHewan");
                 columnMapping.put("rumpunHewan", "rumpunHewan");
                 columnMapping.put("ib1", "ib1");
                 columnMapping.put("ib2", "ib2");
@@ -662,6 +662,36 @@ public class InseminasiRepository {
                 columnMapping.put("produsen", "produsen");
 
                 return client.showDataTable(tableInseminasi.toString(), columnMapping, inseminasiId, Inseminasi.class);
+        }
+
+        public Inseminasi findById(String idInseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+
+                columnMapping.put("idInseminasi", "idInseminasi");
+                columnMapping.put("tanggalIB", "tanggalIB");
+                columnMapping.put("peternak", "peternak");
+                columnMapping.put("hewan", "hewan");
+                columnMapping.put("petugas", "petugas");
+                columnMapping.put("kandang", "kandang");
+                columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("rumpunHewan", "rumpunHewan");
+                columnMapping.put("ib1", "ib1");
+                columnMapping.put("ib2", "ib2");
+                columnMapping.put("ib3", "ib3");
+                columnMapping.put("ibLain", "ibLain");
+                columnMapping.put("idPejantan", "idPejantan");
+                columnMapping.put("idPembuatan", "idPembuatan");
+                columnMapping.put("bangsaPejantan", "bangsaPejantan");
+                columnMapping.put("produsen", "produsen");
+
+                Inseminasi inseminasi = client.getDataByColumn(tableInseminasi.toString(), columnMapping, "main",
+                                "idInseminasi", idInseminasi, Inseminasi.class);
+
+                System.out.println("Data Inseminasi ditemukan by ID: " + idInseminasi);
+
+                return inseminasi.getIdInseminasi() != null ? inseminasi : null;
         }
 
         public Inseminasi findInseminasiByIdPejantan(String idPejantan) throws IOException {
@@ -677,7 +707,7 @@ public class InseminasiRepository {
                 columnMapping.put("hewan", "hewan");
                 columnMapping.put("petugas", "petugas");
                 columnMapping.put("kandang", "kandang");
-                // columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("jenisHewan", "jenisHewan");
                 columnMapping.put("rumpunHewan", "rumpunHewan");
                 columnMapping.put("ib1", "ib1");
                 columnMapping.put("ib2", "ib2");
@@ -709,7 +739,7 @@ public class InseminasiRepository {
                 columnMapping.put("hewan", "hewan");
                 columnMapping.put("petugas", "petugas");
                 columnMapping.put("kandang", "kandang");
-                // columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("jenisHewan", "jenisHewan");
                 columnMapping.put("rumpunHewan", "rumpunHewan");
                 columnMapping.put("ib1", "ib1");
                 columnMapping.put("ib2", "ib2");
@@ -737,7 +767,7 @@ public class InseminasiRepository {
                 columnMapping.put("hewan", "hewan");
                 columnMapping.put("petugas", "petugas");
                 columnMapping.put("kandang", "kandang");
-                // columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("jenisHewan", "jenisHewan");
                 columnMapping.put("rumpunHewan", "rumpunHewan");
                 columnMapping.put("ib1", "ib1");
                 columnMapping.put("ib2", "ib2");
@@ -765,7 +795,7 @@ public class InseminasiRepository {
                 columnMapping.put("hewan", "hewan");
                 columnMapping.put("petugas", "petugas");
                 columnMapping.put("kandang", "kandang");
-                // columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("jenisHewan", "jenisHewan");
                 columnMapping.put("rumpunHewan", "rumpunHewan");
                 columnMapping.put("ib1", "ib1");
                 columnMapping.put("ib2", "ib2");
@@ -791,7 +821,7 @@ public class InseminasiRepository {
                 columnMapping.put("hewan", "hewan");
                 columnMapping.put("petugas", "petugas");
                 columnMapping.put("kandang", "kandang");
-                // columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("jenisHewan", "jenisHewan");
                 columnMapping.put("rumpunHewan", "rumpunHewan");
                 columnMapping.put("ib1", "ib1");
                 columnMapping.put("ib2", "ib2");

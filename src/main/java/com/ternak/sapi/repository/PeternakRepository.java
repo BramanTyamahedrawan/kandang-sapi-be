@@ -55,6 +55,7 @@ public class PeternakRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idPeternak", "idPeternak");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
@@ -69,6 +70,7 @@ public class PeternakRepository {
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
+        columnMapping.put("provinsi", "provinsi");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
@@ -375,18 +377,17 @@ public class PeternakRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idPeternak", "idPeternak");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
         columnMapping.put("petugas", "petugas");
         columnMapping.put("tanggalPendaftaran", "tanggalPendaftaran");
-
         columnMapping.put("noTelepon", "noTelepon");
         columnMapping.put("email", "email");
         columnMapping.put("jenisKelamin", "jenisKelamin");
         columnMapping.put("tanggalLahir", "tanggalLahir");
         columnMapping.put("idIsikhnas", "idIsikhnas");
-
         columnMapping.put("dusun", "dusun");
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
@@ -512,21 +513,22 @@ public class PeternakRepository {
         TableName tablePeternak = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("idPeternak", "idPeternak");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
+        columnMapping.put("petugas", "petugas");
         columnMapping.put("tanggalPendaftaran", "tanggalPendaftaran");
-
         columnMapping.put("noTelepon", "noTelepon");
         columnMapping.put("email", "email");
         columnMapping.put("jenisKelamin", "jenisKelamin");
         columnMapping.put("tanggalLahir", "tanggalLahir");
         columnMapping.put("idIsikhnas", "idIsikhnas");
-
         columnMapping.put("dusun", "dusun");
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
+        columnMapping.put("provinsi", "provinsi");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
@@ -557,22 +559,22 @@ public class PeternakRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         columnMapping.put("idPeternak", "idPeternak");
+        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
         columnMapping.put("petugas", "petugas");
         columnMapping.put("tanggalPendaftaran", "tanggalPendaftaran");
-
         columnMapping.put("noTelepon", "noTelepon");
         columnMapping.put("email", "email");
         columnMapping.put("jenisKelamin", "jenisKelamin");
         columnMapping.put("tanggalLahir", "tanggalLahir");
         columnMapping.put("idIsikhnas", "idIsikhnas");
-
         columnMapping.put("dusun", "dusun");
         columnMapping.put("desa", "desa");
         columnMapping.put("kecamatan", "kecamatan");
         columnMapping.put("kabupaten", "kabupaten");
+        columnMapping.put("provinsi", "provinsi");
         columnMapping.put("alamat", "alamat");
         columnMapping.put("latitude", "latitude");
         columnMapping.put("longitude", "longitude");
