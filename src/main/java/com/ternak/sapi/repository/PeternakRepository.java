@@ -457,8 +457,8 @@ public class PeternakRepository {
                 peternak.getPetugas().getNamaPetugas());
         client.insertRecord(tablePeternak, peternakId, "petugas", "noTelp", peternak.getPetugas().getNoTelp());
         client.insertRecord(tablePeternak, peternakId, "petugas", "email", peternak.getPetugas().getEmail());
-        client.insertRecord(tablePeternak, peternakId, "main", "job", peternak.getPetugas().getJob());
-        client.insertRecord(tablePeternak, peternakId, "main", "wilayah", peternak.getPetugas().getWilayah());
+        client.insertRecord(tablePeternak, peternakId, "petugas", "job", peternak.getPetugas().getJob());
+        client.insertRecord(tablePeternak, peternakId, "petugas", "wilayah", peternak.getPetugas().getWilayah());
         client.insertRecord(tablePeternak, peternakId, "detail", "created_by", "Polinema");
         return peternak;
     }

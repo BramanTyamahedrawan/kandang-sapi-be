@@ -216,8 +216,8 @@ public class PetugasService {
             petugas.setNamaPetugas(request.getNamaPetugas());
             petugas.setNoTelp(request.getNoTelp());
             petugas.setEmail(request.getEmail());
-            petugas.setJob(request.getJob() != null ? request.getJob() : ""); // Default job kosong jika null
-            petugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : ""); // Default wilayah kosong jika
+            petugas.setJob(request.getJob() != null ? request.getJob() : "-"); // Default job kosong jika null
+            petugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-"); // Default wilayah kosong jika
                                                                                           // null
             petugasList.add(petugas);
 
