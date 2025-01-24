@@ -1,4 +1,3 @@
-
 package com.ternak.sapi.repository;
 
 import java.io.IOException;
@@ -126,13 +125,12 @@ public class KandangRepository {
                                 String rowKey = safeString(kandang.getIdKandang());
 
                                 if (kandang.getJenisHewan() != null) {
-                                        JenisHewan jenisHewan = new JenisHewan();
                                         client.insertRecord(tableKandang, rowKey, "jenisHewan", "idJenisHewan",
-                                                        safeString(jenisHewan.getIdJenisHewan()));
+                                                        kandang.getJenisHewan().getIdJenisHewan());
                                         client.insertRecord(tableKandang, rowKey, "jenisHewan", "jenis",
-                                                        safeString(jenisHewan.getJenis()));
+                                                        kandang.getJenisHewan().getJenis());
                                         client.insertRecord(tableKandang, rowKey, "jenisHewan", "deskripsi",
-                                                        safeString(jenisHewan.getDeskripsi()));
+                                                        kandang.getJenisHewan().getDeskripsi());
                                         client.insertRecord(tableKandang, rowKey, "detail", "created_by", "Polinema");
                                 }
 
@@ -198,7 +196,7 @@ public class KandangRepository {
                                                 safeString(kandang.getKapasitas()));
                                 System.out.println("Berhasil menyimpan data Kandang ID: " + kandang.getIdKandang());
 
-                                System.out.println("data id jenis hewan" + kandang.getIdJenisHewan());
+                                System.out.println("data id jenis hewan" + kandang.getJenisHewan().getIdJenisHewan());
                                 System.out.println("Berhasil menyimpan data Kandang ID: " + kandang.getIdKandang());
                         } catch (Exception e) {
                                 failedRows.add(kandang.getIdKandang());
@@ -489,10 +487,10 @@ public class KandangRepository {
                 return value != null ? value : "";
         }
 
-        public Kandang findById(String idKandang) throws IOException {
+        public Kandang findById(String kandangId) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 
-                TableName tableKandang = TableName.valueOf(tableName);
+                TableName tableUsers = TableName.valueOf(tableName);
                 Map<String, String> columnMapping = new HashMap<>();
 
                 // Add the mappings to the HashMap
@@ -509,9 +507,11 @@ public class KandangRepository {
                 columnMapping.put("file_path", "file_path");
                 columnMapping.put("namaKandang", "namaKandang");
 
-                Kandang kandang = client.getDataByColumn(tableKandang.toString(), columnMapping, "main", "idKandang",
-                                idKandang, Kandang.class);
+                Kandang kandang = client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "idKandang",
+                                kandangId, Kandang.class);
+
                 System.out.println("data kandang ditemukan by id kandang" + kandang);
+
                 return kandang.getIdKandang() != null ? kandang : null;
         }
 
@@ -560,7 +560,18 @@ public class KandangRepository {
                 Map<String, String> columnMapping = new HashMap<>();
 
                 columnMapping.put("idKandang", "idKandang");
+                columnMapping.put("peternak", "peternak");
+                columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("luas", "luas");
+                columnMapping.put("kapasitas", "kapasitas");
+                columnMapping.put("jenisKandang", "jenisKandang");
+                columnMapping.put("nilaiBangunan", "nilaiBangunan");
+                columnMapping.put("alamat", "alamat");
+                columnMapping.put("latitude", "latitude");
+                columnMapping.put("longitude", "longitude");
+                columnMapping.put("file_path", "file_path");
                 columnMapping.put("namaKandang", "namaKandang");
+
                 Kandang kandang = client.getDataByColumn(tableKandang.toString(), columnMapping, "main", "namaKandang",
                                 namaKandang, Kandang.class);
                 return kandang.getNamaKandang() != null ? kandang : null;

@@ -535,7 +535,7 @@ public class HewanService {
                     continue;
                 } else {
                     kandangResponse = kandangRepository
-                            .findByNamaKandang("Kandang " + peternakResponse.getNamaPeternak());
+                            .findByNamaKandang("Kandang " +jenisHewanResponse.getJenis()+ " " +peternakResponse.getNamaPeternak());
                     if (kandangResponse == null) {
                         // Jika nama kandang tidak ditemukan, tambahkan petugas baru berdasarkan nama
                         // dari frontend
@@ -544,9 +544,15 @@ public class HewanService {
                         Kandang newKandang = new Kandang();
                         newKandang.setIdKandang(request.getIdKandang() != null ? request.getIdKandang()
                                 : UUID.randomUUID().toString());
-                        newKandang.setNamaKandang(peternakResponse.getNamaPeternak() != null
-                                ? "Kandang " + peternakResponse.getNamaPeternak()
-                                : "Nama Kandang tidak ditemukan");
+                        if(jenisHewanResponse.getJenis() != null && peternakResponse.getNamaPeternak() != null){
+                            newKandang.setNamaKandang("Kandang " + jenisHewanResponse.getJenis() + " " + peternakResponse.getNamaPeternak());
+                        }else if(jenisHewanResponse.getJenis() == null){
+                            newKandang.setNamaKandang("Kandang hewan umum" + peternakResponse.getNamaPeternak());
+                        } else if (peternakResponse.getNamaPeternak() == null) {
+                            newKandang.setNamaKandang("Kandang " + jenisHewanResponse.getJenis() + "nya peternak tidak dikenal");
+                        } else{
+                            newKandang.setNamaKandang("Nama Kandang tidak ketahui waktu import hewan");
+                        }
                         newKandang.setPeternak(peternakResponse);
                         newKandang.setJenisHewan(jenisHewanResponse);
                         newKandang.setAlamat(request.getAlamat() != null ? request.getAlamat() : "-");

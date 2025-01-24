@@ -2,7 +2,9 @@ package com.ternak.sapi.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.repository.HewanRepository;
@@ -156,6 +158,9 @@ public class KandangService {
         int skippedIncomplete = 0;
         int dataTidakLengkap = 0;
 
+        // Set untuk menyimpan nama kandang yang sudah diproses
+        Set<String> namaKandangSet = new HashSet<>();
+
         for (KandangRequest request : kandangRequests) {
             try {
                 if (request.getIdKandang() == null || request.getNikPeternak() == null) {
@@ -175,15 +180,29 @@ public class KandangService {
                 }
 
                 JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
-                if (request.getIdJenisHewan() == null) {
+                if (jenisHewanResponse == null) {
                     jenisHewanResponse = new JenisHewan();
-                    jenisHewanResponse
-                            .setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : "-");
-                    jenisHewanResponse
-                            .setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
+                    jenisHewanResponse.setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : "-");
+                    jenisHewanResponse.setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
                     jenisHewanResponse.setDeskripsi("-");
+                } else {
+                    System.out.println("Jenis hewan ditemukan: ID " + jenisHewanResponse.getIdJenisHewan() + ", Nama: " + jenisHewanResponse.getJenis());
                 }
-                // Buat objek Kandang
+
+                // Pengecekan jika nama kandang sudah ada di database
+                Kandang kandangResponse = kandangRepository.findByNamaKandang(request.getNamaKandang());
+                if (kandangResponse != null) {
+                    System.out.println("Kandang dengan nama " + request.getNamaKandang() + " sudah ada di database.");
+                    continue; // Lewatkan data ini dan tidak perlu disimpan
+                }
+
+                // Pengecekan jika nama kandang sudah ada di dalam list sementara
+                if (namaKandangSet.contains(request.getNamaKandang())) {
+                    System.out.println("Kandang dengan nama " + request.getNamaKandang() + " sudah ada dalam list sementara.");
+                    continue; // Lewatkan data ini dan tidak perlu disimpan
+                }
+
+                // Jika tidak ada kandang yang sama, buat objek Kandang baru
                 Kandang kandang = new Kandang();
                 kandang.setPeternak(peternakResponse);
                 kandang.setJenisHewan(jenisHewanResponse);
@@ -200,10 +219,12 @@ public class KandangService {
                 kandang.setIdJenisHewan(request.getIdJenisHewan());
                 kandang.setKapasitas(request.getKapasitas());
 
-                // Tambahkan ke list
+                // Menambahkan nama kandang ke dalam set untuk validasi selanjutnya
+                namaKandangSet.add(request.getNamaKandang());
                 kandangList.add(kandang);
-                System.out.println("data jenis hewan" + jenisHewanResponse);
+
                 System.out.println("Menambahkan data kandang ke dalam daftar: " + kandang);
+
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data: " + request);
                 e.printStackTrace();
@@ -211,6 +232,7 @@ public class KandangService {
             }
         }
 
+        // Jika ada data kandang yang valid untuk disimpan
         if (!kandangList.isEmpty()) {
             System.out.println("Menyimpan data kandang yang valid...");
             kandangRepository.saveAll(kandangList);
@@ -223,6 +245,8 @@ public class KandangService {
         System.out.println("Data tidak lengkap: " + dataTidakLengkap);
         System.out.println("Data yang di-skip karena kesalahan: " + skippedIncomplete);
     }
+
+
 
     @Transactional
     public void createImportKandangByNama(List<KandangRequest> kandangRequests) throws IOException {
