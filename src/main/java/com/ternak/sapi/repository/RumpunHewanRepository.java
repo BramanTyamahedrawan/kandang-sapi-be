@@ -104,10 +104,10 @@ public class RumpunHewanRepository {
         return value != null ? value : "";
     }
 
-    public RumpunHewan findById(String idHewan) throws IOException {
+    public RumpunHewan findById(String idRumpunHewan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        TableName tableUsers = TableName.valueOf(tableName);
+        TableName tableRumpunHewan = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
@@ -115,7 +115,11 @@ public class RumpunHewanRepository {
         columnMapping.put("rumpun", "rumpun");
         columnMapping.put("deskripsi", "deskripsi");
 
-        return client.showDataTable(tableUsers.toString(), columnMapping, idHewan, RumpunHewan.class);
+        RumpunHewan rumpunHewan = client.getDataByColumn(tableRumpunHewan.toString(), columnMapping, "main",
+                "idRumpunHewan", idRumpunHewan, RumpunHewan.class);
+
+        System.out.println("Rumpun Hewan ditemukan " + rumpunHewan);
+        return rumpunHewan.getIdRumpunHewan() != null ? rumpunHewan : null;
     }
 
     public RumpunHewan update(String rumpunhewanId, RumpunHewan rumpunhewan) throws IOException {
@@ -126,7 +130,7 @@ public class RumpunHewanRepository {
             client.insertRecord(tableRumpunHewan, rumpunhewanId, "main", "rumpun", rumpunhewan.getRumpun());
         }
         if (rumpunhewan.getDeskripsi() != null) {
-            client.insertRecord(tableRumpunHewan, rumpunhewanId, "main", "deskripsi",rumpunhewan.getDeskripsi());
+            client.insertRecord(tableRumpunHewan, rumpunhewanId, "main", "deskripsi", rumpunhewan.getDeskripsi());
         }
 
         client.insertRecord(tableRumpunHewan, rumpunhewanId, "detail", "created_by", "Polinema");

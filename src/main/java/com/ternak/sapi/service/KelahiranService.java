@@ -11,6 +11,7 @@ import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.payload.DefaultResponse;
+import com.ternak.sapi.payload.InseminasiRequest;
 import com.ternak.sapi.payload.KelahiranRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.KelahiranRepository;
@@ -129,13 +130,13 @@ public class KelahiranService {
                 kelahiran.setIdKejadian(request.getIdKejadian());
                 kelahiran.setTanggalLaporan(request.getTanggalLaporan());
                 kelahiran.setTanggalLahir(request.getTanggalLahir());
+                kelahiran.setIdHewanAnak(request.getIdHewanAnak());
                 kelahiran.setEartagAnak(request.getEartagAnak());
                 kelahiran.setJenisKelaminAnak(request.getJenisKelaminAnak());
                 kelahiran.setNoKartuTernakAnak(request.getNoKartuTernakAnak());
                 kelahiran.setSpesies(request.getSpesies());
                 kelahiran.setKategori(request.getKategori());
                 kelahiran.setJumlah(request.getJumlah());
-                kelahiran.setIdHewanAnak(request.getIdHewanAnak());
                 kelahiran.setUrutanIB(request.getUrutanIB());
 
                 System.out.println("Petugas diterima dari frontend (kelahiran): " + request.getNamaPetugas());
@@ -218,23 +219,37 @@ public class KelahiranService {
 
     public Kelahiran updateKelahiran(String kelahiranId, KelahiranRequest kelahiranRequest) throws IOException {
         Kelahiran kelahiran = new Kelahiran();
+
         Peternak peternakResponse = peternakRepository.findById(kelahiranRequest.getIdPeternak().toString());
         Petugas petugasResponse = petugasRepository.findById(kelahiranRequest.getPetugasId().toString());
         Hewan hewanResponse = hewanRepository.findById(kelahiranRequest.getIdHewan().toString());
         Kandang kandangResponse = kandangRepository.findById(kelahiranRequest.getIdKandang().toString());
-        Inseminasi inseminasiResponse = inseminasiRepository
-                .findInseminasiById(kelahiranRequest.getIdInseminasi().toString());
-        if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
+        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kelahiranRequest.getIdJenisHewan().toString());
+        RumpunHewan rumpunHewanResponse = rumpunHewanRepository
+                .findById(kelahiranRequest.getIdRumpunHewan().toString());
+        Inseminasi inseminasiResponse = null;
+        if (kelahiranRequest.getIdInseminasi() != null) {
+            inseminasiResponse = inseminasiRepository.findById(kelahiranRequest.getIdInseminasi().toString());
+        }
+        if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
                 && hewanResponse.getIdHewan() != null) {
+
             kelahiran.setTanggalLaporan(kelahiranRequest.getTanggalLaporan());
             kelahiran.setTanggalLahir(kelahiranRequest.getTanggalLahir());
+            kelahiran.setIdHewanAnak(kelahiranRequest.getIdHewanAnak());
+            kelahiran.setNoKartuTernakAnak(kelahiranRequest.getNoKartuTernakAnak());
             kelahiran.setEartagAnak(kelahiranRequest.getEartagAnak());
             kelahiran.setJenisKelaminAnak(kelahiranRequest.getJenisKelaminAnak());
             kelahiran.setSpesies(kelahiranRequest.getSpesies());
+            kelahiran.setKategori(kelahiranRequest.getKategori());
+            kelahiran.setJumlah(kelahiranRequest.getJumlah());
+            kelahiran.setUrutanIB(kelahiranRequest.getUrutanIB());
             kelahiran.setPeternak(peternakResponse);
             kelahiran.setPetugas(petugasResponse);
             kelahiran.setHewan(hewanResponse);
             kelahiran.setKandang(kandangResponse);
+            kelahiran.setJenisHewan(jenisHewanResponse);
+            kelahiran.setRumpunHewan(rumpunHewanResponse);
             kelahiran.setInseminasi(inseminasiResponse);
 
             return kelahiranRepository.update(kelahiranId, kelahiran);

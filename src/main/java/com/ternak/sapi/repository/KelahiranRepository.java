@@ -215,6 +215,9 @@ public class KelahiranRepository {
                                 if (kelahiran.getPetugas() != null) {
                                         Petugas petugas = kelahiran.getPetugas();
                                         client.insertRecord(tableKelahiran, safeString(kelahiran.getIdKejadian()),
+                                                        "petugas", "petugasId",
+                                                        safeString(petugas.getPetugasId()));
+                                        client.insertRecord(tableKelahiran, safeString(kelahiran.getIdKejadian()),
                                                         "petugas",
                                                         "nikPetugas",
                                                         safeString(petugas.getNikPetugas()));
@@ -562,6 +565,40 @@ public class KelahiranRepository {
                 return kelahiranList;
         }
 
+        public Kelahiran findById(String idKejadian) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+
+                // Add the mappings to the HashMap
+                columnMapping.put("idKejadian", "idKejadian");
+                columnMapping.put("tanggalLaporan", "tanggalLaporan");
+                columnMapping.put("tanggalLahir", "tanggalLahir");
+                columnMapping.put("petugas", "petugas");
+                columnMapping.put("peternak", "peternak");
+                columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("rumpunHewan", "rumpunHewan");
+                columnMapping.put("hewan", "hewan");
+                columnMapping.put("kandang", "kandang");
+                columnMapping.put("inseminasi", "inseminasi");
+                columnMapping.put("eartagAnak", "eartagAnak");
+                columnMapping.put("noKartuTernakAnak", "noKartuTernakAnak");
+                columnMapping.put("jenisKelaminAnak", "jenisKelaminAnak");
+                columnMapping.put("spesies", "spesies");
+                columnMapping.put("kategori", "kategori");
+                columnMapping.put("jumlah", "jumlah");
+                columnMapping.put("idHewanAnak", "idHewanAnak");
+                columnMapping.put("urutanIB", "urutanIB");
+
+                Kelahiran kelahiran = client.getDataByColumn(tableKelahiran.toString(), columnMapping, "main",
+                                "idKejadian", idKejadian, Kelahiran.class);
+
+                System.out.println("Data Kelahiran ditemukan by ID: " + idKejadian);
+
+                return kelahiran.getIdKejadian() != null ? kelahiran : null;
+        }
+
         public Kelahiran findKelahiranById(String kelahiranId) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 
@@ -721,6 +758,7 @@ public class KelahiranRepository {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 
                 TableName tableKelahiran = TableName.valueOf(tableName);
+
                 if (kelahiran.getTanggalLaporan() != null) {
                         client.insertRecord(tableKelahiran, kelahiranId, "main", "tanggalLaporan",
                                         kelahiran.getTanggalLaporan());
@@ -728,6 +766,14 @@ public class KelahiranRepository {
                 if (kelahiran.getTanggalLahir() != null) {
                         client.insertRecord(tableKelahiran, kelahiranId, "main", "tanggalLahir",
                                         kelahiran.getTanggalLahir());
+                }
+                if (kelahiran.getIdHewanAnak() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "main", "idHewanAnak",
+                                        kelahiran.getIdHewanAnak());
+                }
+                if (kelahiran.getNoKartuTernakAnak() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "main", "noKartuTernakAnak",
+                                        kelahiran.getNoKartuTernakAnak());
                 }
                 if (kelahiran.getEartagAnak() != null) {
                         client.insertRecord(tableKelahiran, kelahiranId, "main", "eartagAnak",
@@ -740,37 +786,96 @@ public class KelahiranRepository {
                 if (kelahiran.getSpesies() != null) {
                         client.insertRecord(tableKelahiran, kelahiranId, "main", "spesies", kelahiran.getSpesies());
                 }
-                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "idPeternak",
-                                kelahiran.getPeternak().getIdPeternak());
-                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "nikPeternak",
-                                kelahiran.getPeternak().getNikPeternak());
-                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "namaPeternak",
-                                kelahiran.getPeternak().getNamaPeternak());
-                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "lokasi",
-                                kelahiran.getPeternak().getLokasi());
-                client.insertRecord(tableKelahiran, kelahiranId, "petugas", "nikPetugas",
-                                kelahiran.getPetugas().getNikPetugas());
-                client.insertRecord(tableKelahiran, kelahiranId, "petugas", "namaPetugas",
-                                kelahiran.getPetugas().getNamaPetugas());
-                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "kodeEartagNasional",
-                                kelahiran.getHewan().getKodeEartagNasional());
-                client.insertRecord(tableKelahiran, kelahiranId, "kandang", "idKandang",
-                                kelahiran.getKandang().getIdKandang());
-                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idInseminasi",
-                                kelahiran.getInseminasi().getIdInseminasi());
-                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idPejantan",
-                                kelahiran.getInseminasi().getIdPejantan());
-                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idPembuatan",
-                                kelahiran.getInseminasi().getIdPembuatan());
-                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "bangsaPejantan",
-                                kelahiran.getInseminasi().getBangsaPejantan());
-                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "produsen",
-                                kelahiran.getInseminasi().getProdusen());
-                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ib",
-                                kelahiran.getInseminasi().getIb1());
-                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "tanggalIB",
-                                kelahiran.getInseminasi().getTanggalIB());
+                if (kelahiran.getKategori() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "main", "kategori", kelahiran.getKategori());
+                }
+                if (kelahiran.getJumlah() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "main", "jumlah", kelahiran.getJumlah());
+                }
+                if (kelahiran.getUrutanIB() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "main", "urutanIB", kelahiran.getUrutanIB());
+                }
+
+                // Peternak
+                if (kelahiran.getPeternak() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "idPeternak",
+                                        kelahiran.getPeternak().getIdPeternak());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "nikPeternak",
+                                        kelahiran.getPeternak().getNikPeternak());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "namaPeternak",
+                                        kelahiran.getPeternak().getNamaPeternak());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "alamat",
+                                        kelahiran.getPeternak().getAlamat());
+                }
+
+                // Petugas
+                if (kelahiran.getPetugas() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "petugas", "petugasId",
+                                        kelahiran.getPetugas().getPetugasId());
+                        client.insertRecord(tableKelahiran, kelahiranId, "petugas", "nikPetugas",
+                                        kelahiran.getPetugas().getNikPetugas());
+                        client.insertRecord(tableKelahiran, kelahiranId, "petugas", "namaPetugas",
+                                        kelahiran.getPetugas().getNamaPetugas());
+                        client.insertRecord(tableKelahiran, kelahiranId, "petugas", "job",
+                                        kelahiran.getPetugas().getJob());
+                }
+
+                // Hewan
+                if (kelahiran.getHewan() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "idHewan",
+                                        kelahiran.getHewan().getIdHewan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "kodeEartagNasional",
+                                        kelahiran.getHewan().getKodeEartagNasional());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "noKartuTernak",
+                                        kelahiran.getHewan().getNoKartuTernak());
+
+                }
+
+                // Kandang
+                if (kelahiran.getKandang() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "idKandang",
+                                        kelahiran.getKandang().getIdKandang());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "namaKandang",
+                                        kelahiran.getKandang().getNamaKandang());
+                }
+
+                // Rumpun Hewan
+                if (kelahiran.getRumpunHewan() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "rumpunHewan", "idRumpunHewan",
+                                        kelahiran.getRumpunHewan().getIdRumpunHewan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "rumpunHewan", "rumpun",
+                                        kelahiran.getRumpunHewan().getRumpun());
+                        client.insertRecord(tableKelahiran, kelahiranId, "rumpunHewan", "deskripsi",
+                                        kelahiran.getRumpunHewan().getDeskripsi());
+                }
+
+                // Jenis Hewan
+                if (kelahiran.getJenisHewan() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "jenisHewan", "idJenisHewan",
+                                        kelahiran.getJenisHewan().getIdJenisHewan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "jenisHewan", "jenis",
+                                        kelahiran.getJenisHewan().getJenis());
+                        client.insertRecord(tableKelahiran, kelahiranId, "jenisHewan", "deskripsi",
+                                        kelahiran.getJenisHewan().getDeskripsi());
+                }
+
+                // Inseminasi
+                if (kelahiran.getInseminasi() != null) {
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idInseminasi",
+                                        kelahiran.getInseminasi().getIdInseminasi());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idPejantan",
+                                        kelahiran.getInseminasi().getIdPejantan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idPembuatan",
+                                        kelahiran.getInseminasi().getIdPembuatan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "tanggalIB",
+                                        kelahiran.getInseminasi().getTanggalIB());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "produsen",
+                                        kelahiran.getInseminasi().getProdusen());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "bangsaPejantan",
+                                        kelahiran.getInseminasi().getBangsaPejantan());
+                }
                 client.insertRecord(tableKelahiran, kelahiranId, "detail", "created_by", "Polinema");
+
                 return kelahiran;
         }
 

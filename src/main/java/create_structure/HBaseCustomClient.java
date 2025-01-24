@@ -20,7 +20,6 @@ public class HBaseCustomClient {
 
     private HBaseAdmin admin;
     private Connection connection = null;
-    
 
     public HBaseCustomClient(Configuration conf) throws IOException {
         connection = ConnectionFactory.createConnection(conf);
@@ -84,6 +83,23 @@ public class HBaseCustomClient {
         }
     }
 
+    public String getRecord(TableName tableName, String rowKey, String columnFamily, String qualifier)
+            throws IOException {
+        Table table = null;
+        try {
+            table = connection.getTable(tableName);
+            Get get = new Get(Bytes.toBytes(rowKey));
+            get.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier));
+            Result result = table.get(get);
+            byte[] value = result.getValue(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier));
+            return value != null ? Bytes.toString(value) : null;
+        } finally {
+            if (table != null) {
+                table.close();
+            }
+        }
+    }
+
     public void deleteRecord(String tableName, String rowKey) {
 
         try {
@@ -97,7 +113,7 @@ public class HBaseCustomClient {
         }
 
     }
-    
+
     public List<String> getAllRecords(String tableName, String family, String qualifier) {
         List<String> resultValues = new ArrayList<>();
         try {

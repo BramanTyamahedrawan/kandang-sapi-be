@@ -84,7 +84,8 @@ public class HBaseCustomClient {
         }
     }
 
-    public void insertListRecord(TableName tableName, String rowKey, String family, String qualifier, List<String> values) {
+    public void insertListRecord(TableName tableName, String rowKey, String family, String qualifier,
+            List<String> values) {
         try {
             Table table = connection.getTable(tableName);
             Put p = new Put(Bytes.toBytes(rowKey));
@@ -116,7 +117,8 @@ public class HBaseCustomClient {
         return connection.getTable(TableName.valueOf(tableName));
     }
 
-    public <T> List<T> showListTable(String tablename, Map<String, String> columnMapping, Class<T> modelClass, int sizeLimit) {
+    public <T> List<T> showListTable(String tablename, Map<String, String> columnMapping, Class<T> modelClass,
+            int sizeLimit) {
         ResultScanner rsObj = null;
 
         try {
@@ -124,7 +126,7 @@ public class HBaseCustomClient {
 
             Scan s = new Scan();
             s.setCaching(100);
-            if(sizeLimit > 0){
+            if (sizeLimit > 0) {
                 s.setLimit(sizeLimit);
             }
 
@@ -152,57 +154,60 @@ public class HBaseCustomClient {
                     String variableName = columnMapping.get(columnName);
 
                     String value = Bytes.toString(CellUtil.cloneValue(cell));
-                        // Get the value of the cell as a string
-                        // Check if the variableName contains "department"
-                        if (columnMapping.containsKey(familyName)) {
-                            // Get the subfield name
-                            String subFieldName = columnName.substring(columnName.indexOf(".") + 1);
-                            // Get the department object from the main object
-                            Field familyField = object.getClass().getDeclaredField(familyName);
-                            familyField.setAccessible(true);
-                            Object familyObject = familyField.get(object);
-                            if (familyObject == null) {
-                                if (familyField.getType() == List.class) {
-                                    familyObject = new ArrayList<>();
-                                    familyField.set(object, familyObject);
-                                } else {
-                                    familyObject = familyField.getType().newInstance();
-                                    familyField.set(object, familyObject);
-                                }
-                            }
-                            // Set the value to the subfield
-                            if (familyObject instanceof List) {
-                                Object currentObject = familyObject;
-                                ObjectMapper mapper = new ObjectMapper();
-
-                                JsonNode jsonNode = null;
-                                try {
-                                    jsonNode = mapper.readTree((String) value);
-                                } catch (Exception e) {
-                                    // Tidak berformat JSON, lakukan konversi biasa
-                                }
-
-                                if (jsonNode != null && jsonNode.getNodeType() == JsonNodeFactory.instance.objectNode().getNodeType()) {
-                                    // Value berformat JSON, lakukan konversi ke Map
-                                    Map<String, Object> dataList = mapper.readValue((String) value, new TypeReference<Map<String, Object>>(){});
-                                    ((List) currentObject).add(dataList);
-                                } else {
-                                    // Value tidak berformat JSON, lakukan konversi biasa
-                                    ((List) currentObject).add(value);
-                                }
+                    // Get the value of the cell as a string
+                    // Check if the variableName contains "department"
+                    if (columnMapping.containsKey(familyName)) {
+                        // Get the subfield name
+                        String subFieldName = columnName.substring(columnName.indexOf(".") + 1);
+                        // Get the department object from the main object
+                        Field familyField = object.getClass().getDeclaredField(familyName);
+                        familyField.setAccessible(true);
+                        Object familyObject = familyField.get(object);
+                        if (familyObject == null) {
+                            if (familyField.getType() == List.class) {
+                                familyObject = new ArrayList<>();
+                                familyField.set(object, familyObject);
                             } else {
-                                Field subField = familyObject.getClass().getDeclaredField(subFieldName);
-                                subField.setAccessible(true);
-                                setField(subField, familyObject, value);
-                            }
-                        } else {
-                            if (variableName != null) {
-                                // Set the value to the variable
-                                Field field = object.getClass().getDeclaredField(variableName);
-                                field.setAccessible(true);
-                                setField(field, object, value);
+                                familyObject = familyField.getType().newInstance();
+                                familyField.set(object, familyObject);
                             }
                         }
+                        // Set the value to the subfield
+                        if (familyObject instanceof List) {
+                            Object currentObject = familyObject;
+                            ObjectMapper mapper = new ObjectMapper();
+
+                            JsonNode jsonNode = null;
+                            try {
+                                jsonNode = mapper.readTree((String) value);
+                            } catch (Exception e) {
+                                // Tidak berformat JSON, lakukan konversi biasa
+                            }
+
+                            if (jsonNode != null
+                                    && jsonNode.getNodeType() == JsonNodeFactory.instance.objectNode().getNodeType()) {
+                                // Value berformat JSON, lakukan konversi ke Map
+                                Map<String, Object> dataList = mapper.readValue((String) value,
+                                        new TypeReference<Map<String, Object>>() {
+                                        });
+                                ((List) currentObject).add(dataList);
+                            } else {
+                                // Value tidak berformat JSON, lakukan konversi biasa
+                                ((List) currentObject).add(value);
+                            }
+                        } else {
+                            Field subField = familyObject.getClass().getDeclaredField(subFieldName);
+                            subField.setAccessible(true);
+                            setField(subField, familyObject, value);
+                        }
+                    } else {
+                        if (variableName != null) {
+                            // Set the value to the variable
+                            Field field = object.getClass().getDeclaredField(variableName);
+                            field.setAccessible(true);
+                            setField(field, object, value);
+                        }
+                    }
                 }
                 objects.add(object);
             }
@@ -213,9 +218,9 @@ public class HBaseCustomClient {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             if (rsObj != null) {
-       
-    }
-    e.printStackTrace();
+
+            }
+            e.printStackTrace();
         } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -281,9 +286,12 @@ public class HBaseCustomClient {
                             // Tidak berformat JSON, lakukan konversi biasa
                         }
 
-                        if (jsonNode != null && jsonNode.getNodeType() == JsonNodeFactory.instance.objectNode().getNodeType()) {
+                        if (jsonNode != null
+                                && jsonNode.getNodeType() == JsonNodeFactory.instance.objectNode().getNodeType()) {
                             // Value berformat JSON, lakukan konversi ke Map
-                            Map<String, Object> dataList = mapper.readValue((String) value, new TypeReference<Map<String, Object>>(){});
+                            Map<String, Object> dataList = mapper.readValue((String) value,
+                                    new TypeReference<Map<String, Object>>() {
+                                    });
                             ((List) currentObject).add(dataList);
                         } else {
                             // Value tidak berformat JSON, lakukan konversi biasa
@@ -317,7 +325,8 @@ public class HBaseCustomClient {
         return null;
     }
 
-    public <T> T getDataByColumn(String tableName, Map<String, String> columnMapping, String familyName, String columnName, String columnValue, Class<T> modelClass) {
+    public <T> T getDataByColumn(String tableName, Map<String, String> columnMapping, String familyName,
+            String columnName, String columnValue, Class<T> modelClass) {
         try {
             // Create HBase table object
             Table table = connection.getTable(TableName.valueOf(tableName));
@@ -328,7 +337,8 @@ public class HBaseCustomClient {
             scan.setLimit(1000);
 
             // Add filter to scan by column value
-            Filter filter = new SingleColumnValueFilter(Bytes.toBytes(familyName), Bytes.toBytes(columnName), CompareOperator.EQUAL, Bytes.toBytes(columnValue));
+            Filter filter = new SingleColumnValueFilter(Bytes.toBytes(familyName), Bytes.toBytes(columnName),
+                    CompareOperator.EQUAL, Bytes.toBytes(columnValue));
             scan.setFilter(filter);
 
             // Create a list to store the objects
@@ -383,7 +393,8 @@ public class HBaseCustomClient {
         return null;
     }
 
-    public <T> List<T> getDataListByColumn(String tableName, Map<String, String> columnMapping, String familyName, String columnName, String columnValue, Class<T> modelClass, int sizeLimit) {
+    public <T> List<T> getDataListByColumn(String tableName, Map<String, String> columnMapping, String familyName,
+            String columnName, String columnValue, Class<T> modelClass, int sizeLimit) {
         ResultScanner rsObj = null;
 
         try {
@@ -399,7 +410,8 @@ public class HBaseCustomClient {
                 s.addFamily(family);
             }
 
-            Filter filter = new SingleColumnValueFilter(Bytes.toBytes(familyName), Bytes.toBytes(columnName), CompareOperator.EQUAL, Bytes.toBytes(columnValue));
+            Filter filter = new SingleColumnValueFilter(Bytes.toBytes(familyName), Bytes.toBytes(columnName),
+                    CompareOperator.EQUAL, Bytes.toBytes(columnValue));
             s.setFilter(filter);
 
             rsObj = table.getScanner(s);
@@ -449,9 +461,12 @@ public class HBaseCustomClient {
                                 // Tidak berformat JSON, lakukan konversi biasa
                             }
 
-                            if (jsonNode != null && jsonNode.getNodeType() == JsonNodeFactory.instance.objectNode().getNodeType()) {
+                            if (jsonNode != null
+                                    && jsonNode.getNodeType() == JsonNodeFactory.instance.objectNode().getNodeType()) {
                                 // Value berformat JSON, lakukan konversi ke Map
-                                Map<String, Object> dataList = mapper.readValue((String) value, new TypeReference<Map<String, Object>>(){});
+                                Map<String, Object> dataList = mapper.readValue((String) value,
+                                        new TypeReference<Map<String, Object>>() {
+                                        });
                                 ((List) currentObject).add(dataList);
                             } else {
                                 // Value tidak berformat JSON, lakukan konversi biasa
@@ -488,9 +503,6 @@ public class HBaseCustomClient {
         return null;
     }
 
-
-
-
     private void setField(Field field, Object object, String value) throws IllegalAccessException {
         // Ubah hak akses field agar dapat diakses
         field.setAccessible(true);
@@ -522,9 +534,9 @@ public class HBaseCustomClient {
             field.setBoolean(object, booleanValue);
         } else if (fieldType == Boolean.class) {
             Boolean booleanValue;
-            if(value.equalsIgnoreCase("true")){
+            if (value.equalsIgnoreCase("true")) {
                 booleanValue = Boolean.TRUE;
-            }else{
+            } else {
                 booleanValue = Boolean.FALSE;
             }
             field.set(object, booleanValue);
@@ -533,14 +545,15 @@ public class HBaseCustomClient {
         } else if (fieldType == Instant.class) {
             Instant instantValue = Instant.parse(value);
             field.set(object, instantValue);
-        
+
         } else {
             // Tipe data yang tidak dikenal, lewati saja
             System.out.println("Tipe data " + fieldType + " tidak dikenali.");
         }
     }
 
-    public List<String> getExistingByColumn(String tableName, Map<String, String> columnMapping, String family, String columnName, List<String> values) {
+    public List<String> getExistingByColumn(String tableName, Map<String, String> columnMapping, String family,
+            String columnName, List<String> values) {
         List<String> existingValues = new ArrayList<>();
         try {
             Table table = connection.getTable(TableName.valueOf(tableName));
@@ -572,5 +585,22 @@ public class HBaseCustomClient {
         }
 
         return existingValues;
+    }
+
+    public String getRecord(TableName tableName, String rowKey, String columnFamily, String qualifier)
+            throws IOException {
+        Table table = null;
+        try {
+            table = connection.getTable(tableName);
+            Get get = new Get(Bytes.toBytes(rowKey));
+            get.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier));
+            Result result = table.get(get);
+            byte[] value = result.getValue(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier));
+            return value != null ? Bytes.toString(value) : null;
+        } finally {
+            if (table != null) {
+                table.close();
+            }
+        }
     }
 }
