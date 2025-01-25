@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TujuanPemeliharaanService {
@@ -72,16 +74,36 @@ public class TujuanPemeliharaanService {
         System.out.println("Memulai proses penyimpanan data jenis hewan secara bulk...");
 
         List<TujuanPemeliharaan> tujuanPemeliharaanList = new ArrayList<>();
+        Set<String> tujuanSet = new HashSet<>();
         int skippedIncomplete = 0;
 
         for (TujuanPemeliharaanRequest request : tujuanPemeliharaanRequests) {
             try {
+
+                String filterTujuan = request.getTujuanPemeliharaan() != null ? request.getTujuanPemeliharaan().trim().toLowerCase() :null;
+                if(filterTujuan == null){
+                    System.out.println("Tujuan Pemeliharaan tidak valid");
+                    continue;
+                }
+
+                TujuanPemeliharaan tujuanPemeliharaanResponse = tujuanpemeliharaanRepository.findByTujuan(filterTujuan);
+                if(tujuanPemeliharaanResponse != null){
+                    System.out.println("Tujuan Pemeliharaan '"+ filterTujuan +"'sudah ada");
+                    continue;
+                }
+
+                if(tujuanSet.contains(filterTujuan)){
+                    System.out.println("Tujuan '" + filterTujuan + "' sudah ada dalam list");
+                    continue;
+                }
+
                 TujuanPemeliharaan tujuanPemeliharaan = new TujuanPemeliharaan();
                 tujuanPemeliharaan.setIdTujuanPemeliharaan(request.getIdTujuanPemeliharaan());
                 tujuanPemeliharaan.setTujuanPemeliharaan(request.getTujuanPemeliharaan());
                 tujuanPemeliharaan.setDeskripsi(request.getDeskripsi());
 
                 tujuanPemeliharaanList.add(tujuanPemeliharaan);
+                tujuanSet.add(filterTujuan);
                 System.out.println("Menambahkan data Tujuan Pemeliharaan ke dalam daftar: "
                         + tujuanPemeliharaan.getTujuanPemeliharaan());
             } catch (Exception e) {

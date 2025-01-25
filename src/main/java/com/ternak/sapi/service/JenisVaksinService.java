@@ -89,13 +89,31 @@ public class JenisVaksinService {
 
         List<JenisVaksin> jenisVaksinList = new ArrayList<>();
         Set<String> existingIds = new HashSet<>();
+        Set<String> exitingJenisVaksin = new HashSet<>();
         int skippedIncomplete = 0;
 
         for (JenisVaksinRequest request : jenisVaksinRequests) {
             try {
+
+                if(request.getJenis() == null){
+                    System.out.println("Data tidak lengkap");
+                    skippedIncomplete++;
+                    continue;
+                }
+
                 if (existingIds.contains(request.getIdJenisVaksin())) {
                     System.out.println("Data jenis vaksin sudah ada di dalam database.");
                     skippedIncomplete++;
+                    continue;
+                }
+                 JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findByJenisVaksin(request.getJenis());
+                if(jenisVaksinResponse != null ){
+                    System.out.println("Jenis Vaksin '" + request.getJenis() +"' sudah ada");
+                    continue;
+                }
+
+                if(exitingJenisVaksin.contains(request.getJenis())){
+                    System.out.println("Jenis Vaksin'"+ request.getJenis() +"' sudah ada dalam list");
                     continue;
                 }
 
@@ -105,6 +123,7 @@ public class JenisVaksinService {
                 jenisVaksin.setDeskripsi(request.getDeskripsi());
 
                 jenisVaksinList.add(jenisVaksin);
+                exitingJenisVaksin.add(request.getJenis());
                 System.out.println("Menambahkan data Jenis Vaksin ke dalam daftar: "
                         + jenisVaksin.getJenis());
             } catch (Exception e) {

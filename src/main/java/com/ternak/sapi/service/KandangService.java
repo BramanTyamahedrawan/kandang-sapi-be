@@ -1,20 +1,14 @@
 package com.ternak.sapi.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.*;
 import com.ternak.sapi.repository.HewanRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.model.JenisHewan;
-import com.ternak.sapi.model.Kandang;
-import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.KandangRequest;
 import com.ternak.sapi.payload.PagedResponse;
@@ -246,6 +240,128 @@ public class KandangService {
         System.out.println("Data yang di-skip karena kesalahan: " + skippedIncomplete);
     }
 
+    @Transactional
+    public void createImportKandang(List<KandangRequest> kandangRequests) throws IOException {
+        System.out.println("Memulai proses penyimpanan data kandang secara bulk...");
+
+        List<Kandang> kandangList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int dataTidakLengkap = 0;
+
+        Set<String> namaKandangSet = new HashSet<>();
+        Set<String> namaPeternakSet  = new HashSet<>();
+
+        for (KandangRequest request : kandangRequests) {
+            try {
+                if (request.getIdKandang() == null || request.getNamaPeternak() == null) {
+                    System.out.println("Data kandang tidak lengkap: " + request);
+                    dataTidakLengkap++;
+                    continue;
+                }
+
+                Peternak peternakResponse = peternakRepository.findByNamaPeternak(request.getNamaPeternak());
+                if (peternakResponse == null) {
+                    System.out.println("Peternak dengan Nama: " + request.getNamaPeternak()
+                            + " tidak ditemukan. Membuat default peternak.");
+                    Peternak newPeternak = new Peternak();
+                    newPeternak.setIdPeternak(UUID.randomUUID().toString());
+                    newPeternak.setNikPeternak(request.getNikPeternak() != null ? request.getNikPeternak() : "Nik belum dimasukan");
+                    newPeternak.setNamaPeternak(
+                            request.getNamaPeternak() != null ? request.getNamaPeternak() : "Nama Tidak Diketahui");
+                    newPeternak.setLokasi("Lokasi Tidak Diketahui");
+                    newPeternak.setTanggalPendaftaran("Tanggal Pendaftaran Tidak Diketahui");
+                    newPeternak
+                            .setNoTelepon("08123456789");
+                    newPeternak.setEmail("Email Tidak Diketahui");
+                    newPeternak.setAlamat(
+                            request.getAlamat() != null ? request.getAlamat() : "Alamat Tidak Diketahui");
+                    newPeternak.setJenisKelamin("Lainnya");
+                    newPeternak.setTanggalLahir("Tanggal Lahir Tidak Diketahui");
+                    newPeternak.setIdIsikhnas("Id Isikhnas Tidak Diketahui");
+                    newPeternak.setProvinsi("Provinsi Tidak Diketahui");
+                    newPeternak.setDusun("Dusun Tidak Diketahui");
+                    newPeternak.setDesa("Desa Tidak Diketahui");
+                    newPeternak.setKecamatan("Kecamatan Tidak Diketahui");
+                    newPeternak.setKabupaten("Kabupaten Tidak Diketahui");
+                    newPeternak.setLatitude(
+                            request.getLatitude() != null ? request.getLatitude()
+                                    : "Latitude Tidak Diketahui");
+                    newPeternak.setLongitude(
+                            request.getLongitude() != null ? request.getLongitude() : "Longitude Tidak Diketahui");
+                    peternakResponse = peternakRepository.saveByNamaPeternak(newPeternak);
+                }
+
+                if(namaPeternakSet.contains(request.getNamaPeternak().trim().toLowerCase())){
+                    System.out.println("Peternak sudah ada dalam list");
+                    continue;
+                }
+
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
+                if (jenisHewanResponse == null) {
+                    JenisHewan newJenisHewan = new JenisHewan();
+                    newJenisHewan.setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : UUID.randomUUID().toString());
+                    newJenisHewan.setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
+                    newJenisHewan.setDeskripsi("-");
+                    jenisHewanResponse = jenisHewanRepository.saveByJenis(newJenisHewan);
+                } else {
+                    System.out.println("Jenis hewan ditemukan: ID " + jenisHewanResponse.getIdJenisHewan() + ", Nama: " + jenisHewanResponse.getJenis());
+                }
+
+                Kandang kandangResponse = kandangRepository.findByNamaKandang(request.getNamaKandang());
+                if (kandangResponse != null) {
+                    System.out.println("Kandang dengan nama " + request.getNamaKandang() + " sudah ada di database.");
+                    continue;
+                }
+
+                if (namaKandangSet.contains(request.getNamaKandang())) {
+                    System.out.println("Kandang dengan nama " + request.getNamaKandang() + " sudah ada dalam list sementara.");
+                    continue;
+                }
+
+                // Jika tidak ada kandang yang sama, buat objek Kandang baru
+                Kandang kandang = new Kandang();
+                kandang.setPeternak(peternakResponse);
+                kandang.setJenisHewan(jenisHewanResponse);
+                kandang.setIdKandang(request.getIdKandang());
+                kandang.setAlamat(request.getAlamat());
+                kandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
+                        : "Kandang " + request.getIdKandang());
+                kandang.setLuas(request.getLuas());
+                kandang.setJenisKandang(request.getJenisKandang() != null ? request.getJenisKandang() : "Permanen");
+                kandang.setNilaiBangunan(request.getNilaiBangunan());
+                kandang.setLatitude(request.getLatitude());
+                kandang.setLongitude(request.getLongitude());
+                kandang.setNikPeternak(request.getNikPeternak());
+                kandang.setIdJenisHewan(request.getIdJenisHewan());
+                kandang.setKapasitas(request.getKapasitas());
+
+                // Menambahkan nama kandang ke dalam set untuk validasi selanjutnya
+                namaKandangSet.add(request.getNamaKandang());
+                namaPeternakSet.add(request.getNamaPeternak());
+                kandangList.add(kandang);
+
+                System.out.println("Menambahkan data kandang ke dalam daftar: " + kandang);
+
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data: " + request);
+                e.printStackTrace();
+                skippedIncomplete++;
+            }
+        }
+
+        // Jika ada data kandang yang valid untuk disimpan
+        if (!kandangList.isEmpty()) {
+            System.out.println("Menyimpan data kandang yang valid...");
+            kandangRepository.saveAll(kandangList);
+            System.out.println("Data kandang berhasil disimpan. Total: " + kandangList.size());
+        } else {
+            System.out.println("Tidak ada data kandang baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai.");
+        System.out.println("Data tidak lengkap: " + dataTidakLengkap);
+        System.out.println("Data yang di-skip karena kesalahan: " + skippedIncomplete);
+    }
 
 
     @Transactional

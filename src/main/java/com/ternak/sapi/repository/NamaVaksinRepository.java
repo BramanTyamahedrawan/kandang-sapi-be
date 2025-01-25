@@ -91,21 +91,19 @@ public class NamaVaksinRepository {
 
         for (NamaVaksin namaVaksin : namaVaksinList) {
             try {
-
+                String rowKey = safeString(namaVaksin.getIdNamaVaksin());
                 if (namaVaksin.getJenisVaksin() != null) {
                     JenisVaksin jenisVaksin = namaVaksin.getJenisVaksin();
-                    client.insertRecord(tableNamaVaksin, safeString(namaVaksin.getIdNamaVaksin()), "jenisVaksin",
+                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin",
                             "idJenisVaksin",
                             safeString(jenisVaksin.getIdJenisVaksin()));
-                    client.insertRecord(tableNamaVaksin, safeString(namaVaksin.getIdNamaVaksin()), "jenisVaksin",
+                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin",
                             "jenis",
                             safeString(jenisVaksin.getJenis()));
-                    client.insertRecord(tableNamaVaksin, safeString(namaVaksin.getIdNamaVaksin()), "jenisVaksin",
+                    client.insertRecord(tableNamaVaksin, rowKey, "jenisVaksin",
                             "deskripsi",
                             safeString(jenisVaksin.getDeskripsi()));
                 }
-
-                String rowKey = safeString(namaVaksin.getIdNamaVaksin());
 
                 client.insertRecord(tableNamaVaksin, rowKey, "main", "idNamaVaksin",
                         safeString(namaVaksin.getIdNamaVaksin()));

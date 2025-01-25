@@ -18,6 +18,7 @@ import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
 import com.ternak.sapi.util.AppConstants;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 // import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VaksinService {
@@ -214,6 +216,141 @@ public class VaksinService {
                 e.printStackTrace();
             }
         }
+        if (!vaksinList.isEmpty()) {
+            System.out.println("Menyimpan data vaksin yang valid...");
+            vaksinRepository.saveAll(vaksinList);
+            System.out.println("Proses penyimpanan selesai. Total data yang disimpan: " + vaksinList.size());
+        } else {
+            System.out.println("Tidak ada data peternak baru yang valid untuk disimpan.");
+        }
+
+        System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete + ", Data sudah terdaftar: "
+                + skippedExisting);
+
+    }
+
+    @Transactional
+    public void createImportVaksin(List<VaksinRequest> vaksinRequests) throws IOException {
+
+        System.out.println("Memulai proses penyimpanan data vaksin secara bulk...");
+
+        List<Vaksin> vaksinList = new ArrayList<>();
+        int skippedIncomplete = 0;
+        int skippedExisting = 0;
+
+        for (VaksinRequest request : vaksinRequests) {
+            try {
+                if (request.getKodeEartagNasional() == null && request.getNoKartuTernak() == null) {
+                    System.err.println("Data kode eartag atau kartu ternak null, skip data ini.");
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                if (request.getJenis() == null || request.getNama() == null) {
+                    System.err.println("Jenis Vaksin atau Nama Vaksin null dari frontend, skip data ini.");
+                    skippedExisting++;
+                    continue;
+                }
+
+                if (request.getNikPeternak() == null && request.getNamaPeternak() == null) {
+                    System.err.println("Data peternak (NIK atau Nama) null dari frontend, skip data ini.");
+                    skippedExisting++;
+                    continue;
+                }
+
+                Hewan hewanResponse = request.getKodeEartagNasional() != null
+                        ? hewanRepository.findByNoEartag(request.getKodeEartagNasional())
+                        : hewanRepository.findByNoKartuTernak(request.getNoKartuTernak());
+
+                if (hewanResponse == null) {
+                    System.err.println("Data hewan tidak ditemukan, skip data ini.");
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                Petugas petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                if (petugasResponse == null) {
+                    System.err.println("Petugas tidak ditemukan, membuat petugas baru.");
+                    Petugas petugas = new Petugas();
+                    petugas.setPetugasId(UUID.randomUUID().toString());
+                    petugas.setNamaPetugas(request.getNamaPetugas());
+                    petugas.setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas() : "Nik belum dimasukkan");
+                    petugas.setEmail("-");
+                    petugas.setNoTelp("-");
+                    petugas.setWilayah("-");
+                    petugas.setJob("vaksinasi");
+                    petugasResponse = petugasRepository.save(petugas);
+                }
+
+                JenisVaksin jenisVaksinResponse = jenisVaksinRepository.findByJenisVaksin(request.getJenis());
+                if (jenisVaksinResponse == null) {
+                    System.err.println("Jenis Vaksin tidak ditemukan, membuat jenis vaksin baru.");
+                    JenisVaksin jenisVaksin = new JenisVaksin();
+                    jenisVaksin.setIdJenisVaksin(UUID.randomUUID().toString());
+                    jenisVaksin.setJenis(request.getJenis());
+                    jenisVaksin.setDeskripsi("-");
+                    jenisVaksinResponse = jenisVaksinRepository.save(jenisVaksin);
+                }
+
+                NamaVaksin namaVaksinResponse = namaVaksinRepository.findByNamaVaksin(request.getNama());
+                if (namaVaksinResponse == null) {
+                    System.err.println("Nama vaksin tidak ditemukan, membuat nama vaksin baru.");
+                    NamaVaksin namaVaksin = new NamaVaksin();
+                    namaVaksin.setIdNamaVaksin(UUID.randomUUID().toString());
+                    namaVaksin.setNama(request.getNama());
+                    namaVaksin.setJenisVaksin(jenisVaksinResponse);
+                    namaVaksin.setDeskripsi("-");
+                    namaVaksinResponse = namaVaksinRepository.save(namaVaksin);
+                }
+
+                Peternak peternakResponse = request.getNikPeternak() != null
+                        ? peternakRepository.findByNikPeternak(request.getNikPeternak())
+                        : peternakRepository.findByNamaPeternak(request.getNamaPeternak());
+                if (peternakResponse == null) {
+                    System.err.println("Data peternak tidak ditemukan, membuat data peternak default.");
+                    Peternak peternak = new Peternak();
+                    peternak.setIdPeternak(UUID.randomUUID().toString());
+                    peternak.setNikPeternak(request.getNikPeternak());
+                    peternak.setNamaPeternak(request.getNamaPeternak());
+                    peternak.setLokasi("Lokasi Tidak Diketahui");
+                    peternak.setTanggalPendaftaran("Tanggal Pendaftaran Tidak Diketahui");
+                    peternak.setNoTelepon("08123456789");
+                    peternak.setEmail("Email Tidak Diketahui");
+                    peternak.setAlamat("Alamat Tidak Diketahui");
+                    peternak.setJenisKelamin("Lainnya");
+                    peternak.setTanggalLahir("Tanggal Lahir Tidak Diketahui");
+                    peternak.setIdIsikhnas("Id Isikhnas Tidak Diketahui");
+                    peternak.setProvinsi("Provinsi Tidak Diketahui");
+                    peternak.setDusun("Dusun Tidak Diketahui");
+                    peternak.setDesa("Desa Tidak Diketahui");
+                    peternak.setKecamatan("Kecamatan Tidak Diketahui");
+                    peternak.setKabupaten("Kabupaten Tidak Diketahui");
+                    peternak.setLatitude("Latitude Tidak Diketahui");
+                    peternak.setLongitude("Longitude Tidak Diketahui");
+                    peternakResponse = peternakRepository.saveByNamaPeternak(peternak);
+                }
+
+
+                // Simpan data vaksin ke dalam list
+                Vaksin vaksin = new Vaksin();
+                vaksin.setPeternak(peternakResponse);
+                vaksin.setPetugas(petugasResponse);
+                vaksin.setJenisVaksin(jenisVaksinResponse);
+                vaksin.setNamaVaksin(namaVaksinResponse);
+                vaksin.setHewan(hewanResponse);
+                vaksin.setIdVaksin(request.getIdVaksin());
+                vaksin.setTglVaksin(request.getTglVaksin());
+                vaksin.setBatchVaksin(request.getBatchVaksin());
+                vaksin.setVaksinKe(request.getVaksinKe());
+                vaksinList.add(vaksin);
+
+                System.out.println("Data vaksin berhasil ditambahkan: " + vaksin.getIdVaksin());
+            } catch (Exception e) {
+                System.err.println("Terjadi kesalahan saat memproses data vaksin: " + request.getIdVaksin());
+                e.printStackTrace();
+            }
+        }
+
         if (!vaksinList.isEmpty()) {
             System.out.println("Menyimpan data vaksin yang valid...");
             vaksinRepository.saveAll(vaksinList);

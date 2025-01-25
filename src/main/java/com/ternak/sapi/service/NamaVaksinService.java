@@ -1,8 +1,7 @@
 package com.ternak.sapi.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,6 +75,7 @@ public class NamaVaksinService {
         System.out.println("Memulai proses penyimpanan data peternak secara bulk...");
 
         List<NamaVaksin> namaVaksinList = new ArrayList<>();
+        Set<String> exitingNamaVaksin = new HashSet<>();
         int skippedIncomplete = 0;
         int skippedExisting = 0;
 
@@ -84,9 +84,15 @@ public class NamaVaksinService {
                 // System.out.println("Jenis Vaksin diterima dari frontend: " +
                 // request.getJenis());
 
-                if (request.getNama() == null) {
-                    System.err.println("Data Nama Vaksin tidak lengkap: " + request.getNama());
+                String filterNamaVaksin = request.getNama() != null ? request.getNama().trim().toLowerCase() : null;
+
+                if (filterNamaVaksin == null) {
                     skippedIncomplete++;
+                    continue;
+                }
+
+                if(exitingNamaVaksin.contains(filterNamaVaksin)){
+                    System.out.println("Nama Vaksin " + filterNamaVaksin + "sudah ada");
                     continue;
                 }
 
@@ -94,12 +100,18 @@ public class NamaVaksinService {
                 if (jenisVaksinResponse == null) {
                     System.err.println("Data jenis vaksin tidak ditemukan: " +
                             request.getJenis());
-                    skippedIncomplete++;
-                    continue;
-                    // jenisVaksinResponse = new JenisVaksin();
-                    // jenisVaksinResponse.setIdJenisVaksin("id jenis vaksin tidak valid");
-                    // jenisVaksinResponse.setJenisVaksin("nama vaksin tidak valid");
+                    System.out.println("Membuat jenis vaksin baru....");
+                     JenisVaksin jenisVaksin = new JenisVaksin();
+                     jenisVaksin.setIdJenisVaksin(UUID.randomUUID().toString());
+                     jenisVaksin.setJenis(request.getJenis() != null ? request.getJenis() : "Jenis vaksin tidak ditemukan waktu import nama vaksin");
+                     jenisVaksin.setDeskripsi(request.getJenis() != null ? "Deskripsi " +request.getJenis() : "-");
+                     jenisVaksinResponse = jenisVaksinRepository.save(jenisVaksin);
+                }
 
+                NamaVaksin namaVaksinResponse = namaVaksinRepository.findByNamaVaksin(filterNamaVaksin);
+                if(namaVaksinResponse!= null ){
+                    System.out.println("Nama Vaksin sudah ada didata base");
+                    continue;
                 }
 
                 NamaVaksin namaVaksin = new NamaVaksin();
@@ -109,6 +121,7 @@ public class NamaVaksinService {
                 namaVaksin.setJenisVaksin(jenisVaksinResponse);
 
                 namaVaksinList.add(namaVaksin);
+                exitingNamaVaksin.add(filterNamaVaksin);
                 System.out.println("Menambahkan data peternak ke dalam daftar: " + namaVaksin.getNama());
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data peternak: " + request.getNama());

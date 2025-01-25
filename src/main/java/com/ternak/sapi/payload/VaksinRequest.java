@@ -21,15 +21,16 @@ public class VaksinRequest {
     private String namaPeternak;
     private String noTelp;
     private String kodeEartagNasional;
+    private String noKartuTernak;
 
     public VaksinRequest() {
     }
 
     public VaksinRequest(String idVaksin, String peternak_id, String hewan_id, String petugas_id,
-            String nama, String jenis, String tglVaksin,
-            String tglPendataan, String nikPetugas, String namaPetugas, String nikPeternak, String namaPeternak,
-            String noTelp, String kodeEartagNasional, String idNamaVaksin, String idJenisVaksin, String deskripsiJenis,
-            String deskripsiNama) {
+                         String nama, String jenis, String tglVaksin,
+                         String tglPendataan, String nikPetugas, String namaPetugas, String nikPeternak, String namaPeternak,
+                         String noTelp, String kodeEartagNasional, String idNamaVaksin, String idJenisVaksin, String deskripsiJenis,
+                         String deskripsiNama) {
         this.idVaksin = idVaksin;
         this.peternak_id = peternak_id;
         this.hewan_id = hewan_id;
@@ -212,6 +213,14 @@ public class VaksinRequest {
         this.kodeEartagNasional = kodeEartagNasional;
     }
 
+    public void setNoKartuTernak(String noKartuTernak) {
+        this.noKartuTernak = noKartuTernak;
+    }
+
+    public String getNoKartuTernak() {
+        return noKartuTernak;
+    }
+
     public void set(String fieldName, String value) {
         switch (fieldName) {
             case "idVaksin":
@@ -267,6 +276,9 @@ public class VaksinRequest {
                 break;
             case "kodeEartagNasional":
                 this.kodeEartagNasional = value;
+                break;
+            case "noKartuTernak":
+                this.noKartuTernak = value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid field name: " + fieldName);
