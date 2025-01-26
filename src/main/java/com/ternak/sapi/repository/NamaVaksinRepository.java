@@ -68,9 +68,20 @@ public class NamaVaksinRepository {
     public NamaVaksin update(String idNamaVaksin, NamaVaksin namaVaksin)throws IOException{
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableNamaVaksin = TableName.valueOf(tableName);
+        System.err.println("Id Jenis Vaksin " + namaVaksin.getJenisVaksin().getIdJenisVaksin());
+        System.err.println("Nama Jenis Vaksin " + namaVaksin.getJenisVaksin().getJenis());
+
         client.insertRecord(tableNamaVaksin,idNamaVaksin,"main","nama",namaVaksin.getNama());
         client.insertRecord(tableNamaVaksin,idNamaVaksin,"main","deskripsi",namaVaksin.getDeskripsi());
         client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","idJenisVaksin",namaVaksin.getJenisVaksin().getIdJenisVaksin());
+        client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","jenis",namaVaksin.getJenisVaksin().getJenis());
+        client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","deskripsi",namaVaksin.getJenisVaksin().getDeskripsi());
+        return namaVaksin;
+    }
+
+    public NamaVaksin updateJenisVaksin(String idNamaVaksin, NamaVaksin namaVaksin)throws IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableNamaVaksin = TableName.valueOf(tableName);
         client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","jenis",namaVaksin.getJenisVaksin().getJenis());
         client.insertRecord(tableNamaVaksin,idNamaVaksin,"jenisVaksin","deskripsi",namaVaksin.getJenisVaksin().getDeskripsi());
         return namaVaksin;
@@ -180,6 +191,17 @@ public class NamaVaksinRepository {
                 namaVaksinId, NamaVaksin.class);
 
         return namaVaksin;
+    }
+
+    public List<NamaVaksin> findIdJenisVaksin (String idJenisVaksin) throws  IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tableNamaVaksin = TableName.valueOf(tableName);
+        Map<String,String> columnMapping = new HashMap<>();
+
+        columnMapping.put("idNamaVaksin","idNamaVaksin");
+        columnMapping.put("jenisVaksin","jenisVaksin");
+
+        return client.getDataListByColumn(tableNamaVaksin.toString(),columnMapping,"jenisVaksin","idJenisVaksin",idJenisVaksin,NamaVaksin.class,-1);
     }
 
 }

@@ -266,6 +266,29 @@ public class VaksinRepository {
                 return vaksin;
         }
 
+        public Vaksin updateJenisVaksin(String idVaksin,Vaksin vaksin)throws IOException{
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tbl = TableName.valueOf(tableName);
+
+                client.insertRecord(tbl,idVaksin,"jenisVaksin","jenis",vaksin.getJenisVaksin().getJenis());
+                client.insertRecord(tbl,idVaksin,"jenisVaksin","deskripsi",vaksin.getJenisVaksin().getDeskripsi());
+
+                return vaksin;
+        }
+
+        public Vaksin updateNamaVaksin(String idVaksin,Vaksin vaksin)throws IOException{
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tbl = TableName.valueOf(tableName);
+
+                client.insertRecord(tbl,idVaksin,"namaVaksin","nama",vaksin.getNamaVaksin().getNama());
+                client.insertRecord(tbl,idVaksin,"namaVaksin","deskripsi",vaksin.getNamaVaksin().getDeskripsi());
+                client.insertRecord(tbl,idVaksin,"jenisVaksin","idJenisVaksin",vaksin.getNamaVaksin().getJenisVaksin().getIdJenisVaksin());
+                client.insertRecord(tbl,idVaksin,"jenisVaksin","jenis",vaksin.getNamaVaksin().getJenisVaksin().getJenis());
+                client.insertRecord(tbl,idVaksin,"jenisVaksin","deskripsi",vaksin.getNamaVaksin().getJenisVaksin().getDeskripsi());
+
+                return vaksin;
+        }
+
         public boolean deleteById(String vaksinId) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
                 client.deleteRecord(tableName, vaksinId);
@@ -464,5 +487,27 @@ public class VaksinRepository {
                 }
 
                 return vaksinList;
+        }
+
+        public List<Vaksin> findIdJenisVaksin (String idJenisVaksin) throws IOException{
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableVaksin = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+
+                columnMapping.put("idVaksin","idVaksin");
+                columnMapping.put("jenisVaksin","jenisVaksin");
+
+                return client.getDataListByColumn(tableVaksin.toString(),columnMapping,"jenisVaksin","idJenisVaksin",idJenisVaksin,Vaksin.class,-1);
+        }
+
+        public List<Vaksin> findIdNamaVaksin (String idNamaVaksin) throws IOException{
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableVaksin = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+
+                columnMapping.put("idVaksin","idVaksin");
+                columnMapping.put("namaVaksin","namaVaksin");
+
+                return client.getDataListByColumn(tableVaksin.toString(),columnMapping,"namaVaksin","idNamaVaksin",idNamaVaksin,Vaksin.class,-1);
         }
 }
