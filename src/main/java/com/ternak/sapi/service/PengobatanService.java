@@ -45,17 +45,27 @@ public class PengobatanService {
     }
 
     public Pengobatan createPengobatan(PengobatanRequest pengobatanRequest) throws IOException {
+
+        if (pengobatanRepository.existsById(pengobatanRequest.getIdPengobatan())) {
+            throw new BadRequestException("Id Pengobatan " + pengobatanRequest.getIdPengobatan() + " sudah terdaftar.");
+        }
+
         Pengobatan pengobatan = new Pengobatan();
-        Petugas petugasResponse = petugasRepository.findById(pengobatanRequest.getPetugas_id().toString());
-        if (petugasResponse.getNamaPetugas() != null) {
+        Petugas petugasResponse = petugasRepository.findById(pengobatanRequest.getPetugasId().toString());
+        if (petugasResponse.getPetugasId() != null) {
+            pengobatan.setIdPengobatan(pengobatanRequest.getIdPengobatan());
             pengobatan.setIdKasus(pengobatanRequest.getIdKasus());
             pengobatan.setTanggalPengobatan(pengobatanRequest.getTanggalPengobatan());
             pengobatan.setTanggalKasus(pengobatanRequest.getTanggalKasus());
             pengobatan.setNamaInfrastruktur(pengobatanRequest.getNamaInfrastruktur());
-            pengobatan.setLokasi(pengobatanRequest.getLokasi());
             pengobatan.setDosis(pengobatanRequest.getDosis());
             pengobatan.setSindrom(pengobatanRequest.getSindrom());
             pengobatan.setDiagnosaBanding(pengobatanRequest.getDiagnosaBanding());
+            pengobatan.setLokasi(pengobatanRequest.getLokasi());
+            pengobatan.setProvinsiPengobatan(pengobatanRequest.getProvinsiPengobatan());
+            pengobatan.setKabupatenPengobatan(pengobatanRequest.getKabupatenPengobatan());
+            pengobatan.setKecamatanPengobatan(pengobatanRequest.getKecamatanPengobatan());
+            pengobatan.setDesaPengobatan(pengobatanRequest.getDesaPengobatan());
             pengobatan.setPetugas(petugasResponse);
 
             return pengobatanRepository.save(pengobatan);
@@ -73,7 +83,7 @@ public class PengobatanService {
 
     public Pengobatan updatePengobatan(String pengobatanId, PengobatanRequest pengobatanRequest) throws IOException {
         Pengobatan pengobatan = new Pengobatan();
-        Petugas petugasResponse = petugasRepository.findById(pengobatanRequest.getPetugas_id().toString());
+        Petugas petugasResponse = petugasRepository.findById(pengobatanRequest.getPetugasId().toString());
         if (petugasResponse.getNamaPetugas() != null) {
             pengobatan.setIdKasus(pengobatanRequest.getIdKasus());
             pengobatan.setTanggalPengobatan(pengobatanRequest.getTanggalPengobatan());
@@ -121,64 +131,37 @@ public class PengobatanService {
 
         for (PengobatanRequest request : pengobatanRequests) {
             try {
-                if (existingIds.contains(request.getIdKasus())) {
+                if (existingIds.contains(request.getIdPengobatan())) {
                     skippedExisting++;
                     continue;
                 }
 
                 Pengobatan pengobatan = new Pengobatan();
+                pengobatan.setIdPengobatan(request.getIdPengobatan());
                 pengobatan.setIdKasus(request.getIdKasus());
-                pengobatan.setTanggalPengobatan(request.getTanggalPengobatan() != null ? request.getTanggalPengobatan()
-                        : "-");
-                pengobatan.setTanggalKasus(request.getTanggalKasus() != null ? request.getTanggalKasus() : "-");
-                pengobatan.setNamaInfrastruktur(request.getNamaInfrastruktur() != null ? request.getNamaInfrastruktur()
-                        : "-");
-                pengobatan.setLokasi(request.getLokasi() != null ? request.getLokasi() : "-");
-                pengobatan.setDosis(request.getDosis() != null ? request.getDosis() : "-");
-                pengobatan.setSindrom(request.getSindrom() != null ? request.getSindrom() : "-");
-                pengobatan
-                        .setDiagnosaBanding(request.getDiagnosaBanding() != null ? request.getDiagnosaBanding() : "-");
-                pengobatan.setProvinsiPengobatan(
-                        request.getProvinsiPengobatan() != null ? request.getProvinsiPengobatan() : "-");
-                pengobatan.setKabupatenPengobatan(
-                        request.getKabupatenPengobatan() != null ? request.getKabupatenPengobatan() : "-");
-                pengobatan.setKecamatanPengobatan(
-                        request.getKecamatanPengobatan() != null ? request.getKecamatanPengobatan() : "-");
-                pengobatan.setDesaPengobatan(request.getDesaPengobatan() != null ? request.getDesaPengobatan() : "-");
+                pengobatan.setTanggalPengobatan(request.getTanggalPengobatan());
+                pengobatan.setTanggalKasus(request.getTanggalKasus());
+                pengobatan.setNamaInfrastruktur(request.getNamaInfrastruktur());
+                pengobatan.setLokasi(request.getLokasi());
+                pengobatan.setDosis(request.getDosis());
+                pengobatan.setSindrom(request.getSindrom());
+                pengobatan.setDiagnosaBanding(request.getDiagnosaBanding());
+                pengobatan.setProvinsiPengobatan(request.getProvinsiPengobatan());
+                pengobatan.setKabupatenPengobatan(request.getKabupatenPengobatan());
+                pengobatan.setKecamatanPengobatan(request.getKecamatanPengobatan());
+                pengobatan.setDesaPengobatan(request.getDesaPengobatan());
 
                 System.out.println("nama petugas diterima dari frontend: " + request.getNamaPetugas());
 
-                Petugas petugasResponse = null;
+                Petugas petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
                 if (request.getNamaPetugas() == null) {
                     System.out.println("Nama petugas tidak ditemukan. lewati proses penyimpanan data pengobatan ini.");
                     skippedIncomplete++;
                     continue;
-                } else {
-                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
-                    if (petugasResponse == null) {
-                        System.out.println("Nama Petugas tidak ditemukan di database. Membuat petugas baru...");
-
-                        Petugas newPetugas = new Petugas();
-                        newPetugas
-                                .setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas()
-                                        : "NIK Kosong");
-                        newPetugas.setNamaPetugas(request.getNamaPetugas());
-                        newPetugas.setEmail(
-                                request.getEmail() != null ? request.getEmail() : "-");
-                        newPetugas.setNoTelp(
-                                request.getNoTelp() != null ? request.getNoTelp() : "-");
-                        newPetugas.setJob(request.getJob() != null ? request.getJob() : "Pengobatan");
-                        newPetugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
-
-                        petugasResponse = petugasRepository.saveImport(newPetugas);
-                        System.out.println("Petugas baru berhasil dibuat: " + newPetugas.getNamaPetugas());
-                    } else {
-                        System.out.println("Petugas ditemukan di database: " + petugasResponse.getNamaPetugas());
-                    }
                 }
 
                 pengobatan.setPetugas(petugasResponse);
-                existingIds.add(request.getIdKasus());
+                existingIds.add(request.getIdPengobatan());
                 pengobatanList.add(pengobatan);
 
             } catch (Exception e) {

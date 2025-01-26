@@ -38,7 +38,7 @@ public class PengobatanController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{pengobatanId}")
-                .buildAndExpand(pengobatan.getIdKasus()).toUri();
+                .buildAndExpand(pengobatan.getIdPengobatan()).toUri();
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Pengobatan Created Successfully"));
@@ -56,7 +56,7 @@ public class PengobatanController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{pengobatanId}")
-                .buildAndExpand(pengobatan.getIdKasus()).toUri();
+                .buildAndExpand(pengobatan.getIdPengobatan()).toUri();
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Pengobatan Updated Successfully"));

@@ -182,11 +182,14 @@ public class KandangService {
                 JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
                 if (jenisHewanResponse == null) {
                     jenisHewanResponse = new JenisHewan();
-                    jenisHewanResponse.setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : "-");
-                    jenisHewanResponse.setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
+                    jenisHewanResponse
+                            .setIdJenisHewan(request.getIdJenisHewan() != null ? request.getIdJenisHewan() : "-");
+                    jenisHewanResponse
+                            .setJenis(request.getJenis() != null ? request.getJenis() : "Jenis hewan tidak ditemukan");
                     jenisHewanResponse.setDeskripsi("-");
                 } else {
-                    System.out.println("Jenis hewan ditemukan: ID " + jenisHewanResponse.getIdJenisHewan() + ", Nama: " + jenisHewanResponse.getJenis());
+                    System.out.println("Jenis hewan ditemukan: ID " + jenisHewanResponse.getIdJenisHewan() + ", Nama: "
+                            + jenisHewanResponse.getJenis());
                 }
 
                 // Pengecekan jika nama kandang sudah ada di database
@@ -198,7 +201,8 @@ public class KandangService {
 
                 // Pengecekan jika nama kandang sudah ada di dalam list sementara
                 if (namaKandangSet.contains(request.getNamaKandang())) {
-                    System.out.println("Kandang dengan nama " + request.getNamaKandang() + " sudah ada dalam list sementara.");
+                    System.out.println(
+                            "Kandang dengan nama " + request.getNamaKandang() + " sudah ada dalam list sementara.");
                     continue; // Lewatkan data ini dan tidak perlu disimpan
                 }
 
@@ -246,8 +250,6 @@ public class KandangService {
         System.out.println("Data yang di-skip karena kesalahan: " + skippedIncomplete);
     }
 
-
-
     @Transactional
     public void createImportKandangByNama(List<KandangRequest> kandangRequests) throws IOException {
         System.out.println("Memulai proses penyimpanan data kandang secara bulk...");
@@ -256,42 +258,65 @@ public class KandangService {
         int skippedIncomplete = 0;
         int dataTidakLengkap = 0;
 
+        // Set untuk menyimpan nama kandang yang sudah diproses
+        Set<String> namaKandangSet = new HashSet<>();
+
         for (KandangRequest request : kandangRequests) {
             try {
-                if (request.getNamaKandang() == null) {
+                if (request.getIdKandang() == null || request.getNikPeternak() == null) {
                     System.out.println("Data kandang tidak lengkap: " + request);
                     dataTidakLengkap++;
                     continue;
                 }
 
                 // Validasi: Temukan Peternak berdasarkan NIK
-                Peternak peternakResponse = peternakRepository.findByNamaPeternak(request.getNamaPeternak());
+                Peternak peternakResponse = peternakRepository.findById(request.getIdPeternak());
                 if (peternakResponse == null) {
-                    System.out.println("Peternak dengan Nama: " + request.getNamaPeternak()
-                            + " tidak ditemukan");
-                    skippedIncomplete++;
+                    System.out.println("data peternak tidak lengkap");
+                    dataTidakLengkap++;
                     continue;
                 }
 
-                // Buat objek Kandang
+                System.out.println("Jenis Hewan diterima dari frontend: " + request.getJenis());
+                JenisHewan jenisHewanResponse = jenisHewanRepository.findByJenis(request.getJenis());
+
+                // Pengecekan jika nama kandang sudah ada di database
+                Kandang kandangResponse = kandangRepository.findByNamaKandang(request.getNamaKandang());
+                if (kandangResponse != null) {
+                    System.out.println("Kandang dengan nama " + request.getNamaKandang() + " sudah ada di database.");
+                    continue; // Lewatkan data ini dan tidak perlu disimpan
+                }
+
+                // Pengecekan jika nama kandang sudah ada di dalam list sementara
+                if (namaKandangSet.contains(request.getNamaKandang())) {
+                    System.out.println(
+                            "Kandang dengan nama " + request.getNamaKandang() + " sudah ada dalam list sementara.");
+                    continue; // Lewatkan data ini dan tidak perlu disimpan
+                }
+
+                // Jika tidak ada kandang yang sama, buat objek Kandang baru
                 Kandang kandang = new Kandang();
+                kandang.setPeternak(peternakResponse);
+                kandang.setJenisHewan(jenisHewanResponse);
                 kandang.setIdKandang(request.getIdKandang());
-                kandang.setAlamat(request.getAlamat() != null ? request.getAlamat() : "-");
+                kandang.setAlamat(request.getAlamat());
                 kandang.setNamaKandang(request.getNamaKandang() != null ? request.getNamaKandang()
                         : "Kandang " + request.getIdKandang());
-                kandang.setLuas(request.getLuas() != null ? request.getLuas() : "-");
+                kandang.setLuas(request.getLuas());
                 kandang.setJenisKandang(request.getJenisKandang() != null ? request.getJenisKandang() : "Permanen");
-                kandang.setNilaiBangunan(request.getNilaiBangunan() != null ? request.getNilaiBangunan() : "-");
-                kandang.setLatitude(request.getLatitude() != null ? request.getLatitude() : "-");
-                kandang.setLongitude(request.getLongitude() != null ? request.getLongitude() : "-");
-                kandang.setNikPeternak(request.getNikPeternak() != null ? request.getNikPeternak() : "-");
-                kandang.setKapasitas(request.getKapasitas() != null ? request.getKapasitas() : "-");
+                kandang.setNilaiBangunan(request.getNilaiBangunan());
+                kandang.setLatitude(request.getLatitude());
+                kandang.setLongitude(request.getLongitude());
+                kandang.setNikPeternak(request.getNikPeternak());
+                kandang.setIdJenisHewan(request.getIdJenisHewan());
+                kandang.setKapasitas(request.getKapasitas());
 
-                kandang.setPeternak(peternakResponse);
-
-                // Tambahkan ke list
+                // Menambahkan nama kandang ke dalam set untuk validasi selanjutnya
+                namaKandangSet.add(request.getNamaKandang());
                 kandangList.add(kandang);
+
                 System.out.println("Menambahkan data kandang ke dalam daftar: " + kandang);
+
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data: " + request);
                 e.printStackTrace();

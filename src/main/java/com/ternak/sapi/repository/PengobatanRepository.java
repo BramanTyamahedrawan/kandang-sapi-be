@@ -1,10 +1,10 @@
 package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
-import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.Pengobatan;
 import com.ternak.sapi.model.Petugas;
-import com.ternak.sapi.model.User;
+import com.ternak.sapi.model.Pkb;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -23,6 +23,7 @@ public class PengobatanRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
+        columnMapping.put("idPengobatan", "idPengobatan");
         columnMapping.put("idKasus", "idKasus");
         columnMapping.put("tanggalPengobatan", "tanggalPengobatan");
         columnMapping.put("tanggalKasus", "tanggalKasus");
@@ -43,36 +44,71 @@ public class PengobatanRepository {
     public Pengobatan save(Pengobatan pengobatan) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        String rowKey = pengobatan.getIdKasus();
+        String rowKey = pengobatan.getIdPengobatan();
 
         TableName tablePengobatan = TableName.valueOf(tableName);
-        client.insertRecord(tablePengobatan, rowKey, "main", "idKasus", rowKey);
+        client.insertRecord(tablePengobatan, rowKey, "main", "idPengobatan", safeString(pengobatan.getIdPengobatan()));
+        if (pengobatan.getIdKasus() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "main", "idKasus", safeString(pengobatan.getIdKasus()));
+        }
         if (pengobatan.getTanggalPengobatan() != null) {
             client.insertRecord(tablePengobatan, rowKey, "main", "tanggalPengobatan",
-                    pengobatan.getTanggalPengobatan());
+                    safeString(pengobatan.getTanggalPengobatan()));
         }
         if (pengobatan.getTanggalKasus() != null) {
-            client.insertRecord(tablePengobatan, rowKey, "main", "tanggalKasus", pengobatan.getTanggalKasus());
+            client.insertRecord(tablePengobatan, rowKey, "main", "tanggalKasus",
+                    safeString(pengobatan.getTanggalKasus()));
         }
         if (pengobatan.getNamaInfrastruktur() != null) {
             client.insertRecord(tablePengobatan, rowKey, "main", "namaInfrastruktur",
-                    pengobatan.getNamaInfrastruktur());
-        }
-        if (pengobatan.getLokasi() != null) {
-            client.insertRecord(tablePengobatan, rowKey, "main", "lokasi", pengobatan.getLokasi());
-        }
-        if (pengobatan.getDosis() != null) {
-            client.insertRecord(tablePengobatan, rowKey, "main", "dosis", pengobatan.getDosis());
+                    safeString(pengobatan.getNamaInfrastruktur()));
         }
         if (pengobatan.getSindrom() != null) {
-            client.insertRecord(tablePengobatan, rowKey, "main", "sindrom", pengobatan.getSindrom());
+            client.insertRecord(tablePengobatan, rowKey, "main", "sindrom", safeString(pengobatan.getSindrom()));
         }
         if (pengobatan.getDiagnosaBanding() != null) {
-            client.insertRecord(tablePengobatan, rowKey, "main", "diagnosaBanding", pengobatan.getDiagnosaBanding());
+            client.insertRecord(tablePengobatan, rowKey, "main", "diagnosaBanding",
+                    safeString(pengobatan.getDiagnosaBanding()));
         }
-        client.insertRecord(tablePengobatan, rowKey, "petugas", "nikPetugas", pengobatan.getPetugas().getNikPetugas());
-        client.insertRecord(tablePengobatan, rowKey, "petugas", "namaPetugas",
-                pengobatan.getPetugas().getNamaPetugas());
+        if (pengobatan.getDosis() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "main", "dosis", safeString(pengobatan.getDosis()));
+        }
+        if (pengobatan.getLokasi() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "main", "lokasi", safeString(pengobatan.getLokasi()));
+        }
+        if (pengobatan.getProvinsiPengobatan() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "main", "provinsiPengobatan",
+                    safeString(pengobatan.getProvinsiPengobatan()));
+        }
+        if (pengobatan.getKabupatenPengobatan() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "main", "kabupatenPengobatan",
+                    safeString(pengobatan.getKabupatenPengobatan()));
+        }
+        if (pengobatan.getKecamatanPengobatan() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "main", "kecamatanPengobatan",
+                    safeString(pengobatan.getKecamatanPengobatan()));
+        }
+        if (pengobatan.getDesaPengobatan() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "main", "desaPengobatan",
+                    safeString(pengobatan.getDesaPengobatan()));
+        }
+
+        // Petugas
+        if (pengobatan.getPetugas() != null) {
+            client.insertRecord(tablePengobatan, rowKey, "petugas", "petugasId",
+                    pengobatan.getPetugas().getPetugasId());
+            client.insertRecord(tablePengobatan, rowKey, "petugas", "nikPetugas",
+                    pengobatan.getPetugas().getNikPetugas());
+            client.insertRecord(tablePengobatan, rowKey, "petugas", "namaPetugas",
+                    pengobatan.getPetugas().getNamaPetugas());
+            client.insertRecord(tablePengobatan, rowKey, "petugas", "email",
+                    pengobatan.getPetugas().getEmail());
+            client.insertRecord(tablePengobatan, rowKey, "petugas", "noTelp",
+                    pengobatan.getPetugas().getNoTelp());
+            client.insertRecord(tablePengobatan, rowKey, "petugas", "job",
+                    pengobatan.getPetugas().getJob());
+        }
+
         client.insertRecord(tablePengobatan, rowKey, "detail", "created_by", "Polinema");
         return pengobatan;
     }
@@ -88,32 +124,57 @@ public class PengobatanRepository {
             try {
                 if (pengobatan.getPetugas() != null) {
                     Petugas petugas = pengobatan.getPetugas();
-                    if (petugas.getNamaPetugas() != null) {
-                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdKasus()), "petugas",
+                    if (petugas.getPetugasId() != null) {
+                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdPengobatan()),
+                                "petugas",
+                                "petugasId",
+                                safeString(petugas.getPetugasId()));
+                    }
+                    if (petugas.getNikPetugas() != null) {
+                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdPengobatan()),
+                                "petugas",
                                 "nikPetugas",
                                 safeString(petugas.getNikPetugas()));
-                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdKasus()), "petugas",
+                    }
+                    if (petugas.getNamaPetugas() != null) {
+                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdPengobatan()),
+                                "petugas",
                                 "namaPetugas",
                                 safeString(petugas.getNamaPetugas()));
-                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdKasus()), "petugas",
+                    }
+                    if (petugas.getEmail() != null) {
+                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdPengobatan()),
+                                "petugas",
                                 "email",
                                 safeString(petugas.getEmail()));
-                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdKasus()), "petugas",
+                    }
+                    if (petugas.getNoTelp() != null) {
+                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdPengobatan()),
+                                "petugas",
                                 "noTelp",
                                 safeString(petugas.getNoTelp()));
-                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdKasus()), "petugas", "job",
+                    }
+                    if (petugas.getJob() != null) {
+                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdPengobatan()),
+                                "petugas",
+                                "job",
                                 safeString(petugas.getJob()));
-                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdKasus()), "petugas",
+                    }
+                    if (petugas.getWilayah() != null) {
+                        client.insertRecord(tablePengobatan, safeString(pengobatan.getIdPengobatan()),
+                                "petugas",
                                 "wilayah",
                                 safeString(petugas.getWilayah()));
-
                     }
                 }
 
-                String rowKey = pengobatan.getIdKasus();
+                String rowKey = pengobatan.getIdPengobatan();
 
+                client.insertRecord(tablePengobatan, rowKey, "main", "idPengobatan",
+                        safeString(pengobatan.getIdPengobatan()));
                 if (pengobatan.getIdKasus() != null) {
-                    client.insertRecord(tablePengobatan, rowKey, "main", "idKasus", rowKey);
+                    client.insertRecord(tablePengobatan, rowKey, "main", "idKasus",
+                            safeString(pengobatan.getIdKasus()));
                 }
                 if (pengobatan.getTanggalPengobatan() != null) {
                     client.insertRecord(tablePengobatan, rowKey, "main", "tanggalPengobatan",
@@ -159,12 +220,12 @@ public class PengobatanRepository {
                 client.insertRecord(tablePengobatan, rowKey, "detail", "created_by", "Polinema");
 
                 System.out.println(
-                        "Data berhasil disimpan ke HBase dengan ID Inseminasi: " + pengobatan.getIdKasus());
+                        "Data berhasil disimpan ke HBase dengan ID Pengobatan: " + pengobatan.getIdPengobatan());
 
             } catch (Exception e) {
-                failedRows.add(pengobatan.getIdKasus());
+                failedRows.add(pengobatan.getIdPengobatan());
                 System.err.println(
-                        "Failed to insert record for ID: " + pengobatan.getIdKasus() + ", Error: "
+                        "Failed to insert record for ID: " + pengobatan.getIdPengobatan() + ", Error: "
                                 + e.getMessage());
             }
         }
@@ -187,6 +248,7 @@ public class PengobatanRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         // Add the mappings to the HashMap
+        columnMapping.put("idPengobatan", "idPengobatan");
         columnMapping.put("idKasus", "idKasus");
         columnMapping.put("tanggalPengobatan", "tanggalPengobatan");
         columnMapping.put("tanggalKasus", "tanggalKasus");
@@ -210,6 +272,7 @@ public class PengobatanRepository {
         TableName table = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
         // Add the mappings to the HashMap
+        columnMapping.put("idPengobatan", "idPengobatan");
         columnMapping.put("idKasus", "idKasus");
         columnMapping.put("tanggalPengobatan", "tanggalPengobatan");
         columnMapping.put("tanggalKasus", "tanggalKasus");
@@ -234,6 +297,7 @@ public class PengobatanRepository {
         TableName table = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
         // Add the mappings to the HashMap
+        columnMapping.put("idPengobatan", "idPengobatan");
         columnMapping.put("idKasus", "idKasus");
         columnMapping.put("tanggalPengobatan", "tanggalPengobatan");
         columnMapping.put("tanggalKasus", "tanggalKasus");
@@ -300,5 +364,17 @@ public class PengobatanRepository {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         client.deleteRecord(tableName, pengobatanId);
         return true;
+    }
+
+    public boolean existsById(String pengobatanId) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePengobatan = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("idPengobatan", "idPengobatan");
+
+        Pengobatan pengobatan = client.getDataByColumn(tablePengobatan.toString(), columnMapping, "main",
+                "idPengobatan", pengobatanId,
+                Pengobatan.class);
+        return pengobatan.getIdPengobatan() != null;
     }
 }

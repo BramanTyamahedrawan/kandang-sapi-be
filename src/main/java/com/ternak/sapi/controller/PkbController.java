@@ -5,7 +5,6 @@ import com.ternak.sapi.payload.ApiResponse;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.PkbRequest;
 import com.ternak.sapi.payload.PagedResponse;
-import com.ternak.sapi.payload.PengobatanRequest;
 import com.ternak.sapi.service.PkbService;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.http.HttpStatus;
