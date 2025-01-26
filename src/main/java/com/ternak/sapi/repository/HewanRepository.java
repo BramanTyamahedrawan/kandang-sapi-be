@@ -915,6 +915,36 @@ public class HewanRepository {
                 return hewan.getKodeEartagNasional() != null ? hewan : null;
         }
 
+        public Hewan findByNoKartuTernak(String noKartuTernak) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+
+                TableName tableUsers = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+
+                // Add the mappings to the HashMap
+                columnMapping.put("idHewan", "idHewan");
+                columnMapping.put("idIsikhnasTernak", "idIsikhnasTernak");
+                columnMapping.put("kodeEartagNasional", "kodeEartagNasional");
+                columnMapping.put("noKartuTernak", "noKartuTernak");
+                columnMapping.put("peternak", "peternak");
+                columnMapping.put("petugas", "petugas");
+                columnMapping.put("kandang", "kandang");
+                columnMapping.put("jenisHewan", "jenisHewan");
+                columnMapping.put("rumpunHewan", "rumpunHewan");
+                columnMapping.put("tujuanPemeliharaan", "tujuanPemeliharaan");
+                columnMapping.put("sex", "sex");
+                columnMapping.put("umur", "umur");
+                columnMapping.put("tanggalLahir", "tanggalLahir");
+                columnMapping.put("tempatLahir", "tempatLahir");
+
+                columnMapping.put("identifikasiHewan", "identifikasiHewan");
+                columnMapping.put("tanggalTerdaftar", "tanggalTerdaftar");
+                columnMapping.put("file_path", "file_path");
+                Hewan hewan = client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "noKartuTernak",
+                                noKartuTernak, Hewan.class);
+                return hewan.getNoKartuTernak() != null ? hewan : null;
+        }
+
         public List<Hewan> findHewanByPeternak(String peternakID, int size) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 

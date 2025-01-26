@@ -139,7 +139,7 @@ public class JenisVaksinRepository {
         JenisVaksin jenisVaksin = client.getDataByColumn(tableJenisVaksin.toString(), columnMapping, "main", "jenis",
                 jenis,
                 JenisVaksin.class);
-        return jenisVaksin;
+        return jenisVaksin.getJenis() != null ? jenisVaksin : null;
 
     }
 

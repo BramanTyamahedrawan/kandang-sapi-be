@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class JenisHewanService {
@@ -65,18 +67,18 @@ public class JenisHewanService {
         jenishewan.setDeskripsi(jenishewanRequest.getDeskripsi());
 
         List<Hewan> hewanList = hewanRepository.findByJenisHewanId(jenishewanId);
-        if(hewanList != null){
-            for(Hewan hewan : hewanList){
+        if (hewanList != null) {
+            for (Hewan hewan : hewanList) {
                 hewan.setJenisHewan(jenishewan);
-                hewanRepository.updateJenisHewanByHewan(hewan.getIdHewan(),hewan);
+                hewanRepository.updateJenisHewanByHewan(hewan.getIdHewan(), hewan);
             }
         }
 
         List<Kandang> kandangList = kandangRepository.findByJenisHewanId(jenishewanId);
-        if(kandangList != null){
-            for (Kandang kandang : kandangList){
+        if (kandangList != null) {
+            for (Kandang kandang : kandangList) {
                 kandang.setJenisHewan(jenishewan);
-                kandangRepository.updateJenisHewanByKandang(kandang.getIdKandang(),kandang);
+                kandangRepository.updateJenisHewanByKandang(kandang.getIdKandang(), kandang);
             }
         }
 
@@ -84,7 +86,7 @@ public class JenisHewanService {
     }
 
     public void deleteJenisHewanById(String jenishewanId) throws IOException {
-            jenishewanRepository.deleteById(jenishewanId);
+        jenishewanRepository.deleteById(jenishewanId);
     }
 
     private void validatePageNumberAndSize(int page, int size) {
@@ -102,24 +104,46 @@ public class JenisHewanService {
         System.out.println("Memulai proses penyimpanan data jenis hewan secara bulk...");
 
         List<JenisHewan> jenishewanList = new ArrayList<>();
+        Set<String> jenisHewanSet = new HashSet<>(); 
         int skippedIncomplete = 0;
-        // int skippedExisting = 0;
 
         for (JenisHewanRequest request : jenishewanRequests) {
             try {
+                // Normalisasi string untuk konsistensi
+                String jenisNormalized = request.getJenis() != null ? request.getJenis().trim().toLowerCase() : null;
+
+                if (jenisNormalized == null || jenisNormalized.isEmpty()) {
+                    System.out.println("Data jenis hewan tidak valid atau kosong: " + request);
+                    skippedIncomplete++;
+                    continue;
+                }
+
+                JenisHewan jenisHewanResponse = jenishewanRepository.findByJenis(jenisNormalized);
+                if (jenisHewanResponse != null) {
+                    System.out.println("Data '" + jenisNormalized + "' sudah ada di database");
+                    continue;
+                }
+
+                if (jenisHewanSet.contains(jenisNormalized)) {
+                    System.out.println("Jenis hewan '" + jenisNormalized + "' sudah ada dalam list");
+                    continue;
+                }
+
                 JenisHewan jenishewan = new JenisHewan();
                 jenishewan.setIdJenisHewan(request.getIdJenisHewan());
-                jenishewan.setJenis(request.getJenis());
-                jenishewan.setDeskripsi(request.getDeskripsi());
+                jenishewan.setJenis(jenisNormalized);
+                jenishewan.setDeskripsi(request.getDeskripsi() != null ? request.getDeskripsi() : "-");
 
                 jenishewanList.add(jenishewan);
-                System.out.println("Menambahkan data jenis hewa ke dalam daftar: " + jenishewan.getJenis());
+                jenisHewanSet.add(jenisNormalized); // Tambahkan jenis ke set
+                System.out.println("Menambahkan data jenis hewan ke dalam daftar: " + jenisNormalized);
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data: " + request);
                 e.printStackTrace();
             }
         }
 
+        // Simpan semua data valid ke dalam database
         if (!jenishewanList.isEmpty()) {
             System.out.println("Menyimpan data jenis hewan yang valid...");
             jenishewanRepository.saveAll(jenishewanList);
@@ -130,5 +154,6 @@ public class JenisHewanService {
 
         System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete);
     }
+
 
 }

@@ -96,4 +96,16 @@ public class VaksinController {
         }
     }
 
+    @PostMapping("/import")
+    public ResponseEntity<?> createImportVaksin(@RequestBody List<VaksinRequest> vaksinRequests) {
+        try {
+            System.out.println("Payload diterima: " + vaksinRequests);
+            vaksinService.createImportVaksin(vaksinRequests);
+            return ResponseEntity.ok("Data berhasil diproses.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Terjadi kesalahan.");
+        }
+    }
+
 }

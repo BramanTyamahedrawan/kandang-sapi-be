@@ -345,8 +345,6 @@ public class VaksinRepository {
                                                 safeString(vaksin.getBatchVaksin()));
                                 client.insertRecord(tableVaksin, rowKey, "main", "vaksinKe",
                                                 safeString(vaksin.getVaksinKe()));
-                                client.insertRecord(tableVaksin, rowKey, "main", "tglPendataan",
-                                                safeString(vaksin.getTglPendataan()));
 
                                 if (vaksin.getJenisVaksin() != null) {
                                         JenisVaksin jenisVaksin = vaksin.getJenisVaksin();

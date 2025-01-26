@@ -63,10 +63,7 @@ public class JenisHewanRepository {
                     client.insertRecord(tableJenisHewan, rowKey, "main", "jenis", safeString(jenisHewan.getJenis()));
                 }
                 client.insertRecord(tableJenisHewan, rowKey, "main", "deskripsi",
-                        (jenisHewan.getDeskripsi() != null && !jenisHewan.getDeskripsi().isEmpty())
-                                ? jenisHewan.getDeskripsi()
-                                : "Deskripsi "
-                                        + (jenisHewan.getJenis() != null ? jenisHewan.getJenis() : "Tidak Diketahui"));
+                        safeString(jenisHewan.getDeskripsi()));
                 client.insertRecord(tableJenisHewan, rowKey, "detail", "created_by", "Polinema");
 
                 System.out.println("Berhasil menyimpan Jenis Hewan: " + jenisHewan.getIdJenisHewan());
@@ -88,7 +85,7 @@ public class JenisHewanRepository {
     public JenisHewan saveByJenis(JenisHewan jenis) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        String rowKey = jenis.getJenis();
+        String rowKey = jenis.getIdJenisHewan();
         TableName tableJenisHewan = TableName.valueOf(tableName);
 
         client.insertRecord(tableJenisHewan, rowKey, "main", "idJenisHewan", rowKey);
@@ -129,12 +126,13 @@ public class JenisHewanRepository {
     public JenisHewan findByJenis(String jenis) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         TableName tableJenisHewan = TableName.valueOf(tableName);
-        Map<String,String> columnMapping = new HashMap<>();
+        Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("idJenisHewan", "idJenisHewan");
         columnMapping.put("jenis", "jenis");
         columnMapping.put("deskripsi", "deskripsi");
 
-        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping,"main","jenis", jenis,JenisHewan.class);
+        JenisHewan jenisHewan = client.getDataByColumn(tableJenisHewan.toString(), columnMapping, "main", "jenis",
+                jenis, JenisHewan.class);
         return jenisHewan.getJenis() != null ? jenisHewan : null;
     }
 

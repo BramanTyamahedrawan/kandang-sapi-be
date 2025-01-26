@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RumpunHewanService {
@@ -90,17 +92,36 @@ public class RumpunHewanService {
         System.out.println("Memulai proses penyimpanan data jenis hewan secara bulk...");
 
         List<RumpunHewan> rumpunhewanList = new ArrayList<>();
+        Set<String> rumpunSet = new HashSet<>();
         int skippedIncomplete = 0;
         // int skippedExisting = 0;
 
         for (RumpunHewanRequest request : rumpunhewanRequests) {
+
+            String namaRumpun = request.getRumpun() != null ? request.getRumpun().trim().toLowerCase() : null;
+            if(namaRumpun == null){
+                System.out.println("Data Tidak lengkap");
+                continue;
+            }
+
+            RumpunHewan rumpunHewanResponse = rumpunhewanRepository.findByRumpun(request.getRumpun());
+            if(rumpunHewanResponse != null){
+                System.out.println("Rumpun " +request.getRumpun() + "sudah ada");
+                continue;
+            }
+
+            if(rumpunSet.contains(namaRumpun)){
+                System.out.println("Rumpun '" + namaRumpun + "'sudah ada dilist");
+                continue;
+            }
             try {
                 RumpunHewan rumpunhewan = new RumpunHewan();
                 rumpunhewan.setIdRumpunHewan(request.getIdRumpunHewan());
-                rumpunhewan.setRumpun(request.getRumpun());
+                rumpunhewan.setRumpun(namaRumpun);
                 rumpunhewan.setDeskripsi(request.getDeskripsi());
 
                 rumpunhewanList.add(rumpunhewan);
+                rumpunSet.add(namaRumpun);
                 System.out.println("Menambahkan data rumpun hewan ke dalam daftar: " + rumpunhewan.getRumpun());
             } catch (Exception e) {
                 System.err.println("Terjadi kesalahan saat memproses data: " + request);

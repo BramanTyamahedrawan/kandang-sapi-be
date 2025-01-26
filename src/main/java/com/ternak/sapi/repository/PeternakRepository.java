@@ -24,7 +24,7 @@ public class PeternakRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idPeternak", "idPeternak");
-        columnMapping.put("petugasId", "petugasId");
+//        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
@@ -55,7 +55,7 @@ public class PeternakRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idPeternak", "idPeternak");
-        columnMapping.put("petugasId", "petugasId");
+//        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
@@ -193,7 +193,7 @@ public class PeternakRepository {
         client.insertRecord(tablePeternak, rowKey, "main", "alamat", peternak.getAlamat());
         client.insertRecord(tablePeternak, rowKey, "main", "latitude", peternak.getLatitude());
         client.insertRecord(tablePeternak, rowKey, "main", "longitude", peternak.getLongitude());
-        client.insertRecord(tablePeternak, rowKey, "main", "petugasId", peternak.getPetugasId());
+//        client.insertRecord(tablePeternak, rowKey, "main", "petugasId", peternak.getPetugasId());
 
         if (peternak.getPetugas() != null) {
             Petugas petugas = peternak.getPetugas();
@@ -209,6 +209,8 @@ public class PeternakRepository {
                 client.insertRecord(tablePeternak, rowKey, "petugas", "job", safeString(petugas.getJob()));
                 client.insertRecord(tablePeternak, rowKey, "petugas", "noTelp", safeString(petugas.getNoTelp()));
             }
+        }else{
+            client.insertRecord(tablePeternak,rowKey,"petugas","namaPetugas","Petugas tidak diketahui");
         }
 
         return peternak;
@@ -377,7 +379,7 @@ public class PeternakRepository {
 
         // Add the mappings to the HashMap
         columnMapping.put("idPeternak", "idPeternak");
-        columnMapping.put("petugasId", "petugasId");
+//        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
@@ -513,7 +515,7 @@ public class PeternakRepository {
         TableName tablePeternak = TableName.valueOf(tableName);
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("idPeternak", "idPeternak");
-        columnMapping.put("petugasId", "petugasId");
+//        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
@@ -546,7 +548,7 @@ public class PeternakRepository {
         TableName tablePeternak = TableName.valueOf(tableName); // Sesuaikan nama tabel HBase Anda
         Map<String, String> columnMapping = new HashMap<>();
         columnMapping.put("idPeternak", "idPeternak");
-        columnMapping.put("petugasId", "petugasId");
+//        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("petugas", "petugas");
 
         return client.getDataListByColumn(tablePeternak.toString(), columnMapping,
@@ -559,7 +561,7 @@ public class PeternakRepository {
         Map<String, String> columnMapping = new HashMap<>();
 
         columnMapping.put("idPeternak", "idPeternak");
-        columnMapping.put("petugasId", "petugasId");
+//        columnMapping.put("petugasId", "petugasId");
         columnMapping.put("nikPeternak", "nikPeternak");
         columnMapping.put("namaPeternak", "namaPeternak");
         columnMapping.put("lokasi", "lokasi");
