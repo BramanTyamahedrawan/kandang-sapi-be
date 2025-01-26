@@ -1,6 +1,7 @@
 package com.ternak.sapi.model;
 
 public class Pengobatan {
+    private String idPengobatan;
     private String idKasus;
     private String tanggalPengobatan;
     private String tanggalKasus;
@@ -18,9 +19,11 @@ public class Pengobatan {
     public Pengobatan() {
     }
 
-    public Pengobatan(String idKasus, String tanggalPengobatan, String tanggalKasus, Petugas petugas,
+    public Pengobatan(String idPengobatan, String idKasus, String tanggalPengobatan, String tanggalKasus,
+            Petugas petugas,
             String namaInfrastruktur, String lokasi, String dosis, String sindrom, String diagnosaBanding,
             String provinsiPengobatan, String kabupatenPengobatan, String kecamatanPengobatan, String desaPengobatan) {
+        this.idPengobatan = idPengobatan;
         this.idKasus = idKasus;
         this.tanggalPengobatan = tanggalPengobatan;
         this.tanggalKasus = tanggalKasus;
@@ -34,6 +37,14 @@ public class Pengobatan {
         this.kabupatenPengobatan = kabupatenPengobatan;
         this.kecamatanPengobatan = kecamatanPengobatan;
         this.desaPengobatan = desaPengobatan;
+    }
+
+    public String getIdPengobatan() {
+        return idPengobatan;
+    }
+
+    public void setIdPengobatan(String idPengobatan) {
+        this.idPengobatan = idPengobatan;
     }
 
     public String getIdKasus() {
@@ -141,12 +152,15 @@ public class Pengobatan {
     }
 
     public boolean isValid() {
-        return this.idKasus != null &&
+        return this.idPengobatan != null &&
                 this.petugas != null;
     }
 
     public void set(String fieldName, String value) {
         switch (fieldName) {
+            case "idPengobatan":
+                this.idPengobatan = value;
+                break;
             case "idKasus":
                 this.idKasus = value;
                 break;

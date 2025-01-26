@@ -11,7 +11,6 @@ import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.InseminasiRequest;
 import com.ternak.sapi.payload.KelahiranRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.KelahiranRepository;

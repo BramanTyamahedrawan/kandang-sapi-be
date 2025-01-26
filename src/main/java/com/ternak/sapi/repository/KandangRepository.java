@@ -234,6 +234,15 @@ public class KandangRepository {
                                 }
 
                                 String rowKey = safeString(kandang.getIdKandang());
+                                if (kandang.getJenisHewan() != null) {
+                                        client.insertRecord(tableKandang, rowKey, "jenisHewan", "idJenisHewan",
+                                                        kandang.getJenisHewan().getIdJenisHewan());
+                                        client.insertRecord(tableKandang, rowKey, "jenisHewan", "jenis",
+                                                        kandang.getJenisHewan().getJenis());
+                                        client.insertRecord(tableKandang, rowKey, "jenisHewan", "deskripsi",
+                                                        kandang.getJenisHewan().getDeskripsi());
+                                        client.insertRecord(tableKandang, rowKey, "detail", "created_by", "Polinema");
+                                }
 
                                 // Jika peternak ada, masukkan informasi peternak
                                 if (kandang.getPeternak() != null) {
@@ -274,15 +283,6 @@ public class KandangRepository {
                                                         safeString(peternak.getIdIsikhnas()));
                                         client.insertRecord(tableKandang, rowKey, "detail", "created_by", "Polinema");
 
-                                }
-
-                                if (kandang.getJenisHewan() != null) {
-                                        client.insertRecord(tableKandang, rowKey, "jenisHewan", "idJenisHewan",
-                                                        kandang.getJenisHewan().getIdJenisHewan());
-                                        client.insertRecord(tableKandang, rowKey, "jenisHewan", "jenis",
-                                                        kandang.getJenisHewan().getJenis());
-                                        client.insertRecord(tableKandang, rowKey, "jenisHewan", "deskripsi",
-                                                        kandang.getJenisHewan().getDeskripsi());
                                 }
 
                                 // Insert data kandang ke HBase

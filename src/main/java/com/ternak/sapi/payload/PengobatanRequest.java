@@ -1,6 +1,7 @@
 package com.ternak.sapi.payload;
 
 public class PengobatanRequest {
+    private String idPengobatan;
     private String idKasus;
     private String tanggalPengobatan;
     private String tanggalKasus;
@@ -13,8 +14,9 @@ public class PengobatanRequest {
     private String kabupatenPengobatan;
     private String kecamatanPengobatan;
     private String desaPengobatan;
+
     // petugas
-    private String petugas_id;
+    private String petugasId;
     private String nikPetugas;
     private String namaPetugas;
     private String email;
@@ -25,14 +27,16 @@ public class PengobatanRequest {
     public PengobatanRequest() {
     }
 
-    public PengobatanRequest(String idKasus, String tanggalPengobatan, String tanggalKasus, String petugas_id,
+    public PengobatanRequest(String idPengobatan, String idKasus, String tanggalPengobatan, String tanggalKasus,
+            String petugasId,
             String namaInfrastruktur, String lokasi, String dosis, String sindrom, String diagnosaBanding,
             String provinsiPengobatan, String kabupatenPengobatan, String kecamatanPengobatan, String desaPengobatan,
             String nikPetugas, String namaPetugas, String email, String noTelp, String wilayah, String job) {
+        this.idPengobatan = idPengobatan;
         this.idKasus = idKasus;
         this.tanggalPengobatan = tanggalPengobatan;
         this.tanggalKasus = tanggalKasus;
-        this.petugas_id = petugas_id;
+        this.petugasId = petugasId;
         this.namaInfrastruktur = namaInfrastruktur;
         this.lokasi = lokasi;
         this.dosis = dosis;
@@ -48,6 +52,14 @@ public class PengobatanRequest {
         this.noTelp = noTelp;
         this.wilayah = wilayah;
         this.job = job;
+    }
+
+    public String getIdPengobatan() {
+        return idPengobatan;
+    }
+
+    public void setIdPengobatan(String idPengobatan) {
+        this.idPengobatan = idPengobatan;
     }
 
     public String getIdKasus() {
@@ -74,12 +86,12 @@ public class PengobatanRequest {
         this.tanggalKasus = tanggalKasus;
     }
 
-    public String getPetugas_id() {
-        return petugas_id;
+    public String getPetugasId() {
+        return petugasId;
     }
 
-    public void setPetugas_id(String petugas_id) {
-        this.petugas_id = petugas_id;
+    public void setPetugasId(String petugasId) {
+        this.petugasId = petugasId;
     }
 
     public String getNamaInfrastruktur() {
@@ -205,6 +217,9 @@ public class PengobatanRequest {
 
     public void set(String fieldName, String value) {
         switch (fieldName) {
+            case "idPengobatan":
+                this.idPengobatan = value;
+                break;
             case "idKasus":
                 this.idKasus = value;
                 break;
@@ -214,8 +229,8 @@ public class PengobatanRequest {
             case "tanggalKasus":
                 this.tanggalKasus = value;
                 break;
-            case "petugas_id":
-                this.petugas_id = value;
+            case "petugasId":
+                this.petugasId = value;
                 break;
             case "namaPetugas":
                 this.namaPetugas = value;
