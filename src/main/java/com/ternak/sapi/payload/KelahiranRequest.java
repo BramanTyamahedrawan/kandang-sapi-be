@@ -1,6 +1,7 @@
 package com.ternak.sapi.payload;
 
 public class KelahiranRequest {
+    private String idKelahiran;
     private String idKejadian;
     private String tanggalLaporan;
     private String tanggalLahir;
@@ -91,7 +92,8 @@ public class KelahiranRequest {
     public KelahiranRequest() {
     }
 
-    public KelahiranRequest(String idKejadian, String tanggalLaporan, String tanggalLahir, String idPeternak,
+    public KelahiranRequest(String idKelahiran, String idKejadian, String tanggalLaporan, String tanggalLahir,
+            String idPeternak,
             String idHewan, String idKandang, String petugasId, String inseminasi_id, String eartagAnak,
             String jenisKelaminAnak, String noKartuTernakAnak,
             String spesies, String urutanIB, String lokasi, String kategori, String jumlah, String idHewanAnak,
@@ -107,6 +109,7 @@ public class KelahiranRequest {
             String ibLain, String idPejantan, String idPembuatan, String bangsaPejantan, String produsen,
             String lokasiInseminasi, String kapasitas, String jenisKandang, String nilaiBangunan, String alamatKandang,
             String namaKandang, String latitudeKandang, String longitudeKandang, String luas) {
+        this.idKelahiran = idKelahiran;
         this.idKejadian = idKejadian;
         this.tanggalLaporan = tanggalLaporan;
         this.tanggalLahir = tanggalLahir;
@@ -187,6 +190,14 @@ public class KelahiranRequest {
         this.bangsaPejantan = bangsaPejantan;
         this.produsen = produsen;
         this.lokasiInseminasi = lokasiInseminasi;
+    }
+
+    public String getIdKelahiran() {
+        return idKelahiran;
+    }
+
+    public void setIdKelahiran(String idKelahiran) {
+        this.idKelahiran = idKelahiran;
     }
 
     public String getIdKejadian() {
@@ -779,6 +790,9 @@ public class KelahiranRequest {
 
     public void set(String fieldName, String value) {
         switch (fieldName) {
+            case "idKelahiran":
+                this.idKelahiran = value;
+                break;
             case "idKejadian":
                 this.idKejadian = value;
                 break;

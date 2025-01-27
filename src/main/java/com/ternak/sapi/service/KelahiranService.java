@@ -66,8 +66,8 @@ public class KelahiranService {
 
     public Kelahiran createKelahiran(KelahiranRequest kelahiranRequest) throws IOException {
 
-        if (kelahiranRepository.existsById(kelahiranRequest.getIdKejadian())) {
-            throw new BadRequestException("Kelahiran ID " + kelahiranRequest.getIdKejadian() + " already exists");
+        if (kelahiranRepository.existsById(kelahiranRequest.getIdKelahiran())) {
+            throw new BadRequestException("Kelahiran ID " + kelahiranRequest.getIdKelahiran() + " already exists");
         }
 
         Kelahiran kelahiran = new Kelahiran();
@@ -82,8 +82,9 @@ public class KelahiranService {
         if (kelahiranRequest.getIdInseminasi() != null) {
             inseminasiResponse = inseminasiRepository.findById(kelahiranRequest.getIdInseminasi().toString());
         }
-        if (peternakResponse.getNamaPeternak() != null && petugasResponse.getNamaPetugas() != null
+        if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
                 && hewanResponse.getIdHewan() != null) {
+            kelahiran.setIdKelahiran(kelahiranRequest.getIdKelahiran());
             kelahiran.setIdKejadian(kelahiranRequest.getIdKejadian());
             kelahiran.setTanggalLaporan(kelahiranRequest.getTanggalLaporan());
             kelahiran.setTanggalLahir(kelahiranRequest.getTanggalLahir());
@@ -120,12 +121,13 @@ public class KelahiranService {
 
         for (KelahiranRequest request : kelahiranRequests) {
             try {
-                if (existingIds.contains(request.getIdKejadian())) {
+                if (existingIds.contains(request.getIdKelahiran())) {
                     skippedExisting++;
                     continue;
                 }
 
                 Kelahiran kelahiran = new Kelahiran();
+                kelahiran.setIdKelahiran(request.getIdKelahiran());
                 kelahiran.setIdKejadian(request.getIdKejadian());
                 kelahiran.setTanggalLaporan(request.getTanggalLaporan());
                 kelahiran.setTanggalLahir(request.getTanggalLahir());
@@ -184,7 +186,7 @@ public class KelahiranService {
                 kelahiran.setHewan(hewanResponse);
                 kelahiran.setInseminasi(inseminasiResponse);
 
-                existingIds.add(request.getIdKejadian());
+                existingIds.add(request.getIdKelahiran());
                 kelahiranList.add(kelahiran);
 
             } catch (Exception e) {
@@ -232,7 +234,7 @@ public class KelahiranService {
         }
         if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
                 && hewanResponse.getIdHewan() != null) {
-
+            kelahiran.setIdKejadian(kelahiranRequest.getIdKejadian());
             kelahiran.setTanggalLaporan(kelahiranRequest.getTanggalLaporan());
             kelahiran.setTanggalLahir(kelahiranRequest.getTanggalLahir());
             kelahiran.setIdHewanAnak(kelahiranRequest.getIdHewanAnak());

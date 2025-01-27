@@ -388,7 +388,7 @@ public class InseminasiService {
                 }
 
                 System.out.println("id Kandang diterima dari frontend (inseminasi): " + request.getIdKandang());
-                Kandang kandangResponse = kandangRepository.findByIdKandang(request.getIdKandang());
+                Kandang kandangResponse = kandangRepository.findById(request.getIdKandang());
 
                 System.out.println("Jenis Hewan diterima dari frontend (inseminasi): " +
                         request.getJenis());

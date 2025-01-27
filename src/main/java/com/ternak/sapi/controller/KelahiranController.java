@@ -44,7 +44,7 @@ public class KelahiranController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{kelahiranId}")
-                .buildAndExpand(kelahiran.getIdKejadian()).toUri();
+                .buildAndExpand(kelahiran.getIdKelahiran()).toUri();
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Kelahiran Created Successfully"));
@@ -62,7 +62,7 @@ public class KelahiranController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{kelahiranId}")
-                .buildAndExpand(kelahiran.getIdKejadian()).toUri();
+                .buildAndExpand(kelahiran.getIdKelahiran()).toUri();
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Kelahiran Updated Successfully"));

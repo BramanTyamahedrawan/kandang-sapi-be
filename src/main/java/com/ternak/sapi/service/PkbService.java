@@ -63,8 +63,8 @@ public class PkbService {
 
     public Pkb createPkb(PkbRequest pkbRequest) throws IOException {
 
-        if (pkbRepository.existsById(pkbRequest.getIdKejadian())) {
-            throw new BadRequestException("Id Kejadian " + pkbRequest.getIdKejadian() + " sudah terdaftar.");
+        if (pkbRepository.existsById(pkbRequest.getIdPkb())) {
+            throw new BadRequestException("Id PKB " + pkbRequest.getIdPkb() + " sudah terdaftar.");
         }
 
         Pkb pkb = new Pkb();
@@ -77,6 +77,7 @@ public class PkbService {
 
         if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
                 && hewanResponse.getIdHewan() != null) {
+            pkb.setIdPkb(pkbRequest.getIdPkb());
             pkb.setIdKejadian(pkbRequest.getIdKejadian());
             pkb.setTanggalPkb(pkbRequest.getTanggalPkb());
             pkb.setJumlah(pkbRequest.getJumlah());
@@ -114,6 +115,7 @@ public class PkbService {
         if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
                 && hewanResponse.getIdHewan() != null) {
 
+            pkb.setIdKejadian(pkbRequest.getIdKejadian());
             pkb.setTanggalPkb(pkbRequest.getTanggalPkb());
             pkb.setJumlah(pkbRequest.getJumlah());
             pkb.setUmurKebuntingan(pkbRequest.getUmurKebuntingan());
@@ -160,12 +162,13 @@ public class PkbService {
 
         for (PkbRequest request : pkbRequests) {
             try {
-                if (existingIds.contains(request.getIdKejadian())) {
+                if (existingIds.contains(request.getIdPkb())) {
                     skippedExisting++;
                     continue;
                 }
 
                 Pkb pkb = new Pkb();
+                pkb.setIdPkb(request.getIdPkb());
                 pkb.setIdKejadian(request.getIdKejadian());
                 pkb.setTanggalPkb(request.getTanggalPkb());
                 pkb.setUmurKebuntingan(request.getUmurKebuntingan());
@@ -208,7 +211,7 @@ public class PkbService {
                 pkb.setKandang(kandangResponse);
                 pkb.setHewan(hewanResponse);
 
-                existingIds.add(request.getIdKejadian());
+                existingIds.add(request.getIdPkb());
                 pkbList.add(pkb);
 
             } catch (Exception e) {

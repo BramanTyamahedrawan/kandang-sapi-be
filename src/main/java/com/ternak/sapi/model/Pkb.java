@@ -1,6 +1,7 @@
 package com.ternak.sapi.model;
 
 public class Pkb {
+    private String idPkb;
     private String idKejadian;
     private String tanggalPkb;
     private Peternak peternak;
@@ -15,9 +16,10 @@ public class Pkb {
     public Pkb() {
     }
 
-    public Pkb(String idKejadian, String tanggalPkb, Peternak peternak, Hewan hewan, Petugas petugas,
+    public Pkb(String idPkb, String idKejadian, String tanggalPkb, Peternak peternak, Hewan hewan, Petugas petugas,
             String umurKebuntingan, RumpunHewan rumpunHewan, JenisHewan jenisHewan, String jumlah,
             Kandang kandang) {
+        this.idPkb = idPkb;
         this.idKejadian = idKejadian;
         this.tanggalPkb = tanggalPkb;
         this.peternak = peternak;
@@ -28,6 +30,14 @@ public class Pkb {
         this.jenisHewan = jenisHewan;
         this.jumlah = jumlah;
         this.kandang = kandang;
+    }
+
+    public String getIdPkb() {
+        return idPkb;
+    }
+
+    public void setIdPkb(String idPkb) {
+        this.idPkb = idPkb;
     }
 
     public String getIdKejadian() {
@@ -111,7 +121,7 @@ public class Pkb {
     }
 
     public boolean isValid() {
-        return this.idKejadian != null &&
+        return this.idPkb != null &&
                 this.peternak != null &&
                 this.hewan != null &&
                 this.petugas != null &&
@@ -122,6 +132,9 @@ public class Pkb {
 
     public void set(String fieldName, String value) {
         switch (fieldName) {
+            case "idPkb":
+                this.idPkb = value;
+                break;
             case "idKejadian":
                 this.idKejadian = value;
                 break;

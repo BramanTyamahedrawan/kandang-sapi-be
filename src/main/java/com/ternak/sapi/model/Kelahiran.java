@@ -1,6 +1,7 @@
 package com.ternak.sapi.model;
 
 public class Kelahiran {
+    private String idKelahiran;
     private String idKejadian;
     private String tanggalLaporan;
     private String tanggalLahir;
@@ -23,11 +24,13 @@ public class Kelahiran {
     public Kelahiran() {
     }
 
-    public Kelahiran(String idKejadian, String tanggalLaporan, String tanggalLahir, Peternak peternak,
+    public Kelahiran(String idKelahiran, String idKejadian, String tanggalLaporan, String tanggalLahir,
+            Peternak peternak,
             Hewan hewan, Kandang kandang, Petugas petugas, Inseminasi inseminasi, String eartagAnak,
             String jenisKelaminAnak, String noKartuTernakAnak, String spesies, String urutanIB, JenisHewan jenisHewan,
             RumpunHewan rumpunHewan,
             String lokasi, String kategori, String jumlah, String idHewanAnak) {
+        this.idKelahiran = idKelahiran;
         this.idKejadian = idKejadian;
         this.tanggalLaporan = tanggalLaporan;
         this.tanggalLahir = tanggalLahir;
@@ -46,6 +49,14 @@ public class Kelahiran {
         this.kategori = kategori;
         this.jumlah = jumlah;
         this.idHewanAnak = idHewanAnak;
+    }
+
+    public String getIdKelahiran() {
+        return idKelahiran;
+    }
+
+    public void setIdKelahiran(String idKelahiran) {
+        this.idKelahiran = idKelahiran;
     }
 
     public String getIdKejadian() {
@@ -193,7 +204,7 @@ public class Kelahiran {
     }
 
     public boolean isValid() {
-        return this.idKejadian != null &&
+        return this.idKelahiran != null &&
                 this.peternak != null &&
                 this.hewan != null &&
                 this.kandang != null &&
@@ -202,6 +213,9 @@ public class Kelahiran {
 
     public void set(String fieldName, String value) {
         switch (fieldName) {
+            case "idKelahiran":
+                this.idKelahiran = value;
+                break;
             case "idKejadian":
                 this.idKejadian = value;
                 break;

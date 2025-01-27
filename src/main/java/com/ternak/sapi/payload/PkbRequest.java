@@ -1,6 +1,7 @@
 package com.ternak.sapi.payload;
 
 public class PkbRequest {
+    private String idPkb;
     private String idKejadian;
     private String tanggalPkb;
     private String spesies;
@@ -72,7 +73,8 @@ public class PkbRequest {
     public PkbRequest() {
     }
 
-    public PkbRequest(String idKejadian, String tanggalPkb, String idPeternak, String idHewan, String petugasId,
+    public PkbRequest(String idPkb, String idKejadian, String tanggalPkb, String idPeternak, String idHewan,
+            String petugasId,
             String spesies, String lokasi, String umurKebuntingan, String jumlah, String nikPetugas, String namaPetugas,
             String noTelpPetugas, String emailPetugas, String job, String wilayah,
             String nikPeternak, String namaPeternak, String alamatPeternak, String noTelpPeternak, String emailPeternak,
@@ -84,6 +86,7 @@ public class PkbRequest {
             String jenis, String deskripsiJenis, String idRumpunHewan, String rumpun, String deskripsiRumpun,
             String idKandang, String kapasitas, String jenisKandang, String nilaiBangunan, String alamatKandang,
             String namaKandang, String latitudeKandang, String longitudeKandang, String luas) {
+        this.idPkb = idPkb;
         this.idKejadian = idKejadian;
         this.tanggalPkb = tanggalPkb;
         this.idPeternak = idPeternak;
@@ -145,6 +148,14 @@ public class PkbRequest {
         this.idRumpunHewan = idRumpunHewan;
         this.rumpun = rumpun;
         this.deskripsiRumpun = deskripsiRumpun;
+    }
+
+    public String getIdPkb() {
+        return idPkb;
+    }
+
+    public void setIdPkb(String idPkb) {
+        this.idPkb = idPkb;
     }
 
     public String getIdKejadian() {
@@ -596,6 +607,9 @@ public class PkbRequest {
 
     public void set(String fieldName, String value) {
         switch (fieldName) {
+            case "idPkb":
+                this.idPkb = value;
+                break;
             case "idKejadian":
                 this.idKejadian = value;
                 break;

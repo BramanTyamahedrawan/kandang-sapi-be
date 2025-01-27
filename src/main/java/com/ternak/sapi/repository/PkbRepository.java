@@ -4,8 +4,6 @@ import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
-import com.ternak.sapi.model.Kelahiran;
-import com.ternak.sapi.model.User;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Pkb;
 import com.ternak.sapi.model.RumpunHewan;
@@ -28,6 +26,7 @@ public class PkbRepository {
                 Map<String, String> columnMapping = new HashMap<>();
 
                 // Add the mappings to the HashMap
+                columnMapping.put("idPkb", "idPkb");
                 columnMapping.put("idKejadian", "idKejadian");
                 columnMapping.put("tanggalPkb", "tanggalPkb");
                 columnMapping.put("jumlah", "jumlah");
@@ -45,10 +44,13 @@ public class PkbRepository {
         public Pkb save(Pkb pkb) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 
-                String rowKey = pkb.getIdKejadian();
+                String rowKey = pkb.getIdPkb();
 
                 TableName tablePkb = TableName.valueOf(tableName);
-                client.insertRecord(tablePkb, rowKey, "main", "idKejadian", rowKey);
+                client.insertRecord(tablePkb, rowKey, "main", "idPkb", pkb.getIdPkb());
+                if (pkb.getIdKejadian() != null) {
+                        client.insertRecord(tablePkb, rowKey, "main", "idKejadian", pkb.getIdKejadian());
+                }
                 if (pkb.getTanggalPkb() != null) {
                         client.insertRecord(tablePkb, rowKey, "main", "tanggalPkb", pkb.getTanggalPkb());
                 }
@@ -166,6 +168,9 @@ public class PkbRepository {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
 
                 TableName tablePkb = TableName.valueOf(tableName);
+                if (pkb.getIdKejadian() != null) {
+                        client.insertRecord(tablePkb, pkbId, "main", "idKejadian", pkb.getIdKejadian());
+                }
                 if (pkb.getTanggalPkb() != null) {
                         client.insertRecord(tablePkb, pkbId, "main", "tanggalPkb", pkb.getTanggalPkb());
                 }
@@ -296,24 +301,24 @@ public class PkbRepository {
 
                                 if (pkb.getPetugas() != null) {
                                         Petugas petugas = pkb.getPetugas();
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "petugas",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "petugas",
                                                         "petugasId",
                                                         safeString(petugas.getPetugasId()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "petugas",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "petugas",
                                                         "nikPetugas",
                                                         safeString(petugas.getNikPetugas()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "petugas",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "petugas",
                                                         "namaPetugas",
                                                         safeString(petugas.getNamaPetugas()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "petugas",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "petugas",
                                                         "email",
                                                         safeString(petugas.getEmail()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "petugas",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "petugas",
                                                         "noTelp",
                                                         safeString(petugas.getNoTelp()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "petugas", "job",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "petugas", "job",
                                                         safeString(petugas.getJob()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "petugas",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "petugas",
                                                         "wilayah",
                                                         safeString(petugas.getWilayah()));
                                 }
@@ -321,97 +326,97 @@ public class PkbRepository {
                                 if (pkb.getPeternak() != null) {
                                         Peternak peternak = pkb.getPeternak();
                                         if (peternak.getIdPeternak() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "idPeternak",
                                                                 safeString(peternak.getIdPeternak()));
                                         }
                                         if (peternak.getNikPeternak() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "nikPeternak",
                                                                 safeString(peternak.getNikPeternak()));
                                         }
                                         if (peternak.getNamaPeternak() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "namaPeternak",
                                                                 safeString(peternak.getNamaPeternak()));
                                         }
                                         if (peternak.getAlamat() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "alamat",
                                                                 safeString(peternak.getAlamat()));
                                         }
                                         if (peternak.getLokasi() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "lokasi",
                                                                 safeString(peternak.getLokasi()));
                                         }
                                         if (peternak.getEmail() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "email",
                                                                 safeString(peternak.getEmail()));
                                         }
                                         if (peternak.getNoTelepon() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "noTelepon",
                                                                 safeString(peternak.getNoTelepon()));
                                         }
                                         if (peternak.getJenisKelamin() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "jenisKelamin",
                                                                 safeString(peternak.getJenisKelamin()));
                                         }
                                         if (peternak.getTanggalLahir() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "tanggalLahir",
                                                                 safeString(peternak.getTanggalLahir()));
                                         }
                                         if (peternak.getTanggalPendaftaran() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "tanggalPendaftaran",
                                                                 safeString(peternak.getTanggalPendaftaran()));
 
                                         }
                                         if (peternak.getIdIsikhnas() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "idIsikhnas",
                                                                 safeString(peternak.getIdIsikhnas()));
                                         }
                                         if (peternak.getDusun() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak", "dusun",
                                                                 safeString(peternak.getDusun()));
                                         }
                                         if (peternak.getDesa() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "desa",
                                                                 safeString(peternak.getDesa()));
                                         }
                                         if (peternak.getKecamatan() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "kecamatan",
                                                                 safeString(peternak.getKecamatan()));
                                         }
                                         if (peternak.getKabupaten() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "kabupaten",
                                                                 safeString(peternak.getKabupaten()));
                                         }
                                         if (peternak.getProvinsi() != null) {
-                                                client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()),
+                                                client.insertRecord(tablePkb, safeString(pkb.getIdPkb()),
                                                                 "peternak",
                                                                 "provinsi",
                                                                 safeString(peternak.getProvinsi()));
@@ -420,88 +425,93 @@ public class PkbRepository {
 
                                 if (pkb.getKandang() != null) {
                                         Kandang kandang = pkb.getKandang();
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "idKandang",
                                                         safeString(kandang.getIdKandang()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "namaKandang",
                                                         safeString(kandang.getNamaKandang()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "alamat",
                                                         safeString(kandang.getAlamat()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "luas",
                                                         safeString(kandang.getLuas()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "jenisKandang",
                                                         safeString(kandang.getJenisKandang()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "kapasitas",
                                                         safeString(kandang.getKapasitas()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "nilaiBangunan",
                                                         safeString(kandang.getNilaiBangunan()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "latitude",
                                                         safeString(kandang.getLatitude()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "kandang",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "kandang",
                                                         "longitude",
                                                         safeString(kandang.getLongitude()));
                                 }
 
                                 if (pkb.getJenisHewan() != null) {
                                         JenisHewan jenisHewan = pkb.getJenisHewan();
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "jenisHewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "jenisHewan",
                                                         "idJenisHewan", safeString(jenisHewan.getIdJenisHewan()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "jenisHewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "jenisHewan",
                                                         "jenis",
                                                         safeString(jenisHewan.getJenis()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "jenisHewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "jenisHewan",
                                                         "deskripsi",
                                                         safeString(jenisHewan.getDeskripsi()));
                                 }
 
                                 if (pkb.getRumpunHewan() != null) {
                                         RumpunHewan rumpunHewan = pkb.getRumpunHewan();
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "rumpunHewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "rumpunHewan",
                                                         "idRumpunHewan", safeString(rumpunHewan.getIdRumpunHewan()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "rumpunHewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "rumpunHewan",
                                                         "rumpun",
                                                         safeString(rumpunHewan.getRumpun()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "rumpunHewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "rumpunHewan",
                                                         "deskripsi",
                                                         safeString(rumpunHewan.getDeskripsi()));
                                 }
 
                                 if (pkb.getHewan() != null) {
                                         Hewan hewan = pkb.getHewan();
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "idHewan",
                                                         safeString(hewan.getIdHewan()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "kodeEartagNasional",
                                                         safeString(hewan.getKodeEartagNasional()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "noKartuTernak",
                                                         safeString(hewan.getNoKartuTernak()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "identifikasiHewan", safeString(hewan.getIdentifikasiHewan()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan", "sex",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan", "sex",
                                                         safeString(hewan.getSex()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan", "umur",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan", "umur",
                                                         safeString(hewan.getUmur()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "tanggalTerdaftar", safeString(hewan.getTanggalTerdaftar()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "tanggalLahir",
                                                         safeString(hewan.getTanggalLahir()));
-                                        client.insertRecord(tablePkb, safeString(pkb.getIdKejadian()), "hewan",
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "tempatLahir", safeString(hewan.getTempatLahir()));
                                 }
 
-                                String rowKey = pkb.getIdKejadian();
+                                String rowKey = pkb.getIdPkb();
 
-                                client.insertRecord(tablePkb, rowKey, "main", "idKejadian", rowKey);
+                                client.insertRecord(tablePkb, rowKey, "main", "idPkb", pkb.getIdPkb());
+                                if (pkb.getIdKejadian() != null) {
+                                        client.insertRecord(tablePkb, rowKey, "main", "idKejadian",
+                                                        pkb.getIdKejadian());
+
+                                }
                                 if (pkb.getTanggalPkb() != null) {
                                         client.insertRecord(tablePkb, rowKey, "main", "tanggalPkb",
                                                         pkb.getTanggalPkb());
@@ -517,20 +527,20 @@ public class PkbRepository {
                                 client.insertRecord(tablePkb, rowKey, "detail", "created_by", "Polinema");
 
                                 System.out.println(
-                                                "Data berhasil disimpan ke HBase dengan ID Kejadian: "
-                                                                + pkb.getIdKejadian());
+                                                "Data berhasil disimpan ke HBase dengan ID PKB: "
+                                                                + pkb.getIdPkb());
 
                         } catch (Exception e) {
-                                failedRows.add(pkb.getIdKejadian());
+                                failedRows.add(pkb.getIdPkb());
                                 System.err.println(
-                                                "Failed to insert record for ID: " + pkb.getIdKejadian() + ", Error: "
+                                                "Failed to insert record for ID: " + pkb.getIdPkb() + ", Error: "
                                                                 + e.getMessage());
                         }
                 }
 
                 if (!failedRows.isEmpty()) {
                         throw new IOException(
-                                        "Failed to save records for ID Kejadian: " + String.join(", ", failedRows));
+                                        "Failed to save records for ID PKB: " + String.join(", ", failedRows));
                 }
                 return pkbList;
         }
@@ -542,6 +552,7 @@ public class PkbRepository {
                 Map<String, String> columnMapping = new HashMap<>();
 
                 // Add the mappings to the HashMap
+                columnMapping.put("idPkb", "idPkb");
                 columnMapping.put("idKejadian", "idKejadian");
                 columnMapping.put("tanggalPkb", "tanggalPkb");
                 columnMapping.put("jumlah", "jumlah");
@@ -562,6 +573,7 @@ public class PkbRepository {
                 TableName table = TableName.valueOf(tableName);
                 Map<String, String> columnMapping = new HashMap<>();
                 // Add the mappings to the HashMap
+                columnMapping.put("idPkb", "idPkb");
                 columnMapping.put("idKejadian", "idKejadian");
                 columnMapping.put("tanggalPkb", "tanggalPkb");
                 columnMapping.put("jumlah", "jumlah");
@@ -584,6 +596,7 @@ public class PkbRepository {
                 TableName table = TableName.valueOf(tableName);
                 Map<String, String> columnMapping = new HashMap<>();
                 // Add the mappings to the HashMap
+                columnMapping.put("idPkb", "idPkb");
                 columnMapping.put("idKejadian", "idKejadian");
                 columnMapping.put("tanggalPkb", "tanggalPkb");
                 columnMapping.put("jumlah", "jumlah");
@@ -605,6 +618,7 @@ public class PkbRepository {
                 TableName table = TableName.valueOf(tableName);
                 Map<String, String> columnMapping = new HashMap<>();
                 // Add the mappings to the HashMap
+                columnMapping.put("idPkb", "idPkb");
                 columnMapping.put("idKejadian", "idKejadian");
                 columnMapping.put("tanggalPkb", "tanggalPkb");
                 columnMapping.put("jumlah", "jumlah");
@@ -626,6 +640,7 @@ public class PkbRepository {
                 TableName table = TableName.valueOf(tableName);
                 Map<String, String> columnMapping = new HashMap<>();
                 // Add the mappings to the HashMap
+                columnMapping.put("idPkb", "idPkb");
                 columnMapping.put("idKejadian", "idKejadian");
                 columnMapping.put("tanggalPkb", "tanggalPkb");
                 columnMapping.put("jumlah", "jumlah");
@@ -658,11 +673,11 @@ public class PkbRepository {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
                 TableName tablePkb = TableName.valueOf(tableName);
                 Map<String, String> columnMapping = new HashMap<>();
-                columnMapping.put("idKejadian", "idKejadian");
+                columnMapping.put("idPkb", "idPkb");
 
                 Pkb pkb = client.getDataByColumn(tablePkb.toString(), columnMapping, "main",
-                                "idKejadian", pkbId,
+                                "idPkb", pkbId,
                                 Pkb.class);
-                return pkb.getIdKejadian() != null; // True jika ID Hewan sudah ada
+                return pkb.getIdPkb() != null; // True jika ID Hewan sudah ada
         }
 }

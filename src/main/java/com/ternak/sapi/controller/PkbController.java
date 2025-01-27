@@ -41,7 +41,7 @@ public class PkbController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{pkbId}")
-                .buildAndExpand(pkb.getIdKejadian()).toUri();
+                .buildAndExpand(pkb.getIdPkb()).toUri();
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Pkb Created Successfully"));
@@ -59,7 +59,7 @@ public class PkbController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{pkbId}")
-                .buildAndExpand(pkb.getIdKejadian()).toUri();
+                .buildAndExpand(pkb.getIdPkb()).toUri();
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Pkb Updated Successfully"));
