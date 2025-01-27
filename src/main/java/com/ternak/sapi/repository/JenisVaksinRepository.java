@@ -119,7 +119,7 @@ public class JenisVaksinRepository {
         columnMapping.put("deskripsi", "deskripsi");
 
         JenisVaksin jenisVaksin = client.getDataByColumn(tableJenisVaksin.toString(), columnMapping, "main",
-                "'idJenisVaksin", idJenisVaksin, JenisVaksin.class);
+                "idJenisVaksin", idJenisVaksin, JenisVaksin.class);
         return jenisVaksin.getIdJenisVaksin() != null ? jenisVaksin : null;
     }
 

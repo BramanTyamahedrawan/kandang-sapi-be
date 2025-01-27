@@ -4,6 +4,7 @@ import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.JenisVaksin;
 import com.ternak.sapi.model.NamaVaksin;
+import com.ternak.sapi.model.Vaksin;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.JenisVaksinRequest;
 import com.ternak.sapi.payload.PagedResponse;
@@ -11,6 +12,7 @@ import com.ternak.sapi.repository.JenisVaksinRepository;
 import com.ternak.sapi.repository.NamaVaksinRepository;
 
 // import org.springframework.stereotype.Service;
+import com.ternak.sapi.repository.VaksinRepository;
 import org.springframework.transaction.annotation.Transactional;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ import java.util.HashSet;
 public class JenisVaksinService {
     private JenisVaksinRepository jenisVaksinRepository = new JenisVaksinRepository();
     private NamaVaksinRepository namaVaksinRepository = new NamaVaksinRepository();
+    private VaksinRepository vaksinRepository = new VaksinRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(JenisVaksinService.class);
@@ -76,6 +79,23 @@ public class JenisVaksinService {
         JenisVaksin jenisVaksin = new JenisVaksin();
         jenisVaksin.setJenis(jenisVaksinRequest.getJenis());
         jenisVaksin.setDeskripsi(jenisVaksinRequest.getDeskripsi());
+
+        List<NamaVaksin> namaVaksinList = namaVaksinRepository.findIdJenisVaksin(idJenisVaksin);
+        if(namaVaksinList != null){
+            for(NamaVaksin namaVaksin : namaVaksinList){
+                namaVaksin.setJenisVaksin(jenisVaksin);
+                namaVaksinRepository.updateJenisVaksin(namaVaksin.getIdNamaVaksin(),namaVaksin);
+            }
+        }
+
+        List<Vaksin> vaksinList = vaksinRepository.findIdJenisVaksin(idJenisVaksin);
+        if(vaksinList != null){
+            for(Vaksin vaksin : vaksinList){
+                vaksin.setJenisVaksin(jenisVaksin);
+                vaksinRepository.updateJenisVaksin(vaksin.getIdVaksin(),vaksin);
+            }
+        }
+
         return jenisVaksinRepository.update(idJenisVaksin, jenisVaksin);
     }
 

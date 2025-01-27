@@ -3,6 +3,8 @@ package com.ternak.sapi.service;
 import java.io.IOException;
 import java.util.*;
 
+import com.ternak.sapi.model.Vaksin;
+import com.ternak.sapi.repository.VaksinRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ternak.sapi.exception.BadRequestException;
@@ -18,6 +20,7 @@ public class NamaVaksinService {
 
     private NamaVaksinRepository namaVaksinRepository = new NamaVaksinRepository();
     private JenisVaksinRepository jenisVaksinRepository = new JenisVaksinRepository();
+    private VaksinRepository vaksinRepository = new VaksinRepository();
 
     public PagedResponse<NamaVaksin> getAllNamaVaksin(int page, int size, String userID, String jenisHewanID,
             String peternakID, String namaVaksinID) throws IOException {
@@ -62,6 +65,15 @@ public class NamaVaksinService {
             namaVaksin.setNama(namaVaksinRequest.getNama());
             namaVaksin.setDeskripsi(namaVaksinRequest.getDeskripsi());
         }
+
+        List<Vaksin> vaksinList = vaksinRepository.findIdNamaVaksin(idNamaVaksin);
+        if(vaksinList != null){
+            for(Vaksin vaksin : vaksinList){
+                vaksin.setNamaVaksin(namaVaksin);
+                vaksinRepository.updateNamaVaksin(vaksin.getIdVaksin(),vaksin);
+            }
+        }
+
         return namaVaksinRepository.update(idNamaVaksin,namaVaksin);
     }
 
