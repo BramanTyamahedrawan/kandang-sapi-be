@@ -14,22 +14,30 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.Pkb;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.model.TujuanPemeliharaan;
+import com.ternak.sapi.model.Vaksin;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.HewanRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.InseminasiRepository;
 import com.ternak.sapi.repository.JenisHewanRepository;
 import com.ternak.sapi.repository.KandangRepository;
+import com.ternak.sapi.repository.KelahiranRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
+import com.ternak.sapi.repository.PkbRepository;
 import com.ternak.sapi.repository.RumpunHewanRepository;
 import com.ternak.sapi.repository.TujuanPemeliharaanRepository;
+import com.ternak.sapi.repository.VaksinRepository;
 import com.ternak.sapi.util.AppConstants;
 
 @Service
@@ -41,11 +49,16 @@ public class HewanService {
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
     private RumpunHewanRepository rumpunHewanRepository = new RumpunHewanRepository();
     private TujuanPemeliharaanRepository tujuanPemeliharaanRepository = new TujuanPemeliharaanRepository();
+    private VaksinRepository vaksinRepository = new VaksinRepository();
+    private InseminasiRepository inseminasiRepository = new InseminasiRepository();
+    private KelahiranRepository kelahiranRepository = new KelahiranRepository();
+    private PkbRepository pkbRepository = new PkbRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(HewanService.class);
 
-    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakID, String petugasId, String kandangId, String userId)
+    public PagedResponse<Hewan> getAllHewan(int page, int size, String peternakID, String petugasId, String kandangId,
+            String userId)
             throws IOException {
         validatePageNumberAndSize(page, size);
 
@@ -78,11 +91,13 @@ public class HewanService {
         Kandang kandangResponse = kandangRepository.findById(hewanRequest.getIdKandang().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
-        TujuanPemeliharaan tujuanPemeliharaanResponse = tujuanPemeliharaanRepository.findById(hewanRequest.getIdTujuanPemeliharaan().toString());
+        TujuanPemeliharaan tujuanPemeliharaanResponse = tujuanPemeliharaanRepository
+                .findById(hewanRequest.getIdTujuanPemeliharaan().toString());
 
-        if (peternakResponse.getIdPeternak()!= null && petugasResponse.getPetugasId() != null
+        if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
                 && kandangResponse.getIdKandang() != null && jenisHewanResponse.getIdJenisHewan() != null
-                && rumpunHewanResponse.getIdRumpunHewan() != null && tujuanPemeliharaanResponse.getIdTujuanPemeliharaan() != null) {
+                && rumpunHewanResponse.getIdRumpunHewan() != null
+                && tujuanPemeliharaanResponse.getIdTujuanPemeliharaan() != null) {
             hewan.setIdHewan(hewanRequest.getIdHewan());
             hewan.setKodeEartagNasional(hewanRequest.getKodeEartagNasional());
             hewan.setNoKartuTernak(hewanRequest.getNoKartuTernak());
@@ -120,10 +135,11 @@ public class HewanService {
         Kandang kandangResponse = kandangRepository.findById(hewanRequest.getIdKandang().toString());
         JenisHewan jenisHewanResponse = jenisHewanRepository.findById(hewanRequest.getJenisHewanId().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository.findById(hewanRequest.getRumpunHewanId().toString());
-        TujuanPemeliharaan tujuanPemeliharaanResponse = tujuanPemeliharaanRepository.findById(hewanRequest.getIdTujuanPemeliharaan().toString());
+        TujuanPemeliharaan tujuanPemeliharaanResponse = tujuanPemeliharaanRepository
+                .findById(hewanRequest.getIdTujuanPemeliharaan().toString());
         Hewan hewanResponse = hewanRepository.findByFotoHewan(idHewan);
         System.out.println("hewan response " + hewanResponse.getFile_path());
-        if (hewanResponse != null && peternakResponse.getIdPeternak()!= null && petugasResponse.getPetugasId() != null
+        if (hewanResponse != null && peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
                 && kandangResponse.getIdKandang() != null && jenisHewanResponse.getIdJenisHewan() != null
                 && rumpunHewanResponse.getIdRumpunHewan() != null && tujuanPemeliharaanResponse != null) {
             Hewan hewan = new Hewan();
@@ -143,10 +159,42 @@ public class HewanService {
             hewan.setJenisHewan(jenisHewanResponse);
             hewan.setRumpunHewan(rumpunHewanResponse);
 
-            if(savePath == null || savePath.isEmpty()){
+            if (savePath == null || savePath.isEmpty()) {
                 hewan.setFile_path(hewanResponse.getFile_path() == null ? "" : hewanResponse.getFile_path());
-            }else{
+            } else {
                 hewan.setFile_path(savePath);
+            }
+
+            List<Vaksin> vaksinList = vaksinRepository.findByHewanId(idHewan);
+            if (vaksinList != null) {
+                for (Vaksin vaksin : vaksinList) {
+                    vaksin.setHewan(hewan);
+                    vaksinRepository.updateHewanByVaksin(vaksin.getIdVaksin(), vaksin);
+                }
+            }
+
+            List<Inseminasi> inseminasiList = inseminasiRepository.findByHewanId(idHewan);
+            if (inseminasiList != null) {
+                for (Inseminasi inseminasi : inseminasiList) {
+                    inseminasi.setHewan(hewan);
+                    inseminasiRepository.updateHewanByInseminasi(inseminasi.getIdInseminasi(), inseminasi);
+                }
+            }
+
+            List<Kelahiran> kelahiranList = kelahiranRepository.findByHewanId(idHewan);
+            if (kelahiranList != null) {
+                for (Kelahiran kelahiran : kelahiranList) {
+                    kelahiran.setHewan(hewan);
+                    kelahiranRepository.updateHewanByKelahiran(kelahiran.getIdKelahiran(), kelahiran);
+                }
+            }
+
+            List<Pkb> pkbList = pkbRepository.findByHewanId(idHewan);
+            if (pkbList != null) {
+                for (Pkb pkb : pkbList) {
+                    pkb.setHewan(hewan);
+                    pkbRepository.updateHewanByPkb(pkb.getIdPkb(), pkb);
+                }
             }
 
             return hewanRepository.update(idHewan, hewan);
@@ -383,7 +431,6 @@ public class HewanService {
                     continue; // Lewati iterasi jika idHewan duplikat
                 }
 
-
                 JenisHewan jenisHewanResponse = null;
                 if (request.getJenis() == null || request.getJenis().trim().isEmpty()) {
                     System.out.println("Jenis Hewan tidak ditemukan. Menambahkan jenis hewan baru...");
@@ -535,7 +582,8 @@ public class HewanService {
                     continue;
                 } else {
                     kandangResponse = kandangRepository
-                            .findByNamaKandang("Kandang " +jenisHewanResponse.getJenis()+ " " +peternakResponse.getNamaPeternak());
+                            .findByNamaKandang("Kandang " + jenisHewanResponse.getJenis() + " "
+                                    + peternakResponse.getNamaPeternak());
                     if (kandangResponse == null) {
                         // Jika nama kandang tidak ditemukan, tambahkan petugas baru berdasarkan nama
                         // dari frontend
@@ -544,13 +592,15 @@ public class HewanService {
                         Kandang newKandang = new Kandang();
                         newKandang.setIdKandang(request.getIdKandang() != null ? request.getIdKandang()
                                 : UUID.randomUUID().toString());
-                        if(jenisHewanResponse.getJenis() != null && peternakResponse.getNamaPeternak() != null){
-                            newKandang.setNamaKandang("Kandang " + jenisHewanResponse.getJenis() + " " + peternakResponse.getNamaPeternak());
-                        }else if(jenisHewanResponse.getJenis() == null){
+                        if (jenisHewanResponse.getJenis() != null && peternakResponse.getNamaPeternak() != null) {
+                            newKandang.setNamaKandang("Kandang " + jenisHewanResponse.getJenis() + " "
+                                    + peternakResponse.getNamaPeternak());
+                        } else if (jenisHewanResponse.getJenis() == null) {
                             newKandang.setNamaKandang("Kandang hewan umum" + peternakResponse.getNamaPeternak());
                         } else if (peternakResponse.getNamaPeternak() == null) {
-                            newKandang.setNamaKandang("Kandang " + jenisHewanResponse.getJenis() + "nya peternak tidak dikenal");
-                        } else{
+                            newKandang.setNamaKandang(
+                                    "Kandang " + jenisHewanResponse.getJenis() + "nya peternak tidak dikenal");
+                        } else {
                             newKandang.setNamaKandang("Nama Kandang tidak ketahui waktu import hewan");
                         }
                         newKandang.setPeternak(peternakResponse);
@@ -559,7 +609,8 @@ public class HewanService {
                         newKandang.setLuas(request.getLuas() != null ? request.getLuas() : "-");
                         newKandang.setKapasitas(request.getKapasitas() != null ? request.getKapasitas() : "-");
                         newKandang.setJenisKandang(request.getJenisKandang() != null ? request.getJenisKandang() : "-");
-                        newKandang.setNilaiBangunan(request.getNilaiBangunan() != null ? request.getNilaiBangunan() : "-");
+                        newKandang.setNilaiBangunan(
+                                request.getNilaiBangunan() != null ? request.getNilaiBangunan() : "-");
                         newKandang.setLongitude(request.getLongitude() != null ? request.getLongitude() : "-");
                         newKandang.setLatitude(request.getLatitude() != null ? request.getLatitude() : "-");
                         kandangResponse = kandangRepository.saveImportByHewan(newKandang);
@@ -606,14 +657,16 @@ public class HewanService {
                     }
                 }
 
-
-                TujuanPemeliharaan tujuanResponse = tujuanPemeliharaanRepository.findByTujuan(request.getTujuanPemeliharaan());
+                TujuanPemeliharaan tujuanResponse = tujuanPemeliharaanRepository
+                        .findByTujuan(request.getTujuanPemeliharaan());
                 if (tujuanResponse == null) {
                     TujuanPemeliharaan defaultTujuan = new TujuanPemeliharaan();
                     defaultTujuan.setIdTujuanPemeliharaan(
                             request.getIdTujuanPemeliharaan() != null ? request.getIdTujuanPemeliharaan()
                                     : UUID.randomUUID().toString());
-                    defaultTujuan.setTujuanPemeliharaan(request.getTujuanPemeliharaan() != null ? request.getTujuanPemeliharaan() : "Tujuan pemeliharaan tidak ditemukan waktu import hewan");
+                    defaultTujuan.setTujuanPemeliharaan(
+                            request.getTujuanPemeliharaan() != null ? request.getTujuanPemeliharaan()
+                                    : "Tujuan pemeliharaan tidak ditemukan waktu import hewan");
                     defaultTujuan.setDeskripsi(request.getDeskripsiTujuanPemeliharaan() != null
                             ? "Tujuan pemeliharaan ini adalah " + request.getTujuanPemeliharaan()
                             : "Deskripsi tujuan pemeliharaan tidak ditemukan waktu import hewan");

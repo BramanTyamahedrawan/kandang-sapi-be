@@ -3,14 +3,20 @@ package com.ternak.sapi.service;
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Kelahiran;
+import com.ternak.sapi.model.Pkb;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.JenisHewanRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.InseminasiRepository;
 import com.ternak.sapi.repository.JenisHewanRepository;
 import com.ternak.sapi.repository.KandangRepository;
+import com.ternak.sapi.repository.KelahiranRepository;
+import com.ternak.sapi.repository.PkbRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.checkerframework.checker.units.qual.K;
 import org.springframework.stereotype.Service;
@@ -27,6 +33,9 @@ public class JenisHewanService {
     private JenisHewanRepository jenishewanRepository = new JenisHewanRepository();
     private HewanRepository hewanRepository = new HewanRepository();
     private KandangRepository kandangRepository = new KandangRepository();
+    private InseminasiRepository inseminasiRepository = new InseminasiRepository();
+    private KelahiranRepository kelahiranRepository = new KelahiranRepository();
+    private PkbRepository pkbRepository = new PkbRepository();
 
     public PagedResponse<JenisHewan> getAllJenisHewan(int page, int size, String peternakId, String hewanId,
             String kandangId) throws IOException {
@@ -82,6 +91,30 @@ public class JenisHewanService {
             }
         }
 
+        List<Inseminasi> inseminasiList = inseminasiRepository.findByJenisHewanId(jenishewanId);
+        if (inseminasiList != null) {
+            for (Inseminasi inseminasi : inseminasiList) {
+                inseminasi.setJenisHewan(jenishewan);
+                inseminasiRepository.updateJenisHewanByInseminasi(inseminasi.getIdInseminasi(), inseminasi);
+            }
+        }
+
+        List<Kelahiran> kelahiranList = kelahiranRepository.findByJenisHewanId(jenishewanId);
+        if (kelahiranList != null) {
+            for (Kelahiran kelahiran : kelahiranList) {
+                kelahiran.setJenisHewan(jenishewan);
+                kelahiranRepository.updateJenisHewanByKelahiran(kelahiran.getIdKelahiran(), kelahiran);
+            }
+        }
+
+        List<Pkb> pkbList = pkbRepository.findByJenisHewanId(jenishewanId);
+        if (pkbList != null) {
+            for (Pkb pkb : pkbList) {
+                pkb.setJenisHewan(jenishewan);
+                pkbRepository.updateJenisHewanByPkb(pkb.getIdPkb(), pkb);
+            }
+        }
+
         return jenishewanRepository.update(jenishewanId, jenishewan);
     }
 
@@ -104,7 +137,7 @@ public class JenisHewanService {
         System.out.println("Memulai proses penyimpanan data jenis hewan secara bulk...");
 
         List<JenisHewan> jenishewanList = new ArrayList<>();
-        Set<String> jenisHewanSet = new HashSet<>(); 
+        Set<String> jenisHewanSet = new HashSet<>();
         int skippedIncomplete = 0;
 
         for (JenisHewanRequest request : jenishewanRequests) {
@@ -154,6 +187,5 @@ public class JenisHewanService {
 
         System.out.println("Proses selesai. Data tidak lengkap: " + skippedIncomplete);
     }
-
 
 }

@@ -8,6 +8,7 @@ import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.RumpunHewan;
+import com.ternak.sapi.model.Vaksin;
 import com.ternak.sapi.model.Inseminasi;
 
 // import com.ternak.sapi.model.User;
@@ -108,6 +109,27 @@ public class KelahiranRepository {
                                         kelahiran.getPeternak().getNamaPeternak());
                         client.insertRecord(tableKelahiran, rowKey, "peternak", "alamat",
                                         kelahiran.getPeternak().getAlamat());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "email",
+                                        kelahiran.getPeternak().getEmail());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "noTelepon",
+                                        kelahiran.getPeternak().getNoTelepon());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "tanggalLahir",
+                                        kelahiran.getPeternak().getTanggalLahir());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "tanggalPendaftaran",
+                                        kelahiran.getPeternak().getTanggalPendaftaran());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "idIsikhnas",
+                                        kelahiran.getPeternak().getIdIsikhnas());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "dusun",
+                                        kelahiran.getPeternak().getDusun());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "desa",
+                                        kelahiran.getPeternak().getDesa());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "kecamatan",
+                                        kelahiran.getPeternak().getKecamatan());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "kabupaten",
+                                        kelahiran.getPeternak().getKabupaten());
+                        client.insertRecord(tableKelahiran, rowKey, "peternak", "provinsi",
+                                        kelahiran.getPeternak().getProvinsi());
+
                 }
 
                 // Petugas
@@ -120,6 +142,12 @@ public class KelahiranRepository {
                                         kelahiran.getPetugas().getNamaPetugas());
                         client.insertRecord(tableKelahiran, rowKey, "petugas", "job",
                                         kelahiran.getPetugas().getJob());
+                        client.insertRecord(tableKelahiran, rowKey, "petugas", "email",
+                                        kelahiran.getPetugas().getEmail());
+                        client.insertRecord(tableKelahiran, rowKey, "petugas", "noTelp",
+                                        kelahiran.getPetugas().getNoTelp());
+                        client.insertRecord(tableKelahiran, rowKey, "petugas", "wilayah",
+                                        kelahiran.getPetugas().getWilayah());
                 }
 
                 // Hewan
@@ -130,7 +158,18 @@ public class KelahiranRepository {
                                         kelahiran.getHewan().getKodeEartagNasional());
                         client.insertRecord(tableKelahiran, rowKey, "hewan", "noKartuTernak",
                                         kelahiran.getHewan().getNoKartuTernak());
-
+                        client.insertRecord(tableKelahiran, rowKey, "hewan", "idIsikhnasTernak",
+                                        kelahiran.getHewan().getIdIsikhnasTernak());
+                        client.insertRecord(tableKelahiran, rowKey, "hewan", "identifikasiHewan",
+                                        kelahiran.getHewan().getIdentifikasiHewan());
+                        client.insertRecord(tableKelahiran, rowKey, "hewan", "sex", kelahiran.getHewan().getSex());
+                        client.insertRecord(tableKelahiran, rowKey, "hewan", "umur", kelahiran.getHewan().getUmur());
+                        client.insertRecord(tableKelahiran, rowKey, "hewan", "tanggalTerdaftar",
+                                        kelahiran.getHewan().getTanggalTerdaftar());
+                        client.insertRecord(tableKelahiran, rowKey, "hewan", "tanggalLahir",
+                                        kelahiran.getHewan().getTanggalLahir());
+                        client.insertRecord(tableKelahiran, rowKey, "hewan", "tempatLahir",
+                                        kelahiran.getHewan().getTempatLahir());
                 }
 
                 // Kandang
@@ -447,6 +486,9 @@ public class KelahiranRepository {
                                                         "hewan",
                                                         "noKartuTernak",
                                                         safeString(hewan.getNoKartuTernak()));
+                                        client.insertRecord(tableKelahiran, safeString(kelahiran.getIdKelahiran()),
+                                                        "hewan", "idIsikhnasTernak",
+                                                        safeString(hewan.getIdIsikhnasTernak()));
                                         client.insertRecord(tableKelahiran, safeString(kelahiran.getIdKelahiran()),
                                                         "hewan",
                                                         "identifikasiHewan", safeString(hewan.getIdentifikasiHewan()));
@@ -825,6 +867,26 @@ public class KelahiranRepository {
                                         kelahiran.getPeternak().getNamaPeternak());
                         client.insertRecord(tableKelahiran, kelahiranId, "peternak", "alamat",
                                         kelahiran.getPeternak().getAlamat());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "email",
+                                        kelahiran.getPeternak().getEmail());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "noTelepon",
+                                        kelahiran.getPeternak().getNoTelepon());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "tanggalLahir",
+                                        kelahiran.getPeternak().getTanggalLahir());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "tanggalPendaftaran",
+                                        kelahiran.getPeternak().getTanggalPendaftaran());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "idIsikhnas",
+                                        kelahiran.getPeternak().getIdIsikhnas());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "dusun",
+                                        kelahiran.getPeternak().getDusun());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "desa",
+                                        kelahiran.getPeternak().getDesa());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "kecamatan",
+                                        kelahiran.getPeternak().getKecamatan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "kabupaten",
+                                        kelahiran.getPeternak().getKabupaten());
+                        client.insertRecord(tableKelahiran, kelahiranId, "peternak", "provinsi",
+                                        kelahiran.getPeternak().getProvinsi());
                 }
 
                 // Petugas
@@ -837,6 +899,12 @@ public class KelahiranRepository {
                                         kelahiran.getPetugas().getNamaPetugas());
                         client.insertRecord(tableKelahiran, kelahiranId, "petugas", "job",
                                         kelahiran.getPetugas().getJob());
+                        client.insertRecord(tableKelahiran, kelahiranId, "petugas", "wilayah",
+                                        kelahiran.getPetugas().getWilayah());
+                        client.insertRecord(tableKelahiran, kelahiranId, "petugas", "noTelp",
+                                        kelahiran.getPetugas().getNoTelp());
+                        client.insertRecord(tableKelahiran, kelahiranId, "petugas", "email",
+                                        kelahiran.getPetugas().getEmail());
                 }
 
                 // Hewan
@@ -847,7 +915,20 @@ public class KelahiranRepository {
                                         kelahiran.getHewan().getKodeEartagNasional());
                         client.insertRecord(tableKelahiran, kelahiranId, "hewan", "noKartuTernak",
                                         kelahiran.getHewan().getNoKartuTernak());
-
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "idIsikhnasTernak",
+                                        kelahiran.getHewan().getIdIsikhnasTernak());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "identifikasiHewan",
+                                        kelahiran.getHewan().getIdentifikasiHewan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "sex",
+                                        kelahiran.getHewan().getSex());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "umur",
+                                        kelahiran.getHewan().getUmur());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "tanggalTerdaftar",
+                                        kelahiran.getHewan().getTanggalTerdaftar());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "tanggalLahir",
+                                        kelahiran.getHewan().getTanggalLahir());
+                        client.insertRecord(tableKelahiran, kelahiranId, "hewan", "tempatLahir",
+                                        kelahiran.getHewan().getTempatLahir());
                 }
 
                 // Kandang
@@ -856,6 +937,20 @@ public class KelahiranRepository {
                                         kelahiran.getKandang().getIdKandang());
                         client.insertRecord(tableKelahiran, kelahiranId, "kandang", "namaKandang",
                                         kelahiran.getKandang().getNamaKandang());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "nilaiBangunan",
+                                        kelahiran.getKandang().getNilaiBangunan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "longitude",
+                                        kelahiran.getKandang().getLongitude());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "latitude",
+                                        kelahiran.getKandang().getLatitude());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "luas",
+                                        kelahiran.getKandang().getLuas());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "kapasitas",
+                                        kelahiran.getKandang().getKapasitas());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "jenisKandang",
+                                        kelahiran.getKandang().getJenisKandang());
+                        client.insertRecord(tableKelahiran, kelahiranId, "kandang", "alamat",
+                                        kelahiran.getKandang().getAlamat());
                 }
 
                 // Rumpun Hewan
@@ -892,10 +987,257 @@ public class KelahiranRepository {
                                         kelahiran.getInseminasi().getProdusen());
                         client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "bangsaPejantan",
                                         kelahiran.getInseminasi().getBangsaPejantan());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ib1",
+                                        kelahiran.getInseminasi().getIb1());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ib2",
+                                        kelahiran.getInseminasi().getIb2());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ib3",
+                                        kelahiran.getInseminasi().getIb3());
+                        client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ibLain",
+                                        kelahiran.getInseminasi().getIbLain());
                 }
                 client.insertRecord(tableKelahiran, kelahiranId, "detail", "created_by", "Polinema");
 
                 return kelahiran;
+        }
+
+        public Kelahiran updatePetugasByKelahiran(String kelahiranId, Kelahiran kelahiran) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+
+                client.insertRecord(tableKelahiran, kelahiranId, "petugas", "nikPetugas",
+                                kelahiran.getPetugas().getNikPetugas());
+                client.insertRecord(tableKelahiran, kelahiranId, "petugas", "namaPetugas",
+                                kelahiran.getPetugas().getNamaPetugas());
+                client.insertRecord(tableKelahiran, kelahiranId, "petugas", "noTelp",
+                                kelahiran.getPetugas().getNoTelp());
+                client.insertRecord(tableKelahiran, kelahiranId, "petugas", "email",
+                                kelahiran.getPetugas().getEmail());
+                client.insertRecord(tableKelahiran, kelahiranId, "main", "job", kelahiran.getPetugas().getJob());
+                client.insertRecord(tableKelahiran, kelahiranId, "main", "wilayah",
+                                kelahiran.getPetugas().getWilayah());
+                client.insertRecord(tableKelahiran, kelahiranId, "detail", "created_by", "Polinema");
+                return kelahiran;
+        }
+
+        public Kelahiran updatePeternakByKelahiran(String kelahiranId, Kelahiran kelahiran) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+
+                client.insertRecord(tableKelahiran, kelahiranId, "kandang", "namaKandang",
+                                "Kandang " + kelahiran.getPeternak().getNamaPeternak());
+
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "nikPeternak",
+                                kelahiran.getPeternak().getNikPeternak());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "namaPeternak",
+                                kelahiran.getPeternak().getNamaPeternak());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "lokasi",
+                                kelahiran.getPeternak().getLokasi());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "tanggalPendaftaran",
+                                kelahiran.getPeternak().getTanggalPendaftaran());
+
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "noTelepon",
+                                kelahiran.getPeternak().getNoTelepon());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "email",
+                                kelahiran.getPeternak().getEmail());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "jenisKelamin",
+                                kelahiran.getPeternak().getJenisKelamin());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "tanggalLahir",
+                                kelahiran.getPeternak().getTanggalLahir());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "idIsikhnas",
+                                kelahiran.getPeternak().getIdIsikhnas());
+
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "dusun",
+                                kelahiran.getPeternak().getDusun());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "desa", kelahiran.getPeternak().getDesa());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "kecamatan",
+                                kelahiran.getPeternak().getKecamatan());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "kabupaten",
+                                kelahiran.getPeternak().getKabupaten());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "provinsi",
+                                kelahiran.getPeternak().getProvinsi());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "alamat",
+                                kelahiran.getPeternak().getAlamat());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "latitude",
+                                kelahiran.getPeternak().getLatitude());
+                client.insertRecord(tableKelahiran, kelahiranId, "peternak", "longitude",
+                                kelahiran.getPeternak().getLongitude());
+                return kelahiran;
+        }
+
+        public Kelahiran updateKandangByKelahiran(String kelahiranId, Kelahiran kelahiran) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "namaKandang",
+                                kelahiran.getKandang().getNamaKandang());
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "alamat",
+                                kelahiran.getKandang().getAlamat());
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "luas",
+                                kelahiran.getKandang().getLuas());
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "jenisKandang",
+                                kelahiran.getKandang().getJenisKandang());
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "kapasitas",
+                                kelahiran.getKandang().getKapasitas());
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "nilaiBangunan",
+                                kelahiran.getKandang().getNilaiBangunan());
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "latitude",
+                                kelahiran.getKandang().getLatitude());
+                client.insertRecord(tableKelahiran, kelahiranId,
+                                "kandang", "longitude",
+                                kelahiran.getKandang().getLongitude());
+                return kelahiran;
+        }
+
+        public Kelahiran updateJenisHewanByKelahiran(String kelahiranId, Kelahiran kelahiran) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                client.insertRecord(tableKelahiran, kelahiranId, "jenisHewan", "jenis",
+                                kelahiran.getJenisHewan().getJenis());
+                client.insertRecord(tableKelahiran, kelahiranId, "jenisHewan", "deskripsi",
+                                kelahiran.getJenisHewan().getDeskripsi());
+                return kelahiran;
+        }
+
+        public Kelahiran updateRumpunHewanByKelahiran(String kelahiranId, Kelahiran kelahiran) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                client.insertRecord(tableKelahiran, kelahiranId, "rumpunHewan", "rumpun",
+                                kelahiran.getRumpunHewan().getRumpun());
+                client.insertRecord(tableKelahiran, kelahiranId, "rumpunHewan", "deskripsi",
+                                kelahiran.getRumpunHewan().getDeskripsi());
+                return kelahiran;
+        }
+
+        public Kelahiran updateHewanByKelahiran(String kelahiranId, Kelahiran kelahiran) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "kodeEartagNasional",
+                                kelahiran.getHewan().getKodeEartagNasional());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "noKartuTernak",
+                                kelahiran.getHewan().getNoKartuTernak());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "idIsikhnasTernak",
+                                kelahiran.getHewan().getIdIsikhnasTernak());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "sex", kelahiran.getHewan().getSex());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "umur", kelahiran.getHewan().getUmur());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "identifikasiHewan",
+                                kelahiran.getHewan().getIdentifikasiHewan());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "tanggalLahir",
+                                kelahiran.getHewan().getTanggalLahir());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "tempatLahir",
+                                kelahiran.getHewan().getTempatLahir());
+                client.insertRecord(tableKelahiran, kelahiranId, "hewan", "tanggalTerdaftar",
+                                kelahiran.getHewan().getTanggalTerdaftar());
+                return kelahiran;
+        }
+
+        public Kelahiran updateInseminasiByKelahiran(String kelahiranId, Kelahiran kelahiran) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idPejantan",
+                                kelahiran.getInseminasi().getIdPejantan());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "idPembuatan",
+                                kelahiran.getInseminasi().getIdPembuatan());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "tanggalIB",
+                                kelahiran.getInseminasi().getTanggalIB());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "produsen",
+                                kelahiran.getInseminasi().getProdusen());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "bangsaPejantan",
+                                kelahiran.getInseminasi().getBangsaPejantan());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ib1",
+                                kelahiran.getInseminasi().getIb1());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ib2",
+                                kelahiran.getInseminasi().getIb2());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ib3",
+                                kelahiran.getInseminasi().getIb3());
+                client.insertRecord(tableKelahiran, kelahiranId, "inseminasi", "ibLain",
+                                kelahiran.getInseminasi().getIbLain());
+                return kelahiran;
+        }
+
+        public List<Kelahiran> findByPetugasId(String petugasId) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKelahiran", "idKelahiran");
+                columnMapping.put("petugasId", "petugasId");
+                columnMapping.put("petugas", "petugas");
+
+                return client.getDataListByColumn(tableKelahiran.toString(), columnMapping,
+                                "petugas", "petugasId", petugasId, Kelahiran.class, -1);
+        }
+
+        public List<Kelahiran> findByPeternakId(String peternakId) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKelahiran", "idKelahiran");
+                columnMapping.put("peternakId", "peternakId");
+                columnMapping.put("peternak", "peternak");
+
+                return client.getDataListByColumn(tableKelahiran.toString(), columnMapping,
+                                "peternak", "peternakId", peternakId, Kelahiran.class, -1);
+        }
+
+        public List<Kelahiran> findByKandangId(String idKandang) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKelahiran", "idKelahiran");
+                columnMapping.put("kandang", "kandang");
+
+                return client.getDataListByColumn(tableKelahiran.toString(), columnMapping,
+                                "kandang", "idKandang", idKandang, Kelahiran.class, -1);
+        }
+
+        public List<Kelahiran> findByJenisHewanId(String idJenisHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKelahiran", "idKelahiran");
+                columnMapping.put("jenisHewan", "jenisHewan");
+
+                return client.getDataListByColumn(tableKelahiran.toString(), columnMapping,
+                                "jenisHewan", "idJenisHewan", idJenisHewan, Kelahiran.class, -1);
+        }
+
+        public List<Kelahiran> findByRumpunId(String idRumpunHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKelahiran", "idKelahiran");
+                columnMapping.put("rumpunHewan", "rumpunHewan");
+
+                return client.getDataListByColumn(tableKelahiran.toString(), columnMapping,
+                                "rumpunHewan", "idRumpunHewan", idRumpunHewan, Kelahiran.class, -1);
+        }
+
+        public List<Kelahiran> findByHewanId(String idHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKelahiran", "idKelahiran");
+                columnMapping.put("hewan", "hewan");
+
+                return client.getDataListByColumn(tableKelahiran.toString(), columnMapping,
+                                "hewan", "idHewan", idHewan, Kelahiran.class, -1);
+        }
+
+        public List<Kelahiran> findByInseminasiId(String idInseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableKelahiran = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idKelahiran", "idKelahiran");
+                columnMapping.put("inseminasi", "inseminasi");
+
+                return client.getDataListByColumn(tableKelahiran.toString(), columnMapping,
+                                "inseminasi", "idInseminasi", idInseminasi, Kelahiran.class, -1);
         }
 
         public boolean deleteById(String kelahiranId) throws IOException {

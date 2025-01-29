@@ -14,16 +14,24 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.Pkb;
+import com.ternak.sapi.model.Vaksin;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.payload.PeternakRequest;
 import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.InseminasiRepository;
 import com.ternak.sapi.repository.KandangRepository;
+import com.ternak.sapi.repository.KelahiranRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
+import com.ternak.sapi.repository.PkbRepository;
+import com.ternak.sapi.repository.VaksinRepository;
 import com.ternak.sapi.util.AppConstants;
 
 @Service
@@ -32,6 +40,10 @@ public class PeternakService {
     private PetugasRepository petugasRepository = new PetugasRepository();
     private KandangRepository kandangRepository = new KandangRepository();
     private HewanRepository hewanRepository = new HewanRepository();
+    private VaksinRepository vaksinRepository = new VaksinRepository();
+    private InseminasiRepository inseminasiRepository = new InseminasiRepository();
+    private KelahiranRepository kelahiranRepository = new KelahiranRepository();
+    private PkbRepository pkbRepository = new PkbRepository();
     // private UserRepository userRepository = new UserRepository();
 
     // private static final Logger logger =
@@ -142,6 +154,42 @@ public class PeternakService {
             for (Hewan hewan : hewanList) {
                 hewan.setPeternak(peternak);
                 hewanRepository.updatePeternakByHewan(hewan.getIdHewan(), hewan);
+            }
+
+        }
+
+        List<Vaksin> vaksinList = vaksinRepository.findByPeternakId(peternakId);
+        if (vaksinList != null) {
+            for (Vaksin vaksin : vaksinList) {
+                vaksin.setPeternak(peternak);
+                vaksinRepository.updatePeternakByVaksin(vaksin.getIdVaksin(), vaksin);
+            }
+
+        }
+
+        List<Inseminasi> inseminasiList = inseminasiRepository.findByPeternakId(peternakId);
+        if (inseminasiList != null) {
+            for (Inseminasi inseminasi : inseminasiList) {
+                inseminasi.setPeternak(peternak);
+                inseminasiRepository.updatePeternakByInseminasi(inseminasi.getIdInseminasi(), inseminasi);
+            }
+
+        }
+
+        List<Kelahiran> kelahiranList = kelahiranRepository.findByPeternakId(peternakId);
+        if (kelahiranList != null) {
+            for (Kelahiran kelahiran : kelahiranList) {
+                kelahiran.setPeternak(peternak);
+                kelahiranRepository.updatePeternakByKelahiran(kelahiran.getIdKelahiran(), kelahiran);
+            }
+
+        }
+
+        List<Pkb> pkbList = pkbRepository.findByPeternakId(peternakId);
+        if (pkbList != null) {
+            for (Pkb pkb : pkbList) {
+                pkb.setPeternak(peternak);
+                pkbRepository.updatePeternakByPkb(pkb.getIdPkb(), pkb);
             }
 
         }

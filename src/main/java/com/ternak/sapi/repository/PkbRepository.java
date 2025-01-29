@@ -2,8 +2,10 @@ package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
 import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Pkb;
 import com.ternak.sapi.model.RumpunHewan;
@@ -85,6 +87,12 @@ public class PkbRepository {
                                         pkb.getPeternak().getKecamatan());
                         client.insertRecord(tablePkb, rowKey, "peternak", "desa",
                                         pkb.getPeternak().getDesa());
+                        client.insertRecord(tablePkb, rowKey, "peternak", "dusun",
+                                        pkb.getPeternak().getDusun());
+                        client.insertRecord(tablePkb, rowKey, "peternak", "tanggalLahir",
+                                        pkb.getPeternak().getTanggalLahir());
+                        client.insertRecord(tablePkb, rowKey, "peternak", "tanggalPendaftaran",
+                                        pkb.getPeternak().getTanggalPendaftaran());
                 }
 
                 // Petugas
@@ -101,6 +109,8 @@ public class PkbRepository {
                                         pkb.getPetugas().getNoTelp());
                         client.insertRecord(tablePkb, rowKey, "petugas", "job",
                                         pkb.getPetugas().getJob());
+                        client.insertRecord(tablePkb, rowKey, "petugas", "wilayah",
+                                        pkb.getPetugas().getWilayah());
                 }
 
                 // Hewan
@@ -117,6 +127,13 @@ public class PkbRepository {
                                         pkb.getHewan().getIdentifikasiHewan());
                         client.insertRecord(tablePkb, rowKey, "hewan", "umur",
                                         pkb.getHewan().getUmur());
+                        client.insertRecord(tablePkb, rowKey, "hewan", "sex", pkb.getHewan().getSex());
+                        client.insertRecord(tablePkb, rowKey, "hewan", "tanggalTerdaftar",
+                                        pkb.getHewan().getTanggalTerdaftar());
+                        client.insertRecord(tablePkb, rowKey, "hewan", "tanggalLahir",
+                                        pkb.getHewan().getTanggalLahir());
+                        client.insertRecord(tablePkb, rowKey, "hewan", "tempatLahir",
+                                        pkb.getHewan().getTempatLahir());
                 }
 
                 // Kandang
@@ -205,6 +222,12 @@ public class PkbRepository {
                                         pkb.getPeternak().getKecamatan());
                         client.insertRecord(tablePkb, pkbId, "peternak", "desa",
                                         pkb.getPeternak().getDesa());
+                        client.insertRecord(tablePkb, pkbId, "peternak", "dusun",
+                                        pkb.getPeternak().getDusun());
+                        client.insertRecord(tablePkb, pkbId, "peternak", "tanggalLahir",
+                                        pkb.getPeternak().getTanggalLahir());
+                        client.insertRecord(tablePkb, pkbId, "peternak", "tanggalPendaftaran",
+                                        pkb.getPeternak().getTanggalPendaftaran());
                 }
 
                 // Petugas
@@ -237,6 +260,14 @@ public class PkbRepository {
                                         pkb.getHewan().getIdentifikasiHewan());
                         client.insertRecord(tablePkb, pkbId, "hewan", "umur",
                                         pkb.getHewan().getUmur());
+                        client.insertRecord(tablePkb, pkbId, "hewan", "sex",
+                                        pkb.getHewan().getSex());
+                        client.insertRecord(tablePkb, pkbId, "hewan", "tanggalTerdaftar",
+                                        pkb.getHewan().getTanggalTerdaftar());
+                        client.insertRecord(tablePkb, pkbId, "hewan", "tanggalLahir",
+                                        pkb.getHewan().getTanggalLahir());
+                        client.insertRecord(tablePkb, pkbId, "hewan", "tempatLahir",
+                                        pkb.getHewan().getTempatLahir());
                 }
 
                 // Kandang
@@ -490,6 +521,8 @@ public class PkbRepository {
                                                         "noKartuTernak",
                                                         safeString(hewan.getNoKartuTernak()));
                                         client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
+                                                        "idIsikhnasTernak", safeString(hewan.getIdIsikhnasTernak()));
+                                        client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan",
                                                         "identifikasiHewan", safeString(hewan.getIdentifikasiHewan()));
                                         client.insertRecord(tablePkb, safeString(pkb.getIdPkb()), "hewan", "sex",
                                                         safeString(hewan.getSex()));
@@ -661,6 +694,206 @@ public class PkbRepository {
                 }
 
                 return pkbs;
+        }
+
+        public Pkb updatePetugasByPkb(String pkbId, Pkb pkb) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+
+                client.insertRecord(tablePkb, pkbId, "petugas", "nikPetugas",
+                                pkb.getPetugas().getNikPetugas());
+                client.insertRecord(tablePkb, pkbId, "petugas", "namaPetugas",
+                                pkb.getPetugas().getNamaPetugas());
+                client.insertRecord(tablePkb, pkbId, "petugas", "noTelp",
+                                pkb.getPetugas().getNoTelp());
+                client.insertRecord(tablePkb, pkbId, "petugas", "email",
+                                pkb.getPetugas().getEmail());
+                client.insertRecord(tablePkb, pkbId, "main", "job", pkb.getPetugas().getJob());
+                client.insertRecord(tablePkb, pkbId, "main", "wilayah",
+                                pkb.getPetugas().getWilayah());
+                client.insertRecord(tablePkb, pkbId, "detail", "created_by", "Polinema");
+                return pkb;
+        }
+
+        public Pkb updatePeternakByPkb(String pkbId, Pkb pkb) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+
+                client.insertRecord(tablePkb, pkbId, "kandang", "namaKandang",
+                                "Kandang " + pkb.getPeternak().getNamaPeternak());
+
+                client.insertRecord(tablePkb, pkbId, "peternak", "nikPeternak",
+                                pkb.getPeternak().getNikPeternak());
+                client.insertRecord(tablePkb, pkbId, "peternak", "namaPeternak",
+                                pkb.getPeternak().getNamaPeternak());
+                client.insertRecord(tablePkb, pkbId, "peternak", "lokasi", pkb.getPeternak().getLokasi());
+                client.insertRecord(tablePkb, pkbId, "peternak", "tanggalPendaftaran",
+                                pkb.getPeternak().getTanggalPendaftaran());
+
+                client.insertRecord(tablePkb, pkbId, "peternak", "noTelepon",
+                                pkb.getPeternak().getNoTelepon());
+                client.insertRecord(tablePkb, pkbId, "peternak", "email", pkb.getPeternak().getEmail());
+                client.insertRecord(tablePkb, pkbId, "peternak", "jenisKelamin",
+                                pkb.getPeternak().getJenisKelamin());
+                client.insertRecord(tablePkb, pkbId, "peternak", "tanggalLahir",
+                                pkb.getPeternak().getTanggalLahir());
+                client.insertRecord(tablePkb, pkbId, "peternak", "idIsikhnas",
+                                pkb.getPeternak().getIdIsikhnas());
+
+                client.insertRecord(tablePkb, pkbId, "peternak", "dusun", pkb.getPeternak().getDusun());
+                client.insertRecord(tablePkb, pkbId, "peternak", "desa", pkb.getPeternak().getDesa());
+                client.insertRecord(tablePkb, pkbId, "peternak", "kecamatan",
+                                pkb.getPeternak().getKecamatan());
+                client.insertRecord(tablePkb, pkbId, "peternak", "kabupaten",
+                                pkb.getPeternak().getKabupaten());
+                client.insertRecord(tablePkb, pkbId, "peternak", "provinsi",
+                                pkb.getPeternak().getProvinsi());
+                client.insertRecord(tablePkb, pkbId, "peternak", "alamat", pkb.getPeternak().getAlamat());
+                client.insertRecord(tablePkb, pkbId, "peternak", "latitude",
+                                pkb.getPeternak().getLatitude());
+                client.insertRecord(tablePkb, pkbId, "peternak", "longitude",
+                                pkb.getPeternak().getLongitude());
+                return pkb;
+        }
+
+        public Pkb updateKandangByPkb(String pkbId, Pkb pkb) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "namaKandang",
+                                pkb.getKandang().getNamaKandang());
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "alamat",
+                                pkb.getKandang().getAlamat());
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "luas",
+                                pkb.getKandang().getLuas());
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "jenisKandang",
+                                pkb.getKandang().getJenisKandang());
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "kapasitas",
+                                pkb.getKandang().getKapasitas());
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "nilaiBangunan",
+                                pkb.getKandang().getNilaiBangunan());
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "latitude",
+                                pkb.getKandang().getLatitude());
+                client.insertRecord(tablePkb, pkbId,
+                                "kandang", "longitude",
+                                pkb.getKandang().getLongitude());
+                return pkb;
+        }
+
+        public Pkb updateJenisHewanByPkb(String pkbId, Pkb pkb) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                client.insertRecord(tablePkb, pkbId, "jenisHewan", "jenis",
+                                pkb.getJenisHewan().getJenis());
+                client.insertRecord(tablePkb, pkbId, "jenisHewan", "deskripsi",
+                                pkb.getJenisHewan().getDeskripsi());
+                return pkb;
+        }
+
+        public Pkb updateRumpunHewanByPkb(String pkbId, Pkb pkb) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                client.insertRecord(tablePkb, pkbId, "rumpunHewan", "rumpun",
+                                pkb.getRumpunHewan().getRumpun());
+                client.insertRecord(tablePkb, pkbId, "rumpunHewan", "deskripsi",
+                                pkb.getRumpunHewan().getDeskripsi());
+                return pkb;
+        }
+
+        public Pkb updateHewanByPkb(String pkbId, Pkb pkb) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                client.insertRecord(tablePkb, pkbId, "hewan", "kodeEartagNasional",
+                                pkb.getHewan().getKodeEartagNasional());
+                client.insertRecord(tablePkb, pkbId, "hewan", "noKartuTernak",
+                                pkb.getHewan().getNoKartuTernak());
+                client.insertRecord(tablePkb, pkbId, "hewan", "idIsikhnasTernak",
+                                pkb.getHewan().getIdIsikhnasTernak());
+                client.insertRecord(tablePkb, pkbId, "hewan", "sex", pkb.getHewan().getSex());
+                client.insertRecord(tablePkb, pkbId, "hewan", "umur", pkb.getHewan().getUmur());
+                client.insertRecord(tablePkb, pkbId, "hewan", "identifikasiHewan",
+                                pkb.getHewan().getIdentifikasiHewan());
+                client.insertRecord(tablePkb, pkbId, "hewan", "tanggalLahir",
+                                pkb.getHewan().getTanggalLahir());
+                client.insertRecord(tablePkb, pkbId, "hewan", "tempatLahir",
+                                pkb.getHewan().getTempatLahir());
+                client.insertRecord(tablePkb, pkbId, "hewan", "tanggalTerdaftar",
+                                pkb.getHewan().getTanggalTerdaftar());
+                return pkb;
+        }
+
+        public List<Pkb> findByPetugasId(String petugasId) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idPkb", "idPkb");
+                columnMapping.put("petugasId", "petugasId");
+                columnMapping.put("petugas", "petugas");
+
+                return client.getDataListByColumn(tablePkb.toString(), columnMapping,
+                                "petugas", "petugasId", petugasId, Pkb.class, -1);
+        }
+
+        public List<Pkb> findByPeternakId(String peternakId) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idPkb", "idPkb");
+                columnMapping.put("peternakId", "peternakId");
+                columnMapping.put("peternak", "peternak");
+
+                return client.getDataListByColumn(tablePkb.toString(), columnMapping,
+                                "peternak", "peternakId", peternakId, Pkb.class, -1);
+        }
+
+        public List<Pkb> findByKandangId(String idKandang) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idPkb", "idPkb");
+                columnMapping.put("kandang", "kandang");
+
+                return client.getDataListByColumn(tablePkb.toString(), columnMapping,
+                                "kandang", "idKandang", idKandang, Pkb.class, -1);
+        }
+
+        public List<Pkb> findByJenisHewanId(String idJenisHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idPkb", "idPkb");
+                columnMapping.put("jenisHewan", "jenisHewan");
+
+                return client.getDataListByColumn(tablePkb.toString(), columnMapping,
+                                "jenisHewan", "idJenisHewan", idJenisHewan, Pkb.class, -1);
+        }
+
+        public List<Pkb> findByRumpunId(String idRumpunHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idPkb", "idPkb");
+                columnMapping.put("rumpunHewan", "rumpunHewan");
+
+                return client.getDataListByColumn(tablePkb.toString(), columnMapping,
+                                "rumpunHewan", "idRumpunHewan", idRumpunHewan, Pkb.class, -1);
+        }
+
+        public List<Pkb> findByHewanId(String idHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePkb = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idPkb", "idPkb");
+                columnMapping.put("hewan", "hewan");
+
+                return client.getDataListByColumn(tablePkb.toString(), columnMapping,
+                                "hewan", "idHewan", idHewan, Pkb.class, -1);
         }
 
         public boolean deleteById(String pkbId) throws IOException {

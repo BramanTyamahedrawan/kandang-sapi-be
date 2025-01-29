@@ -84,39 +84,111 @@ public class InseminasiRepository {
                 }
 
                 // Peternak
-                client.insertRecord(tableInseminasi, rowKey, "peternak", "idPeternak",
-                                inseminasi.getPeternak().getIdPeternak());
-                client.insertRecord(tableInseminasi, rowKey, "peternak", "nikPeternak",
-                                inseminasi.getPeternak().getNikPeternak());
-                client.insertRecord(tableInseminasi, rowKey, "peternak", "namaPeternak",
-                                inseminasi.getPeternak().getNamaPeternak());
-                client.insertRecord(tableInseminasi, rowKey, "peternak", "alamat",
-                                inseminasi.getPeternak().getAlamat());
+                if (inseminasi.getPeternak() != null) {
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "idPeternak",
+                                        inseminasi.getPeternak().getIdPeternak());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "nikPeternak",
+                                        inseminasi.getPeternak().getNikPeternak());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "namaPeternak",
+                                        inseminasi.getPeternak().getNamaPeternak());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "idIsikhnas",
+                                        inseminasi.getPeternak().getIdIsikhnas());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "email",
+                                        inseminasi.getPeternak().getEmail());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "noTelepon",
+                                        inseminasi.getPeternak().getNoTelepon());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "alamat",
+                                        inseminasi.getPeternak().getAlamat());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "provinsi",
+                                        inseminasi.getPeternak().getProvinsi());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "kabupaten",
+                                        inseminasi.getPeternak().getKabupaten());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "kecamatan",
+                                        inseminasi.getPeternak().getKecamatan());
+                        client.insertRecord(tableInseminasi, rowKey, "peternak", "desa",
+                                        inseminasi.getPeternak().getDesa());
+                }
 
                 // Petugas
-                client.insertRecord(tableInseminasi, rowKey, "petugas", "petugasId",
-                                inseminasi.getPetugas().getPetugasId());
-                client.insertRecord(tableInseminasi, rowKey, "petugas", "nikPetugas",
-                                inseminasi.getPetugas().getNikPetugas());
-                client.insertRecord(tableInseminasi, rowKey, "petugas", "namaPetugas",
-                                inseminasi.getPetugas().getNamaPetugas());
-                client.insertRecord(tableInseminasi, rowKey, "petugas", "job",
-                                inseminasi.getPetugas().getJob());
+                if (inseminasi.getPetugas() != null) {
+                        client.insertRecord(tableInseminasi, rowKey, "petugas", "petugasId",
+                                        inseminasi.getPetugas().getPetugasId());
+                        client.insertRecord(tableInseminasi, rowKey, "petugas", "nikPetugas",
+                                        inseminasi.getPetugas().getNikPetugas());
+                        client.insertRecord(tableInseminasi, rowKey, "petugas", "namaPetugas",
+                                        inseminasi.getPetugas().getNamaPetugas());
+                        client.insertRecord(tableInseminasi, rowKey, "petugas", "email",
+                                        inseminasi.getPetugas().getEmail());
+                        client.insertRecord(tableInseminasi, rowKey, "petugas", "noTelp",
+                                        inseminasi.getPetugas().getNoTelp());
+                        client.insertRecord(tableInseminasi, rowKey, "petugas", "job",
+                                        inseminasi.getPetugas().getJob());
+                }
 
-                // Hewan
-                client.insertRecord(tableInseminasi, rowKey, "hewan", "idHewan", inseminasi.getHewan().getIdHewan());
-                client.insertRecord(tableInseminasi, rowKey, "hewan", "kodeEartagNasional",
-                                inseminasi.getHewan().getKodeEartagNasional());
-                client.insertRecord(tableInseminasi, rowKey, "hewan", "noKartuTernak",
-                                inseminasi.getHewan().getNoKartuTernak());
+                // Jenis Hewan
+                if (inseminasi.getJenisHewan() != null) {
+                        client.insertRecord(tableInseminasi, rowKey, "jenisHewan", "idJenisHewan",
+                                        inseminasi.getJenisHewan().getIdJenisHewan());
+                        client.insertRecord(tableInseminasi, rowKey, "jenisHewan", "jenis",
+                                        inseminasi.getJenisHewan().getJenis());
+                        client.insertRecord(tableInseminasi, rowKey, "jenisHewan", "deskripsi",
+                                        inseminasi.getJenisHewan().getDeskripsi());
+                }
 
                 // Rumpun Hewan
-                client.insertRecord(tableInseminasi, rowKey, "rumpunHewan", "idRumpunHewan",
-                                inseminasi.getRumpunHewan().getIdRumpunHewan());
-                client.insertRecord(tableInseminasi, rowKey, "rumpunHewan", "rumpun",
-                                inseminasi.getRumpunHewan().getRumpun());
-                client.insertRecord(tableInseminasi, rowKey, "rumpunHewan", "deskripsi",
-                                inseminasi.getRumpunHewan().getDeskripsi());
+                if (inseminasi.getRumpunHewan() != null) {
+                        client.insertRecord(tableInseminasi, rowKey, "rumpunHewan", "idRumpunHewan",
+                                        inseminasi.getRumpunHewan().getIdRumpunHewan());
+                        client.insertRecord(tableInseminasi, rowKey, "rumpunHewan", "rumpun",
+                                        inseminasi.getRumpunHewan().getRumpun());
+                        client.insertRecord(tableInseminasi, rowKey, "rumpunHewan", "deskripsi",
+                                        inseminasi.getRumpunHewan().getDeskripsi());
+                }
+
+                // Kandang
+                if (inseminasi.getKandang() != null) {
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "idKandang",
+                                        inseminasi.getKandang().getIdKandang());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "namaKandang",
+                                        inseminasi.getKandang().getNamaKandang());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "alamat",
+                                        inseminasi.getKandang().getAlamat());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "jenisKandang",
+                                        inseminasi.getKandang().getJenisKandang());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "luas",
+                                        inseminasi.getKandang().getLuas());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "kapasitas",
+                                        inseminasi.getKandang().getKapasitas());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "nilaiBangunan",
+                                        inseminasi.getKandang().getNilaiBangunan());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "latitude",
+                                        inseminasi.getKandang().getLatitude());
+                        client.insertRecord(tableInseminasi, rowKey, "kandang", "longitude",
+                                        inseminasi.getKandang().getLongitude());
+                }
+
+                // Hewan
+                if (inseminasi.getHewan() != null) {
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "idHewan",
+                                        inseminasi.getHewan().getIdHewan());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "kodeEartagNasional",
+                                        inseminasi.getHewan().getKodeEartagNasional());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "noKartuTernak",
+                                        inseminasi.getHewan().getNoKartuTernak());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "idIsikhnasTernak",
+                                        inseminasi.getHewan().getIdIsikhnasTernak());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "identifikasiHewan",
+                                        inseminasi.getHewan().getIdentifikasiHewan());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "umur",
+                                        inseminasi.getHewan().getUmur());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "sex", inseminasi.getHewan().getSex());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "tanggalTerdaftar",
+                                        inseminasi.getHewan().getTanggalTerdaftar());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "tanggalLahir",
+                                        inseminasi.getHewan().getTanggalLahir());
+                        client.insertRecord(tableInseminasi, rowKey, "hewan", "tempatLahir",
+                                        inseminasi.getHewan().getTempatLahir());
+                }
 
                 client.insertRecord(tableInseminasi, rowKey, "detail", "created_by", "Polinema");
 
@@ -395,8 +467,6 @@ public class InseminasiRepository {
                                                         safeString(peternak.getTanggalLahir()));
                                         client.insertRecord(tableInseminasi, rowKey, "peternak", "idIsikhnas",
                                                         safeString(peternak.getIdIsikhnas()));
-                                        client.insertRecord(tableInseminasi, rowKey, "detail", "created_by",
-                                                        "Polinema");
                                 }
 
                                 if (inseminasi.getKandang() != null) {
@@ -470,6 +540,8 @@ public class InseminasiRepository {
                                                         safeString(hewan.getKodeEartagNasional()));
                                         client.insertRecord(tableInseminasi, rowKey, "hewan", "noKartuTernak",
                                                         safeString(hewan.getNoKartuTernak()));
+                                        client.insertRecord(tableInseminasi, rowKey, "hewan", "idIsikhnasTernak",
+                                                        safeString(hewan.getIdIsikhnasTernak()));
                                         client.insertRecord(tableInseminasi, rowKey, "hewan", "sex",
                                                         safeString(hewan.getSex()));
                                         client.insertRecord(tableInseminasi, rowKey, "hewan", "umur",
@@ -537,103 +609,6 @@ public class InseminasiRepository {
                 client.insertRecord(tableInseminasi, rowKey, "main", "ib3", inseminasi.getIb3());
                 client.insertRecord(tableInseminasi, rowKey, "main", "ibLain", inseminasi.getIbLain());
 
-                return inseminasi;
-        }
-
-        public Inseminasi update(String inseminasiId, Inseminasi inseminasi) throws IOException {
-                HBaseCustomClient client = new HBaseCustomClient(conf);
-
-                TableName tableInseminasi = TableName.valueOf(tableName);
-                if (inseminasi.getTanggalIB() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "tanggalIB",
-                                        inseminasi.getTanggalIB());
-                }
-                if (inseminasi.getIb1() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ib1", inseminasi.getIb1());
-                }
-                if (inseminasi.getIb2() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ib2", inseminasi.getIb2());
-                }
-                if (inseminasi.getIb3() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ib3", inseminasi.getIb3());
-                }
-                if (inseminasi.getIbLain() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ibLain", inseminasi.getIbLain());
-                }
-                if (inseminasi.getIdPejantan() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "idPejantan",
-                                        inseminasi.getIdPejantan());
-                }
-                if (inseminasi.getIdPembuatan() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "idPembuatan",
-                                        inseminasi.getIdPembuatan());
-                }
-                if (inseminasi.getBangsaPejantan() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "bangsaPejantan",
-                                        inseminasi.getBangsaPejantan());
-                }
-                if (inseminasi.getProdusen() != null) {
-                        client.insertRecord(tableInseminasi, inseminasiId, "main", "produsen",
-                                        inseminasi.getProdusen());
-                }
-
-                // Peternak
-                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "idPeternak",
-                                inseminasi.getPeternak().getIdPeternak());
-                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "nikPeternak",
-                                inseminasi.getPeternak().getNikPeternak());
-                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "namaPeternak",
-                                inseminasi.getPeternak().getNamaPeternak());
-                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "alamat",
-                                inseminasi.getPeternak().getAlamat());
-
-                // Petugas
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "petugasId",
-                                inseminasi.getPetugas().getPetugasId());
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "nikPetugas",
-                                inseminasi.getPetugas().getNikPetugas());
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "namaPetugas",
-                                inseminasi.getPetugas().getNamaPetugas());
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "job",
-                                inseminasi.getPetugas().getJob());
-
-                // Hewan
-                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "idHewan",
-                                inseminasi.getHewan().getIdHewan());
-                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "kodeEartagNasional",
-                                inseminasi.getHewan().getKodeEartagNasional());
-                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "noKartuTernak",
-                                inseminasi.getHewan().getNoKartuTernak());
-
-                // Rumpun Hewan
-                client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "idRumpunHewan",
-                                inseminasi.getRumpunHewan().getIdRumpunHewan());
-                client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "rumpun",
-                                inseminasi.getRumpunHewan().getRumpun());
-                client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "deskripsi",
-                                inseminasi.getRumpunHewan().getDeskripsi());
-
-                client.insertRecord(tableInseminasi, inseminasiId, "detail", "created_by", "Polinema");
-
-                return inseminasi;
-        }
-
-        public Inseminasi updatePetugasByInseminasi(String inseminasiId, Inseminasi inseminasi) throws IOException {
-                HBaseCustomClient client = new HBaseCustomClient(conf);
-                TableName tableInseminasi = TableName.valueOf(tableName);
-
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "nikPetugas",
-                                inseminasi.getPetugas().getNikPetugas());
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "namaPetugas",
-                                inseminasi.getPetugas().getNamaPetugas());
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "noTelp",
-                                inseminasi.getPetugas().getNoTelp());
-                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "email",
-                                inseminasi.getPetugas().getEmail());
-                client.insertRecord(tableInseminasi, inseminasiId, "main", "job", inseminasi.getPetugas().getJob());
-                client.insertRecord(tableInseminasi, inseminasiId, "main", "wilayah",
-                                inseminasi.getPetugas().getWilayah());
-                client.insertRecord(tableInseminasi, inseminasiId, "detail", "created_by", "Polinema");
                 return inseminasi;
         }
 
@@ -844,6 +819,297 @@ public class InseminasiRepository {
                 return inseminasis;
         }
 
+        public Inseminasi update(String inseminasiId, Inseminasi inseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                if (inseminasi.getTanggalIB() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "tanggalIB",
+                                        inseminasi.getTanggalIB());
+                }
+                if (inseminasi.getIb1() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ib1", inseminasi.getIb1());
+                }
+                if (inseminasi.getIb2() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ib2", inseminasi.getIb2());
+                }
+                if (inseminasi.getIb3() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ib3", inseminasi.getIb3());
+                }
+                if (inseminasi.getIbLain() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "ibLain", inseminasi.getIbLain());
+                }
+                if (inseminasi.getIdPejantan() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "idPejantan",
+                                        inseminasi.getIdPejantan());
+                }
+                if (inseminasi.getIdPembuatan() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "idPembuatan",
+                                        inseminasi.getIdPembuatan());
+                }
+                if (inseminasi.getBangsaPejantan() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "bangsaPejantan",
+                                        inseminasi.getBangsaPejantan());
+                }
+                if (inseminasi.getProdusen() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "produsen",
+                                        inseminasi.getProdusen());
+                }
+
+                // Peternak
+                if (inseminasi.getPeternak() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "idPeternak",
+                                        inseminasi.getPeternak().getIdPeternak());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "nikPeternak",
+                                        inseminasi.getPeternak().getNikPeternak());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "namaPeternak",
+                                        inseminasi.getPeternak().getNamaPeternak());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "email",
+                                        inseminasi.getPeternak().getEmail());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "noTelepon",
+                                        inseminasi.getPeternak().getNoTelepon());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "alamat",
+                                        inseminasi.getPeternak().getAlamat());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "dusun",
+                                        inseminasi.getPeternak().getDusun());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "desa",
+                                        inseminasi.getPeternak().getDesa());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "kecamatan",
+                                        inseminasi.getPeternak().getKecamatan());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "kabupaten",
+                                        inseminasi.getPeternak().getKabupaten());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "tanggalPendaftaran",
+                                        inseminasi.getPeternak().getTanggalPendaftaran());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "tanggalLahir",
+                                        inseminasi.getPeternak().getTanggalLahir());
+                        client.insertRecord(tableInseminasi, inseminasiId, "peternak", "idIsikhnas",
+                                        inseminasi.getPeternak().getIdIsikhnas());
+                }
+
+                // Petugas
+                if (inseminasi.getPetugas() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "petugas", "nikPetugas",
+                                        inseminasi.getPetugas().getNikPetugas());
+                        client.insertRecord(tableInseminasi, inseminasiId, "petugas", "namaPetugas",
+                                        inseminasi.getPetugas().getNamaPetugas());
+                        client.insertRecord(tableInseminasi, inseminasiId, "petugas", "noTelp",
+                                        inseminasi.getPetugas().getNoTelp());
+                        client.insertRecord(tableInseminasi, inseminasiId, "petugas", "email",
+                                        inseminasi.getPetugas().getEmail());
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "job",
+                                        inseminasi.getPetugas().getJob());
+                        client.insertRecord(tableInseminasi, inseminasiId, "main", "wilayah",
+                                        inseminasi.getPetugas().getWilayah());
+                }
+
+                // Jenis Hewan
+                if (inseminasi.getJenisHewan() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "jenisHewan", "idJenisHewan",
+                                        inseminasi.getJenisHewan().getIdJenisHewan());
+                        client.insertRecord(tableInseminasi, inseminasiId, "jenisHewan", "jenis",
+                                        inseminasi.getJenisHewan().getJenis());
+                        client.insertRecord(tableInseminasi, inseminasiId, "jenisHewan", "deskripsi",
+                                        inseminasi.getJenisHewan().getDeskripsi());
+                }
+
+                // Rumpun Hewan
+                if (inseminasi.getRumpunHewan() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "idRumpunHewan",
+                                        inseminasi.getRumpunHewan().getIdRumpunHewan());
+                        client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "rumpun",
+                                        inseminasi.getRumpunHewan().getRumpun());
+                        client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "deskripsi",
+                                        inseminasi.getRumpunHewan().getDeskripsi());
+                }
+
+                // Kandang
+                if (inseminasi.getKandang() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "idKandang",
+                                        inseminasi.getKandang().getIdKandang());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "namaKandang",
+                                        inseminasi.getKandang().getNamaKandang());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "alamat",
+                                        inseminasi.getKandang().getAlamat());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "luas",
+                                        inseminasi.getKandang().getLuas());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "jenisKandang",
+                                        inseminasi.getKandang().getJenisKandang());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "kapasitas",
+                                        inseminasi.getKandang().getKapasitas());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "nilaiBangunan",
+                                        inseminasi.getKandang().getNilaiBangunan());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "latitude",
+                                        inseminasi.getKandang().getLatitude());
+                        client.insertRecord(tableInseminasi, inseminasiId, "kandang", "longitude",
+                                        inseminasi.getKandang().getLongitude());
+                }
+
+                // Hewan
+                if (inseminasi.getHewan() != null) {
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "idHewan",
+                                        inseminasi.getHewan().getIdHewan());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "kodeEartagNasional",
+                                        inseminasi.getHewan().getKodeEartagNasional());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "noKartuTernak",
+                                        inseminasi.getHewan().getNoKartuTernak());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "idIsikhnasTernak",
+                                        inseminasi.getHewan().getIdIsikhnasTernak());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "sex",
+                                        inseminasi.getHewan().getSex());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "umur",
+                                        inseminasi.getHewan().getUmur());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "identifikasiHewan",
+                                        inseminasi.getHewan().getIdentifikasiHewan());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "tanggalLahir",
+                                        inseminasi.getHewan().getTanggalLahir());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "tempatLahir",
+                                        inseminasi.getHewan().getTempatLahir());
+                        client.insertRecord(tableInseminasi, inseminasiId, "hewan", "tanggalTerdaftar",
+                                        inseminasi.getHewan().getTanggalTerdaftar());
+                }
+
+                client.insertRecord(tableInseminasi, inseminasiId, "detail", "created_by", "Polinema");
+
+                return inseminasi;
+        }
+
+        public Inseminasi updatePetugasByInseminasi(String inseminasiId, Inseminasi inseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+
+                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "nikPetugas",
+                                inseminasi.getPetugas().getNikPetugas());
+                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "namaPetugas",
+                                inseminasi.getPetugas().getNamaPetugas());
+                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "noTelp",
+                                inseminasi.getPetugas().getNoTelp());
+                client.insertRecord(tableInseminasi, inseminasiId, "petugas", "email",
+                                inseminasi.getPetugas().getEmail());
+                client.insertRecord(tableInseminasi, inseminasiId, "main", "job", inseminasi.getPetugas().getJob());
+                client.insertRecord(tableInseminasi, inseminasiId, "main", "wilayah",
+                                inseminasi.getPetugas().getWilayah());
+                client.insertRecord(tableInseminasi, inseminasiId, "detail", "created_by", "Polinema");
+                return inseminasi;
+        }
+
+        public Inseminasi updatePeternakByInseminasi(String inseminasiId, Inseminasi inseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+
+                client.insertRecord(tableInseminasi, inseminasiId, "kandang", "namaKandang",
+                                "Kandang " + inseminasi.getPeternak().getNamaPeternak());
+
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "nikPeternak",
+                                inseminasi.getPeternak().getNikPeternak());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "namaPeternak",
+                                inseminasi.getPeternak().getNamaPeternak());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "lokasi",
+                                inseminasi.getPeternak().getLokasi());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "tanggalPendaftaran",
+                                inseminasi.getPeternak().getTanggalPendaftaran());
+
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "noTelepon",
+                                inseminasi.getPeternak().getNoTelepon());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "email",
+                                inseminasi.getPeternak().getEmail());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "jenisKelamin",
+                                inseminasi.getPeternak().getJenisKelamin());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "tanggalLahir",
+                                inseminasi.getPeternak().getTanggalLahir());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "idIsikhnas",
+                                inseminasi.getPeternak().getIdIsikhnas());
+
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "dusun",
+                                inseminasi.getPeternak().getDusun());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "desa",
+                                inseminasi.getPeternak().getDesa());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "kecamatan",
+                                inseminasi.getPeternak().getKecamatan());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "kabupaten",
+                                inseminasi.getPeternak().getKabupaten());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "provinsi",
+                                inseminasi.getPeternak().getProvinsi());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "alamat",
+                                inseminasi.getPeternak().getAlamat());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "latitude",
+                                inseminasi.getPeternak().getLatitude());
+                client.insertRecord(tableInseminasi, inseminasiId, "peternak", "longitude",
+                                inseminasi.getPeternak().getLongitude());
+                return inseminasi;
+        }
+
+        public Inseminasi updateKandangByInseminasi(String inseminasiId, Inseminasi inseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "namaKandang",
+                                inseminasi.getKandang().getNamaKandang());
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "alamat",
+                                inseminasi.getKandang().getAlamat());
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "luas",
+                                inseminasi.getKandang().getLuas());
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "jenisKandang",
+                                inseminasi.getKandang().getJenisKandang());
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "kapasitas",
+                                inseminasi.getKandang().getKapasitas());
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "nilaiBangunan",
+                                inseminasi.getKandang().getNilaiBangunan());
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "latitude",
+                                inseminasi.getKandang().getLatitude());
+                client.insertRecord(tableInseminasi, inseminasiId,
+                                "kandang", "longitude",
+                                inseminasi.getKandang().getLongitude());
+                return inseminasi;
+        }
+
+        public Inseminasi updateJenisHewanByInseminasi(String inseminasiId, Inseminasi inseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                client.insertRecord(tableInseminasi, inseminasiId, "jenisHewan", "jenis",
+                                inseminasi.getJenisHewan().getJenis());
+                client.insertRecord(tableInseminasi, inseminasiId, "jenisHewan", "deskripsi",
+                                inseminasi.getJenisHewan().getDeskripsi());
+                return inseminasi;
+        }
+
+        public Inseminasi updateRumpunHewanByInseminasi(String inseminasiId, Inseminasi inseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "rumpun",
+                                inseminasi.getRumpunHewan().getRumpun());
+                client.insertRecord(tableInseminasi, inseminasiId, "rumpunHewan", "deskripsi",
+                                inseminasi.getRumpunHewan().getDeskripsi());
+                return inseminasi;
+        }
+
+        public Inseminasi updateHewanByInseminasi(String inseminasiId, Inseminasi inseminasi) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "kodeEartagNasional",
+                                inseminasi.getHewan().getKodeEartagNasional());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "noKartuTernak",
+                                inseminasi.getHewan().getNoKartuTernak());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "idIsikhnasTernak",
+                                inseminasi.getHewan().getIdIsikhnasTernak());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "sex", inseminasi.getHewan().getSex());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "umur", inseminasi.getHewan().getUmur());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "identifikasiHewan",
+                                inseminasi.getHewan().getIdentifikasiHewan());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "tanggalLahir",
+                                inseminasi.getHewan().getTanggalLahir());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "tempatLahir",
+                                inseminasi.getHewan().getTempatLahir());
+                client.insertRecord(tableInseminasi, inseminasiId, "hewan", "tanggalTerdaftar",
+                                inseminasi.getHewan().getTanggalTerdaftar());
+                return inseminasi;
+        }
+
         public List<Inseminasi> findByPetugasId(String petugasId) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
                 TableName tableInseminasi = TableName.valueOf(tableName); // Sesuaikan nama tabel HBase Anda
@@ -853,7 +1119,63 @@ public class InseminasiRepository {
                 columnMapping.put("petugas", "petugas");
 
                 return client.getDataListByColumn(tableInseminasi.toString(), columnMapping,
-                                "petugas", "petugasId", petugasId, Inseminasi.class, 100);
+                                "petugas", "petugasId", petugasId, Inseminasi.class, -1);
+        }
+
+        public List<Inseminasi> findByPeternakId(String peternakId) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idInseminasi", "idInseminasi");
+                columnMapping.put("peternakId", "peternakId");
+                columnMapping.put("peternak", "peternak");
+
+                return client.getDataListByColumn(tableInseminasi.toString(), columnMapping,
+                                "peternak", "peternakId", peternakId, Inseminasi.class, -1);
+        }
+
+        public List<Inseminasi> findByKandangId(String idKandang) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idInseminasi", "idInseminasi");
+                columnMapping.put("kandang", "kandang");
+
+                return client.getDataListByColumn(tableInseminasi.toString(), columnMapping,
+                                "kandang", "idKandang", idKandang, Inseminasi.class, -1);
+        }
+
+        public List<Inseminasi> findByJenisHewanId(String idJenisHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idInseminasi", "idInseminasi");
+                columnMapping.put("jenisHewan", "jenisHewan");
+
+                return client.getDataListByColumn(tableInseminasi.toString(), columnMapping,
+                                "jenisHewan", "idJenisHewan", idJenisHewan, Inseminasi.class, -1);
+        }
+
+        public List<Inseminasi> findByRumpunId(String idRumpunHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idInseminasi", "idInseminasi");
+                columnMapping.put("rumpunHewan", "rumpunHewan");
+
+                return client.getDataListByColumn(tableInseminasi.toString(), columnMapping,
+                                "rumpunHewan", "idRumpunHewan", idRumpunHewan, Inseminasi.class, -1);
+        }
+
+        public List<Inseminasi> findByHewanId(String idHewan) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tableInseminasi = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("idInseminasi", "idInseminasi");
+                columnMapping.put("hewan", "hewan");
+
+                return client.getDataListByColumn(tableInseminasi.toString(), columnMapping,
+                                "hewan", "idHewan", idHewan, Inseminasi.class, -1);
         }
 
         public boolean deleteById(String inseminasiId) throws IOException {

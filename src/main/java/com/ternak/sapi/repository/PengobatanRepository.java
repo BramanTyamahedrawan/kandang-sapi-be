@@ -1,6 +1,7 @@
 package com.ternak.sapi.repository;
 
 import com.ternak.sapi.helper.HBaseCustomClient;
+import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.model.Pengobatan;
 import com.ternak.sapi.model.Petugas;
 import com.ternak.sapi.model.Pkb;
@@ -358,6 +359,37 @@ public class PengobatanRepository {
                 pengobatan.getPetugas().getNamaPetugas());
         client.insertRecord(tablePengobatan, pengobatanId, "detail", "created_by", "Polinema");
         return pengobatan;
+    }
+
+    public Pengobatan updatePetugasByPengobatan(String pengobatanId, Pengobatan pengobatan) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePengobatan = TableName.valueOf(tableName);
+
+        client.insertRecord(tablePengobatan, pengobatanId, "petugas", "nikPetugas",
+                pengobatan.getPetugas().getNikPetugas());
+        client.insertRecord(tablePengobatan, pengobatanId, "petugas", "namaPetugas",
+                pengobatan.getPetugas().getNamaPetugas());
+        client.insertRecord(tablePengobatan, pengobatanId, "petugas", "noTelp",
+                pengobatan.getPetugas().getNoTelp());
+        client.insertRecord(tablePengobatan, pengobatanId, "petugas", "email",
+                pengobatan.getPetugas().getEmail());
+        client.insertRecord(tablePengobatan, pengobatanId, "main", "job", pengobatan.getPetugas().getJob());
+        client.insertRecord(tablePengobatan, pengobatanId, "main", "wilayah",
+                pengobatan.getPetugas().getWilayah());
+        client.insertRecord(tablePengobatan, pengobatanId, "detail", "created_by", "Polinema");
+        return pengobatan;
+    }
+
+    public List<Pengobatan> findByPetugasId(String petugasId) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+        TableName tablePengobatan = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+        columnMapping.put("idPengobatan", "idPengobatan");
+        columnMapping.put("petugasId", "petugasId");
+        columnMapping.put("petugas", "petugas");
+
+        return client.getDataListByColumn(tablePengobatan.toString(), columnMapping,
+                "petugas", "petugasId", petugasId, Pengobatan.class, -1);
     }
 
     public boolean deleteById(String pengobatanId) throws IOException {

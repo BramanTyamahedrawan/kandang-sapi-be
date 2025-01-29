@@ -3,11 +3,17 @@ package com.ternak.sapi.service;
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Hewan;
+import com.ternak.sapi.model.Inseminasi;
+import com.ternak.sapi.model.Kelahiran;
+import com.ternak.sapi.model.Pkb;
 import com.ternak.sapi.model.RumpunHewan;
 import com.ternak.sapi.payload.DefaultResponse;
 import com.ternak.sapi.payload.RumpunHewanRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.InseminasiRepository;
+import com.ternak.sapi.repository.KelahiranRepository;
+import com.ternak.sapi.repository.PkbRepository;
 import com.ternak.sapi.repository.RumpunHewanRepository;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.stereotype.Service;
@@ -25,6 +31,9 @@ import java.util.Set;
 public class RumpunHewanService {
     private RumpunHewanRepository rumpunhewanRepository = new RumpunHewanRepository();
     private HewanRepository hewanRepository = new HewanRepository();
+    private InseminasiRepository inseminasiRepository = new InseminasiRepository();
+    private KelahiranRepository kelahiranRepository = new KelahiranRepository();
+    private PkbRepository pkbRepository = new PkbRepository();
 
     public PagedResponse<RumpunHewan> getAllRumpunHewan(int page, int size) throws IOException {
         validatePageNumberAndSize(page, size);
@@ -70,11 +79,36 @@ public class RumpunHewanService {
                 hewanRepository.updateRumpunHewanByHewan(hewan.getIdHewan(), hewan);
             }
         }
+
+        List<Inseminasi> inseminasiList = inseminasiRepository.findByRumpunId(rumpunhewanId);
+        if (inseminasiList != null) {
+            for (Inseminasi inseminasi : inseminasiList) {
+                inseminasi.setRumpunHewan(rumpunhewan);
+                inseminasiRepository.updateRumpunHewanByInseminasi(inseminasi.getIdInseminasi(), inseminasi);
+            }
+        }
+
+        List<Kelahiran> kelahiranList = kelahiranRepository.findByRumpunId(rumpunhewanId);
+        if (kelahiranList != null) {
+            for (Kelahiran kelahiran : kelahiranList) {
+                kelahiran.setRumpunHewan(rumpunhewan);
+                kelahiranRepository.updateRumpunHewanByKelahiran(kelahiran.getIdKelahiran(), kelahiran);
+            }
+        }
+
+        List<Pkb> pkbList = pkbRepository.findByRumpunId(rumpunhewanId);
+        if (pkbList != null) {
+            for (Pkb pkb : pkbList) {
+                pkb.setRumpunHewan(rumpunhewan);
+                pkbRepository.updateRumpunHewanByPkb(pkb.getIdPkb(), pkb);
+            }
+        }
+
         return rumpunhewanRepository.update(rumpunhewanId, rumpunhewan);
     }
 
     public void deleteRumpunHewanById(String rumpunhewanId) throws IOException {
-       rumpunhewanRepository.deleteById(rumpunhewanId);
+        rumpunhewanRepository.deleteById(rumpunhewanId);
     }
 
     private void validatePageNumberAndSize(int page, int size) {
@@ -99,18 +133,18 @@ public class RumpunHewanService {
         for (RumpunHewanRequest request : rumpunhewanRequests) {
 
             String namaRumpun = request.getRumpun() != null ? request.getRumpun().trim().toLowerCase() : null;
-            if(namaRumpun == null){
+            if (namaRumpun == null) {
                 System.out.println("Data Tidak lengkap");
                 continue;
             }
 
             RumpunHewan rumpunHewanResponse = rumpunhewanRepository.findByRumpun(request.getRumpun());
-            if(rumpunHewanResponse != null){
-                System.out.println("Rumpun " +request.getRumpun() + "sudah ada");
+            if (rumpunHewanResponse != null) {
+                System.out.println("Rumpun " + request.getRumpun() + "sudah ada");
                 continue;
             }
 
-            if(rumpunSet.contains(namaRumpun)){
+            if (rumpunSet.contains(namaRumpun)) {
                 System.out.println("Rumpun '" + namaRumpun + "'sudah ada dilist");
                 continue;
             }

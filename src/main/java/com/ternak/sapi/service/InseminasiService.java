@@ -5,6 +5,7 @@ import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.model.Inseminasi;
 import com.ternak.sapi.model.JenisHewan;
 import com.ternak.sapi.model.Kandang;
+import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.model.Petugas;
@@ -15,6 +16,7 @@ import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.InseminasiRepository;
 import com.ternak.sapi.repository.JenisHewanRepository;
 import com.ternak.sapi.repository.KandangRepository;
+import com.ternak.sapi.repository.KelahiranRepository;
 import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
@@ -49,6 +51,7 @@ public class InseminasiService {
     private KandangRepository kandangRepository = new KandangRepository();
     private RumpunHewanRepository rumpunHewanRepository = new RumpunHewanRepository();
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
+    private KelahiranRepository kelahiranRepository = new KelahiranRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(InseminasiService.class);
@@ -78,6 +81,7 @@ public class InseminasiService {
         Peternak peternakResponse = peternakRepository.findById(inseminasiRequest.getIdPeternak().toString());
         Petugas petugasResponse = petugasRepository.findById(inseminasiRequest.getPetugasId().toString());
         Hewan hewanResponse = hewanRepository.findById(inseminasiRequest.getIdHewan().toString());
+        Kandang kandangResponse = kandangRepository.findById(inseminasiRequest.getIdKandang().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository
                 .findById(inseminasiRequest.getIdRumpunHewan().toString());
         if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
@@ -95,6 +99,7 @@ public class InseminasiService {
             inseminasi.setPeternak(peternakResponse);
             inseminasi.setPetugas(petugasResponse);
             inseminasi.setHewan(hewanResponse);
+            inseminasi.setKandang(kandangResponse);
             inseminasi.setRumpunHewan(rumpunHewanResponse);
 
             return inseminasiRepository.save(inseminasi);
@@ -115,6 +120,7 @@ public class InseminasiService {
         Peternak peternakResponse = peternakRepository.findById(inseminasiRequest.getIdPeternak().toString());
         Petugas petugasResponse = petugasRepository.findById(inseminasiRequest.getPetugasId().toString());
         Hewan hewanResponse = hewanRepository.findById(inseminasiRequest.getIdHewan().toString());
+        Kandang kandangResponse = kandangRepository.findById(inseminasiRequest.getIdKandang().toString());
         RumpunHewan rumpunHewanResponse = rumpunHewanRepository
                 .findById(inseminasiRequest.getIdRumpunHewan().toString());
         if (peternakResponse.getIdPeternak() != null && petugasResponse.getPetugasId() != null
@@ -132,7 +138,14 @@ public class InseminasiService {
             inseminasi.setPeternak(peternakResponse);
             inseminasi.setPetugas(petugasResponse);
             inseminasi.setHewan(hewanResponse);
+            inseminasi.setKandang(kandangResponse);
             inseminasi.setRumpunHewan(rumpunHewanResponse);
+
+            List<Kelahiran> kelahiranList = kelahiranRepository.findByInseminasiId(inseminasiId);
+            for (Kelahiran kelahiran : kelahiranList) {
+                kelahiran.setInseminasi(inseminasi);
+                kelahiranRepository.updateInseminasiByKelahiran(kelahiran.getIdKelahiran(), kelahiran);
+            }
 
             return inseminasiRepository.update(inseminasiId, inseminasi);
         } else {

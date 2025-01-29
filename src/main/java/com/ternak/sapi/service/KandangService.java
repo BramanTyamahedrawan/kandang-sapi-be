@@ -5,6 +5,8 @@ import java.util.*;
 
 import com.ternak.sapi.model.*;
 import com.ternak.sapi.repository.HewanRepository;
+import com.ternak.sapi.repository.InseminasiRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +16,9 @@ import com.ternak.sapi.payload.KandangRequest;
 import com.ternak.sapi.payload.PagedResponse;
 import com.ternak.sapi.repository.JenisHewanRepository;
 import com.ternak.sapi.repository.KandangRepository;
+import com.ternak.sapi.repository.KelahiranRepository;
 import com.ternak.sapi.repository.PeternakRepository;
+import com.ternak.sapi.repository.PkbRepository;
 import com.ternak.sapi.util.AppConstants;
 
 @Service
@@ -23,6 +27,9 @@ public class KandangService {
     private PeternakRepository peternakRepository = new PeternakRepository();
     private JenisHewanRepository jenisHewanRepository = new JenisHewanRepository();
     private HewanRepository hewanRepository = new HewanRepository();
+    private InseminasiRepository inseminasiRepository = new InseminasiRepository();
+    private KelahiranRepository kelahiranRepository = new KelahiranRepository();
+    private PkbRepository pkbRepository = new PkbRepository();
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(KandangService.class);
@@ -116,6 +123,30 @@ public class KandangService {
                 for (Hewan hewan : hewanList) {
                     hewan.setKandang(kandang);
                     hewanRepository.updateKandangByHewan(hewan.getIdHewan(), hewan);
+                }
+            }
+
+            List<Inseminasi> inseminasiList = inseminasiRepository.findByKandangId(kandangId);
+            if (inseminasiList != null) {
+                for (Inseminasi inseminasi : inseminasiList) {
+                    inseminasi.setKandang(kandang);
+                    inseminasiRepository.updateKandangByInseminasi(inseminasi.getIdInseminasi(), inseminasi);
+                }
+            }
+
+            List<Kelahiran> kelahiranList = kelahiranRepository.findByKandangId(kandangId);
+            if (kelahiranList != null) {
+                for (Kelahiran kelahiran : kelahiranList) {
+                    kelahiran.setKandang(kandang);
+                    kelahiranRepository.updateKandangByKelahiran(kelahiran.getIdKelahiran(), kelahiran);
+                }
+            }
+
+            List<Pkb> pkbList = pkbRepository.findByKandangId(kandangId);
+            if (pkbList != null) {
+                for (Pkb pkb : pkbList) {
+                    pkb.setKandang(kandang);
+                    pkbRepository.updateKandangByPkb(pkb.getIdPkb(), pkb);
                 }
             }
 

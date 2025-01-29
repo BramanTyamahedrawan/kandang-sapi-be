@@ -7,12 +7,16 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.FilterList;
+import org.apache.hadoop.hbase.filter.PageFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
+import org.apache.hadoop.hbase.filter.SkipFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -502,6 +506,133 @@ public class HBaseCustomClient {
 
         return null;
     }
+
+    public <T> List<T> getDataListByColumnWithPagination(String tableName,
+            Map<String, String> columnMapping,
+            String familyName,
+            String columnName,
+            String columnValue,
+            Class<T> modelClass,
+            int limit,
+            int offset) {
+
+        ResultScanner rsObj = null;
+
+        try {
+            Table table = connection.getTable(TableName.valueOf(tableName));
+
+            Scan s = new Scan();
+            s.setCaching(limit);
+            s.setLimit(limit);
+
+            TableDescriptor tableDescriptor = connection.getAdmin().getDescriptor(TableName.valueOf(tableName));
+            ColumnFamilyDescriptor[] columnFamilies = tableDescriptor.getColumnFamilies();
+            for (ColumnFamilyDescriptor columnFamily : columnFamilies) {
+                byte[] family = columnFamily.getName();
+                s.addFamily(family);
+            }
+
+            // Tambahkan filter untuk pagination
+            FilterList filterList = new FilterList(FilterList.Operator.MUST_PASS_ALL);
+
+            // Filter untuk kolom yang dicari
+            Filter valueFilter = new SingleColumnValueFilter(
+                    Bytes.toBytes(familyName),
+                    Bytes.toBytes(columnName),
+                    CompareOperator.EQUAL,
+                    Bytes.toBytes(columnValue));
+
+            // Filter untuk skip sejumlah row sesuai offset
+            Filter pageFilter = new PageFilter(limit);
+            Filter skipFilter = new SkipFilter(new PageFilter(offset));
+
+            filterList.addFilter(valueFilter);
+            filterList.addFilter(skipFilter);
+            filterList.addFilter(pageFilter);
+
+            s.setFilter(filterList);
+
+            rsObj = table.getScanner(s);
+
+            // Create a list to store the objects
+            List<T> objects = new ArrayList<T>();
+
+            for (Result result : rsObj) {
+                T object = modelClass.newInstance();
+                for (Cell cell : result.listCells()) {
+                    String familyName2 = Bytes.toString(CellUtil.cloneFamily(cell));
+                    String columnName2 = Bytes.toString(CellUtil.cloneQualifier(cell));
+                    String variableName = columnMapping.get(columnName2);
+                    String value = Bytes.toString(CellUtil.cloneValue(cell));
+
+                    if (columnMapping.containsKey(familyName2)) {
+                        String subFieldName = columnName2.substring(columnName2.indexOf(".") + 1);
+                        Field familyField = object.getClass().getDeclaredField(familyName2);
+                        familyField.setAccessible(true);
+                        Object familyObject = familyField.get(object);
+
+                        if (familyObject == null) {
+                            if (familyField.getType() == List.class) {
+                                familyObject = new ArrayList<>();
+                                familyField.set(object, familyObject);
+                            } else {
+                                familyObject = familyField.getType().newInstance();
+                                familyField.set(object, familyObject);
+                            }
+                        }
+
+                        if (familyObject instanceof List) {
+                            Object currentObject = familyObject;
+                            ObjectMapper mapper = new ObjectMapper();
+
+                            JsonNode jsonNode = null;
+                            try {
+                                jsonNode = mapper.readTree(value);
+                            } catch (Exception e) {
+                                // Bukan format JSON
+                            }
+
+                            if (jsonNode != null
+                                    && jsonNode.getNodeType() == JsonNodeFactory.instance.objectNode().getNodeType()) {
+                                Map<String, Object> dataList = mapper.readValue(value,
+                                        new TypeReference<Map<String, Object>>() {
+                                        });
+                                ((List) currentObject).add(dataList);
+                            } else {
+                                ((List) currentObject).add(value);
+                            }
+                        } else {
+                            Field subField = familyObject.getClass().getDeclaredField(subFieldName);
+                            subField.setAccessible(true);
+                            setField(subField, familyObject, value);
+                        }
+                    } else {
+                        if (variableName != null) {
+                            Field field = object.getClass().getDeclaredField(variableName);
+                            field.setAccessible(true);
+                            setField(field, object, value);
+                        }
+                    }
+                }
+                objects.add(object);
+            }
+
+            rsObj.close();
+            return objects;
+
+        } catch (IOException e) {
+            if (rsObj != null) {
+                rsObj.close();
+            }
+            e.printStackTrace();
+        } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    // Helper method untuk set field
 
     private void setField(Field field, Object object, String value) throws IllegalAccessException {
         // Ubah hak akses field agar dapat diakses

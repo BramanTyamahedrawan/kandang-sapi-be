@@ -3,12 +3,20 @@ package com.ternak.sapi.service;
 // import com.ternak.sapi.repository.UserRepository;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.Inseminasi;
+import com.ternak.sapi.model.Kelahiran;
+import com.ternak.sapi.model.Pengobatan;
 import com.ternak.sapi.model.Peternak;
 import com.ternak.sapi.repository.HewanRepository;
 import com.ternak.sapi.repository.InseminasiRepository;
+import com.ternak.sapi.repository.KelahiranRepository;
+import com.ternak.sapi.repository.PengobatanRepository;
 import com.ternak.sapi.repository.PeternakRepository;
 import com.ternak.sapi.repository.PetugasRepository;
+import com.ternak.sapi.repository.PkbRepository;
+import com.ternak.sapi.repository.VaksinRepository;
 import com.ternak.sapi.model.Petugas;
+import com.ternak.sapi.model.Pkb;
+import com.ternak.sapi.model.Vaksin;
 import com.ternak.sapi.exception.BadRequestException;
 import com.ternak.sapi.exception.ResourceNotFoundException;
 import com.ternak.sapi.payload.DefaultResponse;
@@ -33,7 +41,11 @@ public class PetugasService {
     private PetugasRepository petugasRepository = new PetugasRepository();
     private PeternakRepository peternakRepository = new PeternakRepository();
     private HewanRepository hewanRepository = new HewanRepository();
+    private VaksinRepository vaksinRepository = new VaksinRepository();
     private InseminasiRepository inseminasiRepository = new InseminasiRepository();
+    private KelahiranRepository kelahiranRepository = new KelahiranRepository();
+    private PengobatanRepository pengobatanRepository = new PengobatanRepository();
+    private PkbRepository pkbRepository = new PkbRepository();
     // private UserRepository userRepository = new UserRepository();
 
     // private static final Logger logger =
@@ -134,6 +146,16 @@ public class PetugasService {
             }
         }
 
+        List<Vaksin> vaksinList = vaksinRepository.findByPetugasId(petugasId);
+        if (vaksinList != null) {
+            // Jika vaksin ditemukan, lakukan update pada petugas yang terkait
+            for (Vaksin vaksin : vaksinList) {
+                // Update field hewan sesuai dengan kebutuhan
+                vaksin.setPetugas(petugas);
+                vaksinRepository.updatePetugasByVaksin(vaksin.getIdVaksin(), vaksin);
+            }
+        }
+
         List<Inseminasi> inseminasiList = inseminasiRepository.findByPetugasId(petugasId);
         if (inseminasiList != null) {
             // Jika inseminasi ditemukan, lakukan update pada petugas yang terkait
@@ -141,6 +163,36 @@ public class PetugasService {
                 // Update field hewan sesuai dengan kebutuhan
                 inseminasi.setPetugas(petugas);
                 inseminasiRepository.updatePetugasByInseminasi(inseminasi.getIdInseminasi(), inseminasi);
+            }
+        }
+
+        List<Kelahiran> kelahiranList = kelahiranRepository.findByPetugasId(petugasId);
+        if (kelahiranList != null) {
+            // Jika kelahiran ditemukan, lakukan update pada petugas yang terkait
+            for (Kelahiran kelahiran : kelahiranList) {
+                // Update field hewan sesuai dengan kebutuhan
+                kelahiran.setPetugas(petugas);
+                kelahiranRepository.updatePetugasByKelahiran(kelahiran.getIdKelahiran(), kelahiran);
+            }
+        }
+
+        List<Pengobatan> pengobatanList = pengobatanRepository.findByPetugasId(petugasId);
+        if (pengobatanList != null) {
+            // Jika pengobatan ditemukan, lakukan update pada petugas yang terkait
+            for (Pengobatan pengobatan : pengobatanList) {
+                // Update field hewan sesuai dengan kebutuhan
+                pengobatan.setPetugas(petugas);
+                pengobatanRepository.updatePetugasByPengobatan(pengobatan.getIdPengobatan(), pengobatan);
+            }
+        }
+
+        List<Pkb> pkbList = pkbRepository.findByPetugasId(petugasId);
+        if (pkbList != null) {
+            // Jika pkb ditemukan, lakukan update pada petugas yang terkait
+            for (Pkb pkb : pkbList) {
+                // Update field hewan sesuai dengan kebutuhan
+                pkb.setPetugas(petugas);
+                pkbRepository.updatePetugasByPkb(pkb.getIdPkb(), pkb);
             }
         }
 
@@ -217,8 +269,9 @@ public class PetugasService {
             petugas.setNoTelp(request.getNoTelp());
             petugas.setEmail(request.getEmail());
             petugas.setJob(request.getJob() != null ? request.getJob() : "-"); // Default job kosong jika null
-            petugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-"); // Default wilayah kosong jika
-                                                                                          // null
+            petugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-"); // Default wilayah kosong
+                                                                                           // jika
+                                                                                           // null
             petugasList.add(petugas);
 
             System.out.println("Menambahkan data petugas ke dalam daftar: " + petugas.getNikPetugas());
