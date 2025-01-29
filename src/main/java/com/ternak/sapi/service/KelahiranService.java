@@ -1,7 +1,6 @@
 package com.ternak.sapi.service;
 
-import com.ternak.sapi.exception.BadRequestException;
-import com.ternak.sapi.exception.ResourceNotFoundException;
+import com.ternak.sapi.exception.*;
 import com.ternak.sapi.model.Kelahiran;
 import com.ternak.sapi.model.Hewan;
 import com.ternak.sapi.model.Inseminasi;

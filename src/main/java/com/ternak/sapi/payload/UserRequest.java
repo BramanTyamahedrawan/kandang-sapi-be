@@ -12,6 +12,8 @@ public class UserRequest {
     private String alamat;
     private String role;
     private Instant createdAt;
+    private String oldPassword;
+    private String newPassword;
     public UserRequest() {
     }
 
@@ -98,6 +100,22 @@ public class UserRequest {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
     }
 
     public void set(String fieldName, String value) {
