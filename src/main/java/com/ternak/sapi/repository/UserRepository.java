@@ -108,6 +108,21 @@ public class UserRepository {
         return client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "username", username, User.class);
     }
 
+    public User findByUserId(String userId) throws IOException {
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        Map<String, String> columnMapping = new HashMap<>();
+
+        // Add the mappings to the HashMap
+        columnMapping.put("id", "id");
+        columnMapping.put("password", "password");
+
+        User user =  client.getDataByColumn(tableUsers.toString(), columnMapping, "main", "id", userId, User.class);
+
+        return user.getId() != null ? user : null;
+    }
+
     public boolean deleteById(String userId) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
         client.deleteRecord(tableName, userId);
@@ -254,7 +269,7 @@ public class UserRepository {
     public User saveForm(User user) throws IOException {
         HBaseCustomClient client = new HBaseCustomClient(conf);
 
-        String rowKey = UUID.randomUUID().toString();
+        String rowKey = user.getId();
 
         TableName tableUsers = TableName.valueOf(tableName);
         client.insertRecord(tableUsers, rowKey, "main", "id", rowKey);
@@ -312,6 +327,22 @@ public class UserRepository {
         }
 
         return userList;
+    }
+
+    public User update(String userId, User user) throws IOException{
+        HBaseCustomClient client = new HBaseCustomClient(conf);
+
+        TableName tableUsers = TableName.valueOf(tableName);
+        client.insertRecord(tableUsers, userId, "main", "id", userId);
+        client.insertRecord(tableUsers, userId, "main", "nik", user.getNik());
+        client.insertRecord(tableUsers, userId, "main", "alamat", user.getAlamat());
+        client.insertRecord(tableUsers, userId, "main", "name", user.getName());
+        client.insertRecord(tableUsers, userId, "main", "username", user.getUsername());
+        client.insertRecord(tableUsers, userId, "main", "email", user.getEmail());
+        client.insertRecord(tableUsers, userId, "main", "password", user.getPassword());
+        client.insertRecord(tableUsers, userId, "main", "role", user.getRole());
+        client.insertRecord(tableUsers, userId, "detail", "createdBy", user.getCreatedAt().toString());
+        return user;
     }
 
     private String safeString(String value) {

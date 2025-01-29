@@ -50,32 +50,54 @@ public class UserService {
         return new PagedResponse<>(userResponse, userResponse.size(), "Successfully get data", 200);
     }
 
-     @Transactional
-     public User createUser(UserRequest userRequest) throws IOException {
-     // Validasi jika email sudah ada
-     if (userRepository.existsByEmail(userRequest.getEmail())) {
-     throw new IllegalArgumentException("Email sudah terdaftar!");
-     }
 
-     if(userRepository.existsByUsername(userRequest.getUsername())) {
-     throw new IllegalArgumentException("Username sudah terdaftar!");
-     }
-     if(userRepository.existsByNik(userRequest.getNik())) {
-     throw new IllegalArgumentException("Nik sudah terdaftar!");
-     }
+    @Transactional
+    public User createUser(UserRequest userRequest) throws IOException {
+        // Validasi jika email sudah ada
+        if (userRepository.existsByEmail(userRequest.getEmail())) {
+            throw new IllegalArgumentException("Email sudah terdaftar!");
+        }
 
-     User user = new User();
-     user.setId(userRequest.getId());
-     user.setName(userRequest.getName());
-     user.setNik(userRequest.getNik());
-     user.setUsername(userRequest.getUsername());
-     user.setEmail(userRequest.getEmail());
-     user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-     user.setAlamat(userRequest.getAlamat());
-     user.setRole(userRequest.getRole());
-     user.setCreatedAt(userRequest.getCreatedAt() != null ? userRequest.getCreatedAt() : instant);
-     return userRepository.saveForm(user);
-     }
+        if (userRepository.existsByUsername(userRequest.getUsername())) {
+            throw new IllegalArgumentException("Username sudah terdaftar!");
+        }
+        if (userRepository.existsByNik(userRequest.getNik())) {
+            throw new IllegalArgumentException("Nik sudah terdaftar!");
+        }
+
+        User user = new User();
+        user.setId(userRequest.getId());
+        user.setName(userRequest.getName());
+        user.setNik(userRequest.getNik());
+        user.setUsername(userRequest.getUsername());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setAlamat(userRequest.getAlamat());
+        user.setRole(userRequest.getRole());
+        user.setCreatedAt(userRequest.getCreatedAt() != null ? userRequest.getCreatedAt() : instant);
+        return userRepository.saveForm(user);
+    }
+
+    @Transactional
+    public User update(String userId, UserRequest userRequest)throws  IOException{
+        User user = new User();
+        User userResponse = userRepository.findByUserId(userId);
+        if(userResponse != null) {
+            user.setNik(userRequest.getNik());
+            user.setName(userRequest.getName());
+            user.setEmail(userRequest.getEmail());
+            user.setUsername(userRequest.getUsername());
+            user.setAlamat(userRequest.getAlamat());
+            user.setRole(userRequest.getRole());
+            user.setCreatedAt(userRequest.getCreatedAt() != null ? userRequest.getCreatedAt() : instant);
+            if (!userRequest.getNewPassword().isEmpty() && userRequest.getNewPassword() != null){
+                user.setPassword(passwordEncoder.encode(userRequest.getNewPassword()));
+            }else{
+                user.setPassword(userResponse.getPassword());
+            }
+        }
+        return userRepository.update(userId,user);
+    }
 
     @Transactional
     public void createBulkUser(List<UserRequest> userRequest) throws IOException {
@@ -151,59 +173,6 @@ public class UserService {
         }
     }
 
-    // public User createUserPetugasBulk(UserRequest userRequest) throws IOException
-    // {
-    // // Validasi jika email sudah ada
-    // if (userRepository.existsByEmail(userRequest.getEmail())) {
-    // throw new IllegalArgumentException("Email sudah terdaftar!");
-    // }
-    //
-    // if(userRepository.existsByUsername(userRequest.getUsername())) {
-    // throw new IllegalArgumentException("Email sudah terdaftar!");
-    // }
-    // if(userRepository.existsByNik(userRequest.getNik())) {
-    // throw new IllegalArgumentException("Nik sudah terdaftar!");
-    // }
-    //
-    // User user = new User();
-    // String Password = user.getNik() + "@123";
-    // user.setId(userRequest.getId());
-    // user.setName(userRequest.getName());
-    // user.setNik(userRequest.getNik());
-    // user.setUsername(userRequest.getUsername());
-    // user.setEmail(userRequest.getEmail());
-    // user.setPassword(passwordEncoder.encode(Password));
-    // user.setAlamat(userRequest.getAlamat());
-    // user.setRole("Petugas");
-    // return userRepository.saveBulk(user);
-    // }
-    //
-    // public User createUserPeternakBulk(UserRequest userRequest) throws
-    // IOException {
-    // // Validasi jika email sudah ada
-    // if (userRepository.existsByEmail(userRequest.getEmail())) {
-    // throw new IllegalArgumentException("Email sudah terdaftar!");
-    // }
-    //
-    // if(userRepository.existsByUsername(userRequest.getUsername())) {
-    // throw new IllegalArgumentException("Email sudah terdaftar!");
-    // }
-    // if(userRepository.existsByNik(userRequest.getNik())) {
-    // throw new IllegalArgumentException("Nik sudah terdaftar!");
-    // }
-    //
-    // User user = new User();
-    // String Password = user.getNik() + "@123";
-    // user.setId(userRequest.getId());
-    // user.setName(userRequest.getName());
-    // user.setNik(userRequest.getNik());
-    // user.setUsername(userRequest.getUsername());
-    // user.setEmail(userRequest.getEmail());
-    // user.setPassword(passwordEncoder.encode(Password));
-    // user.setAlamat(userRequest.getAlamat());
-    // user.setRole("Peternak");
-    // return userRepository.saveBulk(user);
-    // }
 
     public PagedResponse<User> getUserNotUsedAccount(int page, int size) throws IOException {
         validatePageNumberAndSize(page, size);

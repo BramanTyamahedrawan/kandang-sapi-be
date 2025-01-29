@@ -1,11 +1,8 @@
 package com.ternak.sapi.controller;
 
 import com.ternak.sapi.model.Pengobatan;
-import com.ternak.sapi.payload.ApiResponse;
-import com.ternak.sapi.payload.DefaultResponse;
-import com.ternak.sapi.payload.InseminasiRequest;
-import com.ternak.sapi.payload.PengobatanRequest;
-import com.ternak.sapi.payload.PagedResponse;
+//import com.ternak.sapi.payload.ApiResponse;
+import com.ternak.sapi.payload.*;
 import com.ternak.sapi.service.PengobatanService;
 import com.ternak.sapi.util.AppConstants;
 import org.springframework.http.HttpStatus;
