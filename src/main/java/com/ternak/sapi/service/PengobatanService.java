@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PengobatanService {
@@ -153,11 +150,27 @@ public class PengobatanService {
 
                 System.out.println("nama petugas diterima dari frontend: " + request.getNamaPetugas());
 
-                Petugas petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                Petugas petugasResponse = null;
                 if (request.getNamaPetugas() == null) {
-                    System.out.println("Nama petugas tidak ditemukan. lewati proses penyimpanan data pengobatan ini.");
-                    skippedIncomplete++;
-                    continue;
+                   continue;
+                }else{
+                    petugasResponse = petugasRepository.findByNamaPetugas(request.getNamaPetugas());
+                    if(petugasResponse == null) {
+                        System.err.println("Nama petugas"+ request.getNamaPetugas() +" tidak ditemukan didata base, new petugas..");
+                        Petugas petugas = new Petugas();
+                        petugas.setPetugasId(UUID.randomUUID().toString());
+                        petugas.setNikPetugas(request.getNikPetugas() != null ? request.getNikPetugas() : "-");
+                        petugas.setNamaPetugas(request.getNamaPetugas() != null ? request.getNamaPetugas() : "Nama petugas tidak ditemukan");
+                        petugas.setEmail(request.getEmail() != null ? request.getEmail() : "-");
+                        petugas.setNoTelp(request.getNoTelp() != null ? request.getNoTelp() : "-");
+                        petugas.setWilayah(request.getWilayah() != null ? request.getWilayah() : "-");
+                        petugas.setJob("Petugas Pengobatan");
+
+                        petugasResponse = petugasRepository.saveImport(petugas);
+                    }else{
+                        System.err.println("Nama Petugas " + request.getNamaPetugas() + "ditemukan");
+                    }
+
                 }
 
                 pengobatan.setPetugas(petugasResponse);
