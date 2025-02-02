@@ -69,6 +69,20 @@ public class HBaseCustomClient {
 
     }
 
+    public void truncateTable(TableName tableName, Configuration conf) throws IOException {
+
+        try (Connection connection = ConnectionFactory.createConnection(conf);
+
+                Admin admin = connection.getAdmin()) {
+
+            admin.disableTable(tableName);
+
+            admin.truncateTable(tableName, true);
+
+        }
+
+    }
+
     public void insertRecord(TableName tableName, String rowKey, String family, String qualifier, String value) {
 
         try {

@@ -1014,7 +1014,7 @@ public class KelahiranRepository {
                                                 client.insertRecord(tableKelahiran,
                                                                 safeString(kelahiran.getIdKelahiran()),
                                                                 "petugas",
-                                                                "idPetugas",
+                                                                "petugasId",
                                                                 safeString(petugas.getPetugasId()));
                                         }
                                         if (petugas.getNikPetugas() != null) {
@@ -1042,7 +1042,7 @@ public class KelahiranRepository {
                                                 client.insertRecord(tableKelahiran,
                                                                 safeString(kelahiran.getIdKelahiran()),
                                                                 "petugas",
-                                                                "noTelepon",
+                                                                "noTelp",
                                                                 safeString(petugas.getNoTelp()));
                                         }
                                         if (petugas.getJob() != null) {
@@ -1056,11 +1056,63 @@ public class KelahiranRepository {
                                                 client.insertRecord(tableKelahiran,
                                                                 safeString(kelahiran.getIdKelahiran()),
                                                                 "petugas",
-                                                                "wilayahKerja",
+                                                                "wilayah",
                                                                 safeString(petugas.getWilayah()));
 
                                         }
                                 }
+
+                                String rowKey = kelahiran.getIdKelahiran();
+                                client.insertRecord(tableKelahiran, rowKey, "main", "idKelahiran",
+                                                safeString(kelahiran.getIdKelahiran()));
+                                if (kelahiran.getIdKejadian() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "idKejadian",
+                                                        safeString(kelahiran.getIdKejadian()));
+                                }
+                                if (kelahiran.getTanggalLaporan() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "tanggalLaporan",
+                                                        safeString(kelahiran.getTanggalLaporan()));
+                                }
+                                if (kelahiran.getTanggalLahir() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "tanggalLahir",
+                                                        safeString(kelahiran.getTanggalLahir()));
+                                }
+                                if (kelahiran.getEartagAnak() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "eartagAnak",
+                                                        safeString(kelahiran.getEartagAnak()));
+                                }
+                                if (kelahiran.getJenisKelaminAnak() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "jenisKelaminAnak",
+                                                        safeString(kelahiran.getJenisKelaminAnak()));
+                                }
+                                if (kelahiran.getNoKartuTernakAnak() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "noKartuTernakAnak",
+                                                        safeString(kelahiran.getNoKartuTernakAnak()));
+                                }
+                                if (kelahiran.getSpesies() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "spesies",
+                                                        safeString(kelahiran.getSpesies()));
+                                }
+                                if (kelahiran.getKategori() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "kategori",
+                                                        safeString(kelahiran.getKategori()));
+                                }
+                                if (kelahiran.getJumlah() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "jumlah",
+                                                        safeString(kelahiran.getJumlah()));
+                                }
+                                if (kelahiran.getIdHewanAnak() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "idHewanAnak",
+                                                        safeString(kelahiran.getIdHewanAnak()));
+                                }
+                                if (kelahiran.getUrutanIB() != null) {
+                                        client.insertRecord(tableKelahiran, rowKey, "main", "urutanIB",
+                                                        safeString(kelahiran.getUrutanIB()));
+                                }
+                                client.insertRecord(tableKelahiran, rowKey, "detail", "created_by", "Polinema");
+
+                                System.out.println("Data berhasil disimpan ke HBase dengan ID Kelahiran (kelahiran): "
+                                                + kelahiran.getIdKelahiran());
 
                         } catch (Exception e) {
                                 failedRows.add(kelahiran.getIdKelahiran());
