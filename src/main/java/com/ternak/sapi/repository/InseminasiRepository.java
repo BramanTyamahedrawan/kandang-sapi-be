@@ -205,6 +205,50 @@ public class InseminasiRepository {
                 for (Inseminasi inseminasi : inseminasiList) {
                         try {
 
+                                if (inseminasi.getJenisHewan() != null) {
+                                        JenisHewan jenisHewan = inseminasi.getJenisHewan();
+                                        if (jenisHewan.getIdJenisHewan() != null) {
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "jenisHewan",
+                                                                "idJenisHewan",
+                                                                safeString(jenisHewan.getIdJenisHewan()));
+                                        }
+                                        if (jenisHewan.getJenis() != null) {
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "jenisHewan",
+                                                                "jenis",
+                                                                safeString(jenisHewan.getJenis()));
+                                        }
+                                        if (jenisHewan.getDeskripsi() != null) {
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "jenisHewan",
+                                                                "deskripsi",
+                                                                safeString(jenisHewan.getDeskripsi()));
+                                        }
+                                }
+
+                                if (inseminasi.getRumpunHewan() != null) {
+                                        RumpunHewan rumpunHewan = inseminasi.getRumpunHewan();
+                                        if (rumpunHewan.getIdRumpunHewan() != null) {
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "rumpunHewan",
+                                                                "idRumpunHewan",
+                                                                safeString(rumpunHewan.getIdRumpunHewan()));
+                                        }
+                                        if (rumpunHewan.getRumpun() != null) {
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "rumpunHewan",
+                                                                "rumpun",
+                                                                safeString(rumpunHewan.getRumpun()));
+                                        }
+                                        if (rumpunHewan.getDeskripsi() != null) {
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "rumpunHewan",
+                                                                "deskripsi",
+                                                                safeString(rumpunHewan.getDeskripsi()));
+                                        }
+                                }
+
                                 if (inseminasi.getPeternak() != null) {
                                         Peternak peternak = inseminasi.getPeternak();
                                         if (peternak.getIdPeternak() != null) {
@@ -327,6 +371,48 @@ public class InseminasiRepository {
                                                                 "wilayah",
                                                                 safeString(petugas.getWilayah()));
 
+                                        }
+                                }
+
+                                if (inseminasi.getKandang() != null) {
+                                        Kandang kandang = inseminasi.getKandang();
+                                        if (kandang.getNamaKandang() != null) {
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "idKandang",
+                                                                safeString(kandang.getIdKandang()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "namaKandang",
+                                                                safeString(kandang.getNamaKandang()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "alamat",
+                                                                safeString(kandang.getAlamat()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "luas",
+                                                                safeString(kandang.getLuas()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "jenisKandang",
+                                                                safeString(kandang.getJenisKandang()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "kapasitas",
+                                                                safeString(kandang.getKapasitas()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "nilaiBangunan",
+                                                                safeString(kandang.getNilaiBangunan()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "latitude",
+                                                                safeString(kandang.getLatitude()));
+                                                client.insertRecord(tableInseminasi,
+                                                                safeString(inseminasi.getIdInseminasi()), "kandang",
+                                                                "longitude",
+                                                                safeString(kandang.getLongitude()));
                                         }
                                 }
 

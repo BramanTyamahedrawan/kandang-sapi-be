@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/kelahiran")
@@ -83,4 +85,18 @@ public class KelahiranController {
                     .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
         }
     }
+
+    @PostMapping("/import")
+    public ResponseEntity<?> createImportKelahiran(@RequestBody List<KelahiranRequest> kelahiranRequests)
+            throws IOException {
+        try {
+            System.out.println("Jumlah data yang diterima: " + kelahiranRequests.size());
+            kelahiranService.createImportKelahiran(kelahiranRequests);
+            return ResponseEntity.ok(new ApiResponse(true, "Hewan Created Successfully"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Failed to create bulk data: " + e.getMessage()));
+        }
+    }
+
 }

@@ -710,4 +710,17 @@ public class PeternakRepository {
                 return client.getExistingByColumn(tablePeternak.toString(), columnMapping, "main", "noTelepon",
                                 noTelpList);
         }
+
+        public boolean existsByNamaPeternak(String namaPeternak) throws IOException {
+                HBaseCustomClient client = new HBaseCustomClient(conf);
+                TableName tablePeternak = TableName.valueOf(tableName);
+                Map<String, String> columnMapping = new HashMap<>();
+                columnMapping.put("namaPeternak", "namaPeternak");
+
+                Peternak peternak = client.getDataByColumn(tablePeternak.toString(), columnMapping, "main",
+                                "namaPeternak",
+                                namaPeternak,
+                                Peternak.class);
+                return peternak.getNamaPeternak() != null; // Jika ada data dengan email yang sama
+        }
 }

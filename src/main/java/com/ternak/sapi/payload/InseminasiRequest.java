@@ -34,6 +34,8 @@ public class InseminasiRequest {
     private String desaPeternak;
     private String dusunPeternak;
     private String tanggalLahirPeternak;
+    private String latitude;
+    private String longitude;
 
     // hewan
     private String idHewan;
@@ -45,8 +47,7 @@ public class InseminasiRequest {
     private String tempatLahir;
     private String identifikasiHewan;
     private String tanggalTerdaftar;
-    private String latitude;
-    private String longitude;
+    private String idIsikhnasTernak;
 
     // Petugas
     private String petugasId;
@@ -87,6 +88,7 @@ public class InseminasiRequest {
             String provinsi, String ib1, String ib2, String ib3, String ibLain, String namaPeternak, String alamat,
             String email, String jenisKelamin, String noTelepon, String idIsikhnas, String tanggalPendaftaran,
             String kodeEartagNasional, String noKartuTernak, String sex, String umur, String tanggalLahir,
+            String idIsikhnasTernak,
             String tempatLahir, String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude,
             String nikPetugas, String namaPetugas, String emailPetugas, String noTelp, String job, String wilayah,
             String lokasiPeternak, String provinsiPeternak, String kabupatenPeternak, String kecamatanPeternak,
@@ -126,6 +128,7 @@ public class InseminasiRequest {
         this.tanggalLahir = tanggalLahir;
         this.tempatLahir = tempatLahir;
         this.identifikasiHewan = identifikasiHewan;
+        this.idIsikhnasTernak = idIsikhnasTernak;
         this.tanggalTerdaftar = tanggalTerdaftar;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -445,6 +448,14 @@ public class InseminasiRequest {
 
     public void setNoKartuTernak(String noKartuTernak) {
         this.noKartuTernak = noKartuTernak;
+    }
+
+    public String getIdIsikhnasTernak() {
+        return idIsikhnasTernak;
+    }
+
+    public void setIdIsikhnasTernak(String idIsikhnasTernak) {
+        this.idIsikhnasTernak = idIsikhnasTernak;
     }
 
     public String getSex() {

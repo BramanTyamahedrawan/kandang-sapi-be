@@ -41,6 +41,8 @@ public class KelahiranRequest {
     private String desaPeternak;
     private String dusunPeternak;
     private String tanggalLahirPeternak;
+    private String latitude;
+    private String longitude;
 
     // Kandang
     private String idKandang;
@@ -60,11 +62,10 @@ public class KelahiranRequest {
     private String sex;
     private String umur;
     private String tanggalLahirHewan;
+    private String idIsikhnasTernak;
     private String tempatLahir;
     private String identifikasiHewan;
     private String tanggalTerdaftar;
-    private String latitude;
-    private String longitude;
 
     // Jenis Hewan
     private String idJenisHewan;
@@ -103,6 +104,7 @@ public class KelahiranRequest {
             String tanggalPendaftaran, String lokasiPeternak, String provinsiPeternak, String kabupatenPeternak,
             String kecamatanPeternak, String desaPeternak, String dusunPeternak, String tanggalLahirPeternak,
             String kodeEartagNasional, String noKartuTernak, String sex, String umur, String tanggalLahirHewan,
+            String idIsikhnasTernak,
             String tempatLahir, String identifikasiHewan, String tanggalTerdaftar, String latitude, String longitude,
             String idJenisHewan, String jenis, String deskripsiJenis, String idRumpunHewan, String rumpun,
             String deskripsiRumpun, String idInseminasi, String tanggalIB, String ib1, String ib2, String ib3,
@@ -165,6 +167,7 @@ public class KelahiranRequest {
         this.sex = sex;
         this.umur = umur;
         this.tanggalLahirHewan = tanggalLahirHewan;
+        this.idIsikhnasTernak = idIsikhnasTernak;
         this.tempatLahir = tempatLahir;
         this.identifikasiHewan = identifikasiHewan;
         this.tanggalTerdaftar = tanggalTerdaftar;
@@ -262,6 +265,14 @@ public class KelahiranRequest {
 
     public void setJenisKelaminAnak(String jenisKelaminAnak) {
         this.jenisKelaminAnak = jenisKelaminAnak;
+    }
+
+    public String getIdIsikhnasTernak() {
+        return idIsikhnasTernak;
+    }
+
+    public void setIdIsikhnasTernak(String idIsikhnasTernak) {
+        this.idIsikhnasTernak = idIsikhnasTernak;
     }
 
     public String getNoKartuTernakAnak() {
