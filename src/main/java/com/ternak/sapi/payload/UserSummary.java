@@ -6,16 +6,17 @@ public class UserSummary {
     private String name;
     private String role;
     private String description;
-
+    private String email;
     private String avatar;
 
-    public UserSummary(String id, String username, String name, String role, String description, String avatar) {
+    public UserSummary(String id, String username, String name,String email, String role, String description, String avatar) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.role = role;
         this.description = description;
         this.avatar = avatar;
+        this.email = email;
     }
 
     public String getId() {
@@ -64,5 +65,13 @@ public class UserSummary {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

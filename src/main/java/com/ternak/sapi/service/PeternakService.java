@@ -346,6 +346,7 @@ public class PeternakService {
                     skippedIncomplete++;
                     continue;
                 }
+                
 
                 // Skip jika data sudah ada
                 if (existingNikSet.contains(request.getNikPeternak())) {

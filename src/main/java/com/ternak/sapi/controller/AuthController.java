@@ -57,7 +57,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
         String jwt = tokenProvider.generateToken(authentication);
-        UserSummary userSummary = new UserSummary(userPrincipal.getId(), userPrincipal.getUsername(), userPrincipal.getName(), userPrincipal.getRole().equalsIgnoreCase("1") ? "ROLE_ADMINISTRATOR" : userPrincipal.getRole().equalsIgnoreCase("2") ? "ROLE_PETUGAS" : "ROLE_PETERNAK","", "");
+        UserSummary userSummary = new UserSummary(userPrincipal.getId(), userPrincipal.getUsername(), userPrincipal.getEmail(),userPrincipal.getName(), userPrincipal.getRole().equalsIgnoreCase("1") ? "ROLE_ADMINISTRATOR" : userPrincipal.getRole().equalsIgnoreCase("2") ? "ROLE_PETUGAS" : "ROLE_PETERNAK","", "");
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userSummary));
     }
 

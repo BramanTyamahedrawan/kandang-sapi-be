@@ -40,7 +40,7 @@ public class UserController {
 
     @GetMapping("/user/me")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName(), currentUser.getRole().equalsIgnoreCase("1") ? "ROLE_ADMINISTRATOR" : currentUser.getRole().equalsIgnoreCase("2") ? "ROLE_PETUGAS" : "ROLE_PETERNAK","", "");
+        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getEmail(), currentUser.getName(), currentUser.getRole().equalsIgnoreCase("1") ? "ROLE_ADMINISTRATOR" : currentUser.getRole().equalsIgnoreCase("2") ? "ROLE_PETUGAS" : "ROLE_PETERNAK", "", "");
         return userSummary;
     }
 
@@ -65,17 +65,17 @@ public class UserController {
 
     @GetMapping("/users")
     public PagedResponse<User> getUsers(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                              @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) throws IOException {
+                                        @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) throws IOException {
         return userService.getAllUser(page, size);
     }
 
     @GetMapping("/users/not-used-account")
     public PagedResponse<User> getUserNotUses(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                        @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) throws IOException {
+                                              @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) throws IOException {
         return userService.getUserNotUsedAccount(page, size);
     }
 
-    @PostMapping ("/users")
+    @PostMapping("/users")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) throws IOException {
         try {
             User user = userService.createUser(userRequest);
@@ -101,7 +101,7 @@ public class UserController {
 
     }
 
-    @PostMapping ("/users/bulk")
+    @PostMapping("/users/bulk")
     public ResponseEntity<?> createUserBulk(@RequestBody List<UserRequest> userRequest) throws IOException {
         try {
             userService.createBulkUser(userRequest);
@@ -121,7 +121,7 @@ public class UserController {
 
     @PutMapping("/user/edit/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable String userId,
-                                           @Valid @RequestBody UserRequest userRequest) throws IOException {
+                                        @Valid @RequestBody UserRequest userRequest) throws IOException {
         User user = userService.update(userId, userRequest);
 
         if (user == null) {
@@ -139,7 +139,7 @@ public class UserController {
 
 
     @PostMapping("/user/validate-password")
-    public ResponseEntity<Boolean> validatePassword(@RequestBody UserRequest request)throws IOException {
+    public ResponseEntity<Boolean> validatePassword(@RequestBody UserRequest request) throws IOException {
         User user = userRepository.findByUserId(request.getId());
 
         if (user == null) {

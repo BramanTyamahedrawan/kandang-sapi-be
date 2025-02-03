@@ -90,10 +90,10 @@ public class UserService {
             user.setAlamat(userRequest.getAlamat());
             user.setRole(userRequest.getRole());
             user.setCreatedAt(userRequest.getCreatedAt() != null ? userRequest.getCreatedAt() : instant);
-            if (!userRequest.getNewPassword().isEmpty() && userRequest.getNewPassword() != null){
-                user.setPassword(passwordEncoder.encode(userRequest.getNewPassword()));
-            }else{
+            if (userRequest.getNewPassword() == null){
                 user.setPassword(userResponse.getPassword());
+            }else{
+                user.setPassword(passwordEncoder.encode(userRequest.getNewPassword()));
             }
         }
         return userRepository.update(userId,user);
