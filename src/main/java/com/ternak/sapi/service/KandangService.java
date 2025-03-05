@@ -54,6 +54,17 @@ public class KandangService {
         if (kandangRepository.existsByIdKandang(kandangRequest.getIdKandang())) {
             throw new IllegalArgumentException("ID Kandang sudah terdaftar!");
         }
+        // Validasi Peternak
+        Peternak peternakResponse = peternakRepository.findById(kandangRequest.getIdPeternak());
+        if (peternakResponse == null) {
+            throw new IllegalArgumentException("Peternak dengan ID " + kandangRequest.getIdPeternak() + " tidak ditemukan.");
+        }
+
+        // Validasi Jenis Hewan
+        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan());
+        if (jenisHewanResponse == null) {
+            throw new IllegalArgumentException("Jenis Hewan dengan ID " + kandangRequest.getIdJenisHewan() + " tidak ditemukan.");
+        }
 
         // Validasi Alamat
         // if (kandangRepository.existsByAlamat(kandangRequest.getAlamat())) {
@@ -61,8 +72,7 @@ public class KandangService {
         // }
 
         Kandang kandang = new Kandang();
-        Peternak peternakResponse = peternakRepository.findById(kandangRequest.getIdPeternak().toString());
-        JenisHewan jenisHewanResponse = jenisHewanRepository.findById(kandangRequest.getIdJenisHewan());
+
         if (peternakResponse.getIdPeternak() != null && jenisHewanResponse.getIdJenisHewan() != null) {
             kandang.setIdKandang(kandangRequest.getIdKandang());
             kandang.setLuas(kandangRequest.getLuas());

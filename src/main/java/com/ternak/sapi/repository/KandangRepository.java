@@ -671,37 +671,13 @@ public class KandangRepository {
                 System.out.println("File yang diterima " + kandang.getFile_path());
                 client.insertRecord(tableKandang, kandangId, "main", "file_path", kandang.getFile_path());
                 client.insertRecord(tableKandang, kandangId, "main", "namaKandang", kandang.getNamaKandang());
+
+                client.insertRecord(tableKandang, kandangId, "peternak", "idPeternak",
+                                kandang.getPeternak().getIdPeternak());
                 client.insertRecord(tableKandang, kandangId, "peternak", "nikPeternak",
                                 kandang.getPeternak().getNikPeternak());
                 client.insertRecord(tableKandang, kandangId, "peternak", "namaPeternak",
                                 kandang.getPeternak().getNamaPeternak());
-                client.insertRecord(tableKandang, kandangId, "peternak", "lokasi", kandang.getPeternak().getLokasi());
-                client.insertRecord(tableKandang, kandangId, "peternak", "tanggalPendaftaran",
-                                kandang.getPeternak().getTanggalPendaftaran());
-
-                client.insertRecord(tableKandang, kandangId, "peternak", "noTelepon",
-                                kandang.getPeternak().getNoTelepon());
-                client.insertRecord(tableKandang, kandangId, "peternak", "email", kandang.getPeternak().getEmail());
-                client.insertRecord(tableKandang, kandangId, "peternak", "jenisKelamin",
-                                kandang.getPeternak().getJenisKelamin());
-                client.insertRecord(tableKandang, kandangId, "peternak", "tanggalLahir",
-                                kandang.getPeternak().getTanggalLahir());
-                client.insertRecord(tableKandang, kandangId, "peternak", "idIsikhnas",
-                                kandang.getPeternak().getIdIsikhnas());
-
-                client.insertRecord(tableKandang, kandangId, "peternak", "dusun", kandang.getPeternak().getDusun());
-                client.insertRecord(tableKandang, kandangId, "peternak", "desa", kandang.getPeternak().getDesa());
-                client.insertRecord(tableKandang, kandangId, "peternak", "kecamatan",
-                                kandang.getPeternak().getKecamatan());
-                client.insertRecord(tableKandang, kandangId, "peternak", "kabupaten",
-                                kandang.getPeternak().getKabupaten());
-                client.insertRecord(tableKandang, kandangId, "peternak", "provinsi",
-                                kandang.getPeternak().getProvinsi());
-                client.insertRecord(tableKandang, kandangId, "peternak", "alamat", kandang.getPeternak().getAlamat());
-                client.insertRecord(tableKandang, kandangId, "peternak", "latitude",
-                                kandang.getPeternak().getLatitude());
-                client.insertRecord(tableKandang, kandangId, "peternak", "longitude",
-                                kandang.getPeternak().getLongitude());
 
                 client.insertRecord(tableKandang, kandangId, "jenisHewan", "idJenisHewan",
                                 kandang.getJenisHewan().getIdJenisHewan());
@@ -754,11 +730,11 @@ public class KandangRepository {
                 return kandang;
         }
 
-        public Kandang updateJenisHewanByKandang(String idHewan, Kandang kandang) throws IOException {
+        public Kandang updateJenisHewanByKandang(String idJenisHewan, Kandang kandang) throws IOException {
                 HBaseCustomClient client = new HBaseCustomClient(conf);
                 TableName tableKandang = TableName.valueOf(tableName);
-                client.insertRecord(tableKandang, idHewan, "jenisHewan", "jenis", kandang.getJenisHewan().getJenis());
-                client.insertRecord(tableKandang, idHewan, "jenisHewan", "deskripsi",
+                client.insertRecord(tableKandang, idJenisHewan, "jenisHewan", "jenis", kandang.getJenisHewan().getJenis());
+                client.insertRecord(tableKandang, idJenisHewan, "jenisHewan", "deskripsi",
                                 kandang.getJenisHewan().getDeskripsi());
                 return kandang;
         }
